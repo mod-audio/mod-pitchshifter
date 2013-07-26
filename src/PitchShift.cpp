@@ -100,7 +100,6 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 	plugin->framesaux = (complex<double>*)malloc(plugin->N*sizeof(complex<double>));
 	plugin->Phi = (double*)malloc(plugin->N*sizeof(double));
 	plugin->ysaida = (double*)malloc((plugin->N + 2*(8-1)*plugin->hopa)*sizeof(double));
-	//plugin->ysaida2 = (double*)malloc(plugin->hopa*2*sizeof(double));
 	
 	plugin->yshift = (double*)malloc(plugin->hopa*sizeof(double));
 	
@@ -218,7 +217,6 @@ void PitchShifter::cleanup(LV2_Handle instance)
 	free(plugin->Phi);
 	free(plugin->framesaux);
 	free(plugin->ysaida);
-	//free(plugin->ysaida2);
 	
 	free(plugin->frames);
 	free(plugin->w);

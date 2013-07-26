@@ -8,7 +8,7 @@
 
 void shift(int N, int hopa, int hops, double *frames, double *w, complex<double> *XaPrevious, double *PhiPrevious, double **Q, double *yshift, complex<double> *Xa, complex<double> *Xs, double *q, complex<double> *qaux, complex<double> *framesaux, double *Phi, double *ysaida, double *ysaida2)
 {
-	//Declaração das variáveis
+	//Some declaration
 	double AUX;
 	double d_phi;
 	double d_phi_prime;
@@ -24,7 +24,7 @@ void shift(int N, int hopa, int hops, double *frames, double *w, complex<double>
 	fftw_plan p;
 	fftw_plan p2;
 	
-	//Algumas inicializações
+	//Some inicialization
 	
 	p = fftw_plan_dft_1d(N, reinterpret_cast<fftw_complex*>(framesaux), reinterpret_cast<fftw_complex*>(Xa), FFTW_FORWARD, FFTW_ESTIMATE);
 	p2 = fftw_plan_dft_1d(N, reinterpret_cast<fftw_complex*>(Xs), reinterpret_cast<fftw_complex*>(qaux), FFTW_BACKWARD, FFTW_ESTIMATE);
@@ -34,25 +34,20 @@ void shift(int N, int hopa, int hops, double *frames, double *w, complex<double>
 		ysaida[i-1] = 0;
 	}
 	
-	//for (int i=1; i<=hops; i++)
-	//{
-	//	ysaida2[i-1] = 0;
-	//}
 	ysaida2 = &ysaida[7*hops];
 	
-	//Começa a brincadeira
+	//Starts now
 	
-	//Janelamento
+	//Windowing
 	for (int i=1; i<=N; i++)
 	{
         framesaux[i-1] = (frames[i-1]*w[i-1])/(sqrt(((double)N/(2*(double)hopa))));
 	}
 	
-	/*Analise*/
-	//myfft( N, framesaux, Xa);
+	/*Analysis*/
 	fftw_execute(p);
 	
-	/*Processamento*/
+	/*Processing*/
 	for (int i=1; i<=N; i++)
 	{
 		d_phi = arg(Xa[i-1]) - arg(XaPrevious[i-1]);
@@ -67,8 +62,7 @@ void shift(int N, int hopa, int hops, double *frames, double *w, complex<double>
         PhiPrevious[i-1] = Phi[i-1];
 	}
 	
-	/*Síntese*/
-	//myifft(N,Xs, qaux);
+	/*Synthesis*/
 	fftw_execute(p2);
 	for (int i=1; i<=N; i++)
 	{
@@ -92,11 +86,7 @@ void shift(int N, int hopa, int hops, double *frames, double *w, complex<double>
 		}
 	}
 	
-	//for (int i=1; i<= hops; i++)
-	//{
-	//	ysaida2[i-1] = ysaida[i-1+7*hops];
-	//}
-	
+	//Linear interpolation
 	r = ((double)hops-1)/((double)hopa-1);
 
         for (int n=1; n <= hopa; n++)
@@ -109,14 +99,5 @@ void shift(int N, int hopa, int hops, double *frames, double *w, complex<double>
 		
 		fftw_destroy_plan(p);
 		fftw_destroy_plan(p2);
-		
-		//free(Xa);
-		//free(Xs);
-		//free(q);
-		//free(qaux);
-		//free(framesaux);
-		//free(Phi);
-		//free(ysaida);
-		//free(ysaida2);
 	
 }
