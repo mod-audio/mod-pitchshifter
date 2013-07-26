@@ -52,6 +52,8 @@ public:
     double *ysaida2;
     
     double *yshift;
+    
+    int Qcolumn;
 };
 
 /**********************************************************************************************************************************************************/
@@ -81,6 +83,7 @@ const LV2_Descriptor* lv2_descriptor(uint32_t index)
 LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features)
 {
     PitchShifter *plugin = new PitchShifter();
+    plugin->Qcolumn = 8;
     plugin->hopa = TAMANHO_DO_BUFFER;
     plugin->N = 4*TAMANHO_DO_BUFFER;
     plugin->w = (double*)malloc(plugin->N*sizeof(double));
@@ -90,7 +93,7 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
     plugin->Q = (double**)malloc(plugin->N*sizeof(double*));
     for (int i=1; i<=plugin->N; i++)
     {
-		plugin->Q[i-1] = (double*)malloc(8*sizeof(double));
+		plugin->Q[i-1] = (double*)malloc(plugin->Qcolumn*sizeof(double));
 	}
 	
 	plugin->Xa = (complex<double>*)malloc(plugin->N*sizeof(complex<double>));
@@ -99,7 +102,7 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 	plugin->qaux = (complex<double>*)malloc(plugin->N*sizeof(complex<double>));
 	plugin->framesaux = (complex<double>*)malloc(plugin->N*sizeof(complex<double>));
 	plugin->Phi = (double*)malloc(plugin->N*sizeof(double));
-	plugin->ysaida = (double*)malloc((plugin->N + 2*(8-1)*plugin->hopa)*sizeof(double));
+	plugin->ysaida = (double*)malloc((plugin->N + 2*(plugin->Qcolumn-1)*plugin->hopa)*sizeof(double));
 	
 	plugin->yshift = (double*)malloc(plugin->hopa*sizeof(double));
 	
@@ -115,7 +118,7 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 		plugin->frames[i-1] = 0;
 		plugin->PhiPrevious[i-1] = 0;
 		plugin->XaPrevious[i-1] = 0;
-		for (int k=1; k<=8; k++)
+		for (int k=1; k<=plugin->Qcolumn; k++)
 		{
 			plugin->Q[i-1][k-1] = 0;
 		}
@@ -195,7 +198,7 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		}
 		else
 		{
-			shift(plugin->N, plugin->hopa, hops, plugin->frames, plugin->w, plugin->XaPrevious, plugin->PhiPrevious, plugin->Q, plugin->yshift, plugin->Xa, plugin->Xs, plugin->q, plugin->qaux, plugin->framesaux, plugin->Phi, plugin->ysaida, plugin->ysaida2);
+			shift(plugin->N, plugin->hopa, hops, plugin->frames, plugin->w, plugin->XaPrevious, plugin->PhiPrevious, plugin->Q, plugin->yshift, plugin->Xa, plugin->Xs, plugin->q, plugin->qaux, plugin->framesaux, plugin->Phi, plugin->ysaida, plugin->ysaida2,  plugin->Qcolumn);
 			for (int i=1; i<=plugin->hopa; i++)
 			{
 				plugin->out_1[i-1] = (float)plugin->yshift[i-1];

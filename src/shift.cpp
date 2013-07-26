@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 
-void shift(int N, int hopa, int hops, double *frames, double *w, complex<double> *XaPrevious, double *PhiPrevious, double **Q, double *yshift, complex<double> *Xa, complex<double> *Xs, double *q, complex<double> *qaux, complex<double> *framesaux, double *Phi, double *ysaida, double *ysaida2)
+void shift(int N, int hopa, int hops, double *frames, double *w, complex<double> *XaPrevious, double *PhiPrevious, double **Q, double *yshift, complex<double> *Xa, complex<double> *Xs, double *q, complex<double> *qaux, complex<double> *framesaux, double *Phi, double *ysaida, double *ysaida2, int Qcolumn)
 {
 	//Some declaration
 	double AUX;
@@ -14,7 +14,7 @@ void shift(int N, int hopa, int hops, double *frames, double *w, complex<double>
 	double d_phi_prime;
 	double d_phi_wrapped;
 	double omega_true_sobre_fs;
-	int L = N + (8-1)*hops;
+	int L = N + (Qcolumn-1)*hops;
 	double r;
 	complex<double> j;
 	int n1;
@@ -34,7 +34,7 @@ void shift(int N, int hopa, int hops, double *frames, double *w, complex<double>
 		ysaida[i-1] = 0;
 	}
 	
-	ysaida2 = &ysaida[7*hops];
+	ysaida2 = &ysaida[(Qcolumn-1)*hops];
 	
 	//Starts now
 	
@@ -68,14 +68,14 @@ void shift(int N, int hopa, int hops, double *frames, double *w, complex<double>
 	{
 		q[i-1] = real(qaux[i-1])/((double)N);
 		q[i-1] = q[i-1]*w[i-1]/(sqrt(((double)N/(2*(double)hops))));
-		for (int j=1; j<=(8-1); j++)
+		for (int j=1; j<=(Qcolumn-1); j++)
 		{
 			Q[i-1][j-1] = Q[i-1][j];
 		}
-        Q[i-1][8-1] = q[i-1];
+        Q[i-1][Qcolumn-1] = q[i-1];
 	}
 	
-	for (int k=1; k <= 8; k++)
+	for (int k=1; k <= Qcolumn; k++)
 	{
 		for (int i=1; i<=N; i++)
 		{
