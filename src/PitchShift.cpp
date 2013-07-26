@@ -236,7 +236,6 @@ void PitchShifter::cleanup(LV2_Handle instance)
 	free(plugin->ysaida);
 	free(plugin->ysaida2);
 	
-	free(plugin->q);
 	free(plugin->frames);
 	free(plugin->w);
 	free(plugin->b1);
