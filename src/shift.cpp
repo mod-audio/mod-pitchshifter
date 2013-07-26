@@ -68,14 +68,11 @@ void shift(int N, int hopa, int hops, double *frames, double *w, complex<double>
 	{
 		q[i-1] = real(qaux[i-1])/((double)N);
 		q[i-1] = q[i-1]*w[i-1]/(sqrt(((double)N/(2*(double)hops))));
-		Q[i-1][0] = Q[i-1][1];
-		Q[i-1][1] = Q[i-1][2];
-        Q[i-1][2] = Q[i-1][3];
-        Q[i-1][3] = Q[i-1][4];
-        Q[i-1][4] = Q[i-1][5];
-        Q[i-1][5] = Q[i-1][6];
-        Q[i-1][6] = Q[i-1][7];
-        Q[i-1][7] = q[i-1];
+		for (int j=1; j<=(8-1); j++)
+		{
+			Q[i-1][j-1] = Q[i-1][j];
+		}
+        Q[i-1][8-1] = q[i-1];
 	}
 	
 	for (int k=1; k <= 8; k++)
