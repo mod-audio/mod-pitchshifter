@@ -10,27 +10,11 @@ void shift(int N, int hopa, int hops, double *frames, double *w, complex<double>
 {
 	//Declaração das variáveis
 	double AUX;
-	//complex<double> *Xa;
-	//Xa = (complex<double>*)malloc(N*sizeof(complex<double>));
-	//complex<double> *Xs;
-	//Xs = (complex<double>*)malloc(N*sizeof(complex<double>));
 	double d_phi;
 	double d_phi_prime;
 	double d_phi_wrapped;
 	double omega_true_sobre_fs;
-	//double *Phi;
-	//Phi = (double*)malloc(N*sizeof(double));
-	//double *q;
-	//q = (double*)malloc(N*sizeof(double));
-	//complex<double> *qaux;
-	//qaux = (complex<double>*)malloc(N*sizeof(complex<double>));
-	//complex<double> *framesaux;
-	//framesaux = (complex<double>*)malloc(N*sizeof(complex<double>));
 	int L = N + (8-1)*hops;
-	//double *ysaida;
-	//ysaida = (double*)malloc(L*sizeof(double));
-	//double *ysaida2;
-	//ysaida2 = (double*)malloc(hops*sizeof(double));
 	double r;
 	complex<double> j;
 	int n1;
@@ -49,11 +33,12 @@ void shift(int N, int hopa, int hops, double *frames, double *w, complex<double>
 	{
 		ysaida[i-1] = 0;
 	}
-	for (int i=1; i<=hops; i++)
-	{
-		ysaida2[i-1] = 0;
-	}
-	//ysaida2 = &ysaida[7*hops];
+	
+	//for (int i=1; i<=hops; i++)
+	//{
+	//	ysaida2[i-1] = 0;
+	//}
+	ysaida2 = &ysaida[7*hops];
 	
 	//Começa a brincadeira
 	
@@ -107,10 +92,10 @@ void shift(int N, int hopa, int hops, double *frames, double *w, complex<double>
 		}
 	}
 	
-	for (int i=1; i<= hops; i++)
-	{
-		ysaida2[i-1] = ysaida[i-1+7*hops];
-	}
+	//for (int i=1; i<= hops; i++)
+	//{
+	//	ysaida2[i-1] = ysaida[i-1+7*hops];
+	//}
 	
 	r = ((double)hops-1)/((double)hopa-1);
 
