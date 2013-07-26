@@ -36,7 +36,8 @@ public:
     int N;
     double *w;
     double *frames;
-    double *b1, *b2, *b3, *b4;
+    //double *b1, *b2, *b3, *b4, *b5, *b6, *b7, *b8;
+    double **b;
     double *PhiPrevious;
     complex<double> *XaPrevious;
     double **Q;
@@ -54,6 +55,7 @@ public:
     double *yshift;
     
     int Qcolumn;
+    int nBuffers;
 };
 
 /**********************************************************************************************************************************************************/
@@ -83,14 +85,17 @@ const LV2_Descriptor* lv2_descriptor(uint32_t index)
 LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features)
 {
     PitchShifter *plugin = new PitchShifter();
-    plugin->Qcolumn = 8;
+    plugin->Qcolumn = 16;
+    plugin->nBuffers = 8;
+    //Começam os testes
     plugin->hopa = TAMANHO_DO_BUFFER;
-    plugin->N = 4*TAMANHO_DO_BUFFER;
+    plugin->N = plugin->nBuffers*TAMANHO_DO_BUFFER;
     plugin->w = (double*)malloc(plugin->N*sizeof(double));
     plugin->frames = (double*)malloc(plugin->N*sizeof(double));
     plugin->PhiPrevious = (double*)malloc(plugin->N*sizeof(double));
     plugin->XaPrevious = (complex<double>*)malloc(plugin->N*sizeof(complex<double>));
     plugin->Q = (double**)malloc(plugin->N*sizeof(double*));
+    plugin->b = (double**)malloc(plugin->hopa*sizeof(double*));
     for (int i=1; i<=plugin->N; i++)
     {
 		plugin->Q[i-1] = (double*)malloc(plugin->Qcolumn*sizeof(double));
@@ -107,11 +112,12 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 	plugin->yshift = (double*)malloc(plugin->hopa*sizeof(double));
 	
     hann2(plugin->N,plugin->w);
-		
-    plugin->b1 = &plugin->frames[0];
-    plugin->b2 = &plugin->frames[plugin->hopa];
-    plugin->b3 = &plugin->frames[2*plugin->hopa];
-    plugin->b4 = &plugin->frames[3*plugin->hopa];
+    
+    for (int i=1 ; i<= (plugin->nBuffers); i++)
+    {
+		plugin->b[i-1] = &plugin->frames[(i-1)*plugin->hopa];
+	}
+
     plugin->cont = 0;
     for (int i=1;i<=plugin->N;i++)
     {
@@ -176,23 +182,24 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
     if ( ((plugin->hopa) != (int)n_samples) )
     {
 		plugin->hopa = n_samples;
-		plugin->N = 4*n_samples;
+		plugin->N = plugin->nBuffers*n_samples;
 		hann2(plugin->N,plugin->w);
-		plugin->b1 = &plugin->frames[0];
-		plugin->b2 = &plugin->frames[plugin->hopa];
-		plugin->b3 = &plugin->frames[2*plugin->hopa];
-		plugin->b4 = &plugin->frames[3*plugin->hopa];
+		for (int i=1 ; i<= plugin->nBuffers; i++)
+		{
+			plugin->b[i-1] = &plugin->frames[(i-1)*plugin->hopa];
+		}
 	}
     
 		for (int i=1; i<=plugin->hopa; i++)
 		{
-			plugin->b1[i-1] = plugin->b2[i-1];
-			plugin->b2[i-1] = plugin->b3[i-1];
-			plugin->b3[i-1] = plugin->b4[i-1];
-			plugin->b4[i-1] = plugin->in[i-1];
+			for (int j=1; j<=(plugin->nBuffers-1); j++)
+			{
+				plugin->b[j-1][i-1] = plugin->b[j][i-1];
+			}
+			plugin->b[plugin->nBuffers-1][i-1] = plugin->in[i-1];
 		}
 		
-		if ( plugin->cont < 3)
+		if ( plugin->cont < plugin->nBuffers-1)
 		{
 			plugin->cont = plugin->cont + 1;
 		}
