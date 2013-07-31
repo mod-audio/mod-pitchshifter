@@ -12,7 +12,7 @@
 
 #define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/PitchShifter"
 #define TAMANHO_DO_BUFFER 512
-enum {IN, OUT_1, STEP, PLUGIN_PORT_COUNT};
+enum {IN, OUT_1, STEP, BUFFERS, PLUGIN_PORT_COUNT};
 
 /**********************************************************************************************************************************************************/
 
@@ -31,6 +31,7 @@ public:
     float *in;
     float *out_1;
     float *step;
+    float *buffers;
     
     int hopa;
     int N;
@@ -164,6 +165,9 @@ void PitchShifter::connect_port(LV2_Handle instance, uint32_t port, void *data)
         case STEP:
             plugin->step = (float*) data;
             break;
+        case BUFFERS:
+            plugin->buffers = (float*) data;
+            break;
     }
 }
 
@@ -176,11 +180,14 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
     /* double *pfOutput; */
     double s;
     int hops;
+    int nBuffersAux;
     s = (double)(*(plugin->step));
     hops = round(plugin->hopa*(pow(2,(s/12))));
+    nBuffersAux = (float)(*(plugin->buffers));
     
-    if ( ((plugin->hopa) != (int)n_samples) )
+    if ( ((plugin->hopa) != (int)n_samples) || (nBuffersAux != plugin->nBuffers) )
     {
+		plugin->nBuffers = nBuffersAux;
 		plugin->hopa = n_samples;
 		plugin->N = plugin->nBuffers*n_samples;
 		hann2(plugin->N,plugin->w);
