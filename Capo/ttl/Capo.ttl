@@ -1,0 +1,56 @@
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#>.
+@prefix doap: <http://usefulinc.com/ns/doap#>.
+@prefix epp: <http://lv2plug.in/ns/ext/port-props/#>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+
+<http://portalmod.com/plugins/mod-devel/Capo>
+a lv2:Plugin, lv2:SpectralPlugin;
+
+doap:name "Capo";
+
+doap:developer [
+    foaf:name "Andre";
+    foaf:homepage <>;
+    foaf:mbox <mailto:andre_coutinho@rocketmail.com>;
+    ];
+
+doap:maintainer [
+    foaf:name "MOD Team";
+    foaf:homepage <http://portalmod.com>;
+    foaf:mbox <mailto:devel@portalmod.com>;
+    ];
+
+doap:license <GPL>;
+lv2:port 
+[
+    a lv2:AudioPort, lv2:InputPort;
+    lv2:index 0;
+    lv2:symbol "In";
+    lv2:name "In";
+],
+[
+    a lv2:AudioPort, lv2:OutputPort;
+    lv2:index 1;
+    lv2:symbol "Out1";
+    lv2:name "Out 1";
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 2;
+    lv2:symbol "Step";
+    lv2:name "Step";
+    lv2:portProperty lv2:integer;
+    lv2:default 0;
+    lv2:minimum 0;
+    lv2:maximum 12;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 3;
+    lv2:symbol "nBuffers";
+    lv2:name "nBuffers";
+    lv2:portProperty lv2:integer;
+    lv2:default 8;
+    lv2:minimum 8;
+    lv2:maximum 14;
+].

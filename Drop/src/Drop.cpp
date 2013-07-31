@@ -10,7 +10,7 @@
 
 /**********************************************************************************************************************************************************/
 
-#define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/PitchShifter"
+#define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/Drop"
 #define TAMANHO_DO_BUFFER 512
 enum {IN, OUT_1, STEP, PLUGIN_PORT_COUNT};
 
@@ -85,7 +85,7 @@ const LV2_Descriptor* lv2_descriptor(uint32_t index)
 LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features)
 {
     PitchShifter *plugin = new PitchShifter();
-    plugin->Qcolumn = 32;
+    plugin->Qcolumn = 8;
     plugin->nBuffers = 4;
     //Começam os testes
     plugin->hopa = TAMANHO_DO_BUFFER;
