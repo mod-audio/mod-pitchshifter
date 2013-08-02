@@ -10,7 +10,7 @@
 
 /**********************************************************************************************************************************************************/
 
-#define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/PitchShifter"
+#define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/PitchShifter2"
 #define TAMANHO_DO_BUFFER 512
 enum {IN, OUT_1, STEP, BUFFERS, PLUGIN_PORT_COUNT};
 
