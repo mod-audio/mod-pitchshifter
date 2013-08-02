@@ -7,7 +7,7 @@ CC = g++
 LD = g++
 
 # flags
-CFLAGS = -I. -O2 -Wall -Wextra -c -fPIC -DPIC
+CFLAGS = -I. -O2 -ffast-math -msse -msse3 -mfpmath=sse -Wall -Wextra -c -fPIC -DPIC
 LDFLAGS = -shared -lc -lm -fPIC -DPIC -nostartfiles
 
 # libs
