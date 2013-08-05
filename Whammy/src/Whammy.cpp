@@ -12,7 +12,7 @@
 
 #define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/Whammy"
 #define TAMANHO_DO_BUFFER 512
-enum {IN, OUT_1, STEP, FIRST, LAST, PLUGIN_PORT_COUNT};
+enum {IN, OUT_1, STEP, FIRST, LAST, CLEAN, PLUGIN_PORT_COUNT};
 
 /**********************************************************************************************************************************************************/
 
@@ -33,6 +33,7 @@ public:
     float *step;
     float *first;
     float *last;
+    float *clean;
     
     int hopa;
     int N;
@@ -174,6 +175,9 @@ void PitchShifter::connect_port(LV2_Handle instance, uint32_t port, void *data)
         case LAST:
             plugin->last = (float*) data;
             break;
+        case CLEAN:
+            plugin->clean = (float*) data;
+            break;
     }
 }
 
@@ -192,9 +196,11 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
     
     float a;
     float b;
+    float c;
     
     a = (float)(*(plugin->first));
     b = (float)(*(plugin->last));
+    c = (float)(*(plugin->clean));
     
     if (a > b)
     {
@@ -325,9 +331,19 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		else
 		{
 			shift(plugin->N, plugin->hopa, hops, plugin->frames, plugin->w, plugin->XaPrevious, plugin->PhiPrevious, plugin->Q, plugin->yshift, plugin->Xa, plugin->Xs, plugin->q, plugin->qaux, plugin->framesaux, plugin->Phi, plugin->ysaida, plugin->ysaida2,  plugin->Qcolumn);
-			for (int i=1; i<=plugin->hopa; i++)
+			if (c == 1)
 			{
-				plugin->out_1[i-1] = (float)plugin->yshift[i-1];
+				for (int i=1; i<=plugin->hopa; i++)
+				{
+					plugin->out_1[i-1] = (float)plugin->yshift[i-1] + (float)plugin->frames[i-1];
+				}
+			}
+			else
+			{
+				for (int i=1; i<=plugin->hopa; i++)
+				{
+					plugin->out_1[i-1] = (float)plugin->yshift[i-1];
+				}
 			}
 		}
 
