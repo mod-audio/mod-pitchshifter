@@ -180,7 +180,7 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
     plugin->s = (double)(*(plugin->step));
     hops = round(plugin->hopa*(pow(2,(plugin->s/12))));
     
-    if (plugin->s != s_before)
+    if ((plugin->s != s_before)||(plugin->cont==0))
     {
 		switch ( (int)(plugin->s))
 		{

@@ -84,7 +84,7 @@ void shift(int N, int hopa, int hops, double *frames, double *w, complex<double>
 	}
 	
 	//Linear interpolation
-	r = ((double)hops-1)/((double)hopa-1);
+	r = ((double)hops)/((double)hopa);
 
         for (int n=1; n <= hopa; n++)
         {
