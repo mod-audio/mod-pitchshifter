@@ -1,7 +1,7 @@
 mod-pitchshifter
 ================
 
-Pitch Shifter developed by mod team
+Pitch Shifter effects developed by mod team
 
 Installation:
 

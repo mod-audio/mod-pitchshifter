@@ -1,0 +1,7 @@
+# the flags defined on this file will affect all Makefiles
+
+# package name
+PACKAGE = invada
+
+# default install path
+INSTALL_PATH = /usr/local/lib/lv2
