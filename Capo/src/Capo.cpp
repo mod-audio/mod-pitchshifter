@@ -12,7 +12,7 @@
 
 #define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/Capo"
 #define TAMANHO_DO_BUFFER 512
-enum {IN, OUT_1, STEP, BUFFERS, PLUGIN_PORT_COUNT};
+enum {IN, OUT_1, STEP, PLUGIN_PORT_COUNT};
 
 /**********************************************************************************************************************************************************/
 
@@ -31,7 +31,6 @@ public:
     float *in;
     float *out_1;
     float *step;
-    float *buffers;
     
     int hopa;
     int N;
@@ -57,6 +56,9 @@ public:
     
     int Qcolumn;
     int nBuffers;
+    double s;
+    
+    int *Hops;
 };
 
 /**********************************************************************************************************************************************************/
@@ -87,10 +89,11 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 {
     PitchShifter *plugin = new PitchShifter();
     plugin->Qcolumn = 32;
-    plugin->nBuffers = 13;
+    plugin->nBuffers = 16;
     //Começam os testes
     plugin->hopa = TAMANHO_DO_BUFFER;
     plugin->N = plugin->nBuffers*TAMANHO_DO_BUFFER;
+    plugin->Hops = (int*)malloc(plugin->Qcolumn*sizeof(int));
     plugin->w = (double*)malloc(plugin->N*sizeof(double));
     plugin->frames = (double*)malloc(plugin->N*sizeof(double));
     plugin->PhiPrevious = (double*)malloc(plugin->N*sizeof(double));
@@ -130,6 +133,12 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 			plugin->Q[i-1][k-1] = 0;
 		}
 	}
+	
+	for (int k=1; k<=plugin->Qcolumn; k++)
+	{
+		plugin->Hops[k-1] = plugin->hopa;
+	}
+	
     return (LV2_Handle)plugin;
 }
 
@@ -165,9 +174,6 @@ void PitchShifter::connect_port(LV2_Handle instance, uint32_t port, void *data)
         case STEP:
             plugin->step = (float*) data;
             break;
-        case BUFFERS:
-            plugin->buffers = (float*) data;
-            break;
     }
 }
 
@@ -178,16 +184,105 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
     PitchShifter *plugin;
     plugin = (PitchShifter *) instance;
     /* double *pfOutput; */
-    double s;
     int hops;
-    int nBuffersAux;
-    s = (double)(*(plugin->step));
-    hops = round(plugin->hopa*(pow(2,(s/12))));
-    nBuffersAux = (float)(*(plugin->buffers));
+    double s_before = plugin->s;
+    plugin->s = (double)(*(plugin->step));
+    hops = round(plugin->hopa*(pow(2,(plugin->s/12))));
     
-    if ( ((plugin->hopa) != (int)n_samples) || (nBuffersAux != plugin->nBuffers) )
+    if ((plugin->s != s_before)||(plugin->cont==0))
     {
-		plugin->nBuffers = nBuffersAux;
+		switch ( (int)(plugin->s))
+		{
+			case 2:
+			plugin->nBuffers = 5;
+			break;
+			case 3:
+			plugin->nBuffers = 6;
+			break;
+			case 4:
+			plugin->nBuffers = 8;
+			break;
+			case 5:
+			plugin->nBuffers = 9;
+			break;
+			case 6:
+			plugin->nBuffers = 10;
+			break;
+			case 7:
+			plugin->nBuffers = 10;
+			break;
+			case 8:
+			plugin->nBuffers = 10;
+			break;
+			case 9:
+			plugin->nBuffers = 10;
+			break;
+			case 10:
+			plugin->nBuffers = 10;
+			break;
+			case 11:
+			plugin->nBuffers = 11;
+			break;
+			case 12:
+			plugin->nBuffers = 12;
+			break;
+			case 13:
+			plugin->nBuffers = 12;
+			break;
+			case 14:
+			plugin->nBuffers = 12;
+			break;
+			case 15:
+			plugin->nBuffers = 12;
+			break;
+			case 16:
+			plugin->nBuffers = 12;
+			break;
+			case 17:
+			plugin->nBuffers = 12;
+			break;
+			case 18:
+			plugin->nBuffers = 12;
+			break;
+			case 19:
+			plugin->nBuffers = 12;
+			break;
+			case 20:
+			plugin->nBuffers = 12;
+			break;
+			case 21:
+			plugin->nBuffers = 12;
+			break;
+			case 22:
+			plugin->nBuffers = 12;
+			break;
+			case 23:
+			plugin->nBuffers = 12;
+			break;
+			case 24:
+			plugin->nBuffers = 12;
+			break;
+			default:
+			plugin->nBuffers = 4;
+			break;
+		}
+			plugin->N = plugin->nBuffers*n_samples;
+			hann2(plugin->N,plugin->w);
+			for (int i=1 ; i<= plugin->nBuffers; i++)
+			{
+			plugin->b[i-1] = &plugin->frames[(i-1)*plugin->hopa];
+			}
+	}
+    
+	for (int k=1; k<= plugin->Qcolumn-1; k++)
+    {
+		plugin->Hops[k-1] = plugin->Hops[k];
+	}
+    
+    plugin->Hops[plugin->Qcolumn-1] = hops;
+    
+    if ( ((plugin->hopa) != (int)n_samples) )
+    {
 		plugin->hopa = n_samples;
 		plugin->N = plugin->nBuffers*n_samples;
 		hann2(plugin->N,plugin->w);
@@ -212,7 +307,7 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		}
 		else
 		{
-			shift(plugin->N, plugin->hopa, hops, plugin->frames, plugin->w, plugin->XaPrevious, plugin->PhiPrevious, plugin->Q, plugin->yshift, plugin->Xa, plugin->Xs, plugin->q, plugin->qaux, plugin->framesaux, plugin->Phi, plugin->ysaida, plugin->ysaida2,  plugin->Qcolumn);
+			shift(plugin->N, plugin->hopa, plugin->Hops, plugin->frames, plugin->w, plugin->XaPrevious, plugin->PhiPrevious, plugin->Q, plugin->yshift, plugin->Xa, plugin->Xs, plugin->q, plugin->qaux, plugin->framesaux, plugin->Phi, plugin->ysaida, plugin->ysaida2,  plugin->Qcolumn);
 			for (int i=1; i<=plugin->hopa; i++)
 			{
 				plugin->out_1[i-1] = (float)plugin->yshift[i-1];

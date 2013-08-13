@@ -57,6 +57,8 @@ public:
     int Qcolumn;
     int nBuffers;
     double s;
+    
+    int *Hops;
 };
 
 /**********************************************************************************************************************************************************/
@@ -87,10 +89,11 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 {
     PitchShifter *plugin = new PitchShifter();
     plugin->Qcolumn = 32;
-    plugin->nBuffers = 12;
+    plugin->nBuffers = 16;
     //Começam os testes
     plugin->hopa = TAMANHO_DO_BUFFER;
     plugin->N = plugin->nBuffers*TAMANHO_DO_BUFFER;
+    plugin->Hops = (int*)malloc(plugin->Qcolumn*sizeof(int));
     plugin->w = (double*)malloc(plugin->N*sizeof(double));
     plugin->frames = (double*)malloc(plugin->N*sizeof(double));
     plugin->PhiPrevious = (double*)malloc(plugin->N*sizeof(double));
@@ -130,6 +133,12 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 			plugin->Q[i-1][k-1] = 0;
 		}
 	}
+	
+	for (int k=1; k<=plugin->Qcolumn; k++)
+	{
+		plugin->Hops[k-1] = plugin->hopa;
+	}
+	
     return (LV2_Handle)plugin;
 }
 
@@ -265,7 +274,12 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 			}
 	}
     
-	
+	for (int k=1; k<= plugin->Qcolumn-1; k++)
+    {
+		plugin->Hops[k-1] = plugin->Hops[k];
+	}
+    
+    plugin->Hops[plugin->Qcolumn-1] = hops;
     
     if ( ((plugin->hopa) != (int)n_samples) )
     {
@@ -293,7 +307,7 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		}
 		else
 		{
-			shift(plugin->N, plugin->hopa, hops, plugin->frames, plugin->w, plugin->XaPrevious, plugin->PhiPrevious, plugin->Q, plugin->yshift, plugin->Xa, plugin->Xs, plugin->q, plugin->qaux, plugin->framesaux, plugin->Phi, plugin->ysaida, plugin->ysaida2,  plugin->Qcolumn);
+			shift(plugin->N, plugin->hopa, plugin->Hops, plugin->frames, plugin->w, plugin->XaPrevious, plugin->PhiPrevious, plugin->Q, plugin->yshift, plugin->Xa, plugin->Xs, plugin->q, plugin->qaux, plugin->framesaux, plugin->Phi, plugin->ysaida, plugin->ysaida2,  plugin->Qcolumn);
 			for (int i=1; i<=plugin->hopa; i++)
 			{
 				plugin->out_1[i-1] = (float)plugin->yshift[i-1];

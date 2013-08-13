@@ -56,6 +56,9 @@ public:
     
     int Qcolumn;
     int nBuffers;
+    double s;
+    
+    int *Hops;
 };
 
 /**********************************************************************************************************************************************************/
@@ -85,11 +88,12 @@ const LV2_Descriptor* lv2_descriptor(uint32_t index)
 LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features)
 {
     PitchShifter *plugin = new PitchShifter();
-    plugin->Qcolumn = 8;
-    plugin->nBuffers = 4;
+    plugin->Qcolumn = 32;
+    plugin->nBuffers = 16;
     //Começam os testes
     plugin->hopa = TAMANHO_DO_BUFFER;
     plugin->N = plugin->nBuffers*TAMANHO_DO_BUFFER;
+    plugin->Hops = (int*)malloc(plugin->Qcolumn*sizeof(int));
     plugin->w = (double*)malloc(plugin->N*sizeof(double));
     plugin->frames = (double*)malloc(plugin->N*sizeof(double));
     plugin->PhiPrevious = (double*)malloc(plugin->N*sizeof(double));
@@ -129,6 +133,12 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 			plugin->Q[i-1][k-1] = 0;
 		}
 	}
+	
+	for (int k=1; k<=plugin->Qcolumn; k++)
+	{
+		plugin->Hops[k-1] = plugin->hopa;
+	}
+	
     return (LV2_Handle)plugin;
 }
 
@@ -174,10 +184,102 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
     PitchShifter *plugin;
     plugin = (PitchShifter *) instance;
     /* double *pfOutput; */
-    double s;
     int hops;
-    s = (double)(*(plugin->step));
-    hops = round(plugin->hopa*(pow(2,(s/12))));
+    double s_before = plugin->s;
+    plugin->s = (double)(*(plugin->step));
+    hops = round(plugin->hopa*(pow(2,(plugin->s/12))));
+    
+    if ((plugin->s != s_before)||(plugin->cont==0))
+    {
+		switch ( (int)(plugin->s))
+		{
+			case 2:
+			plugin->nBuffers = 5;
+			break;
+			case 3:
+			plugin->nBuffers = 6;
+			break;
+			case 4:
+			plugin->nBuffers = 8;
+			break;
+			case 5:
+			plugin->nBuffers = 9;
+			break;
+			case 6:
+			plugin->nBuffers = 10;
+			break;
+			case 7:
+			plugin->nBuffers = 10;
+			break;
+			case 8:
+			plugin->nBuffers = 10;
+			break;
+			case 9:
+			plugin->nBuffers = 10;
+			break;
+			case 10:
+			plugin->nBuffers = 10;
+			break;
+			case 11:
+			plugin->nBuffers = 11;
+			break;
+			case 12:
+			plugin->nBuffers = 12;
+			break;
+			case 13:
+			plugin->nBuffers = 12;
+			break;
+			case 14:
+			plugin->nBuffers = 12;
+			break;
+			case 15:
+			plugin->nBuffers = 12;
+			break;
+			case 16:
+			plugin->nBuffers = 12;
+			break;
+			case 17:
+			plugin->nBuffers = 12;
+			break;
+			case 18:
+			plugin->nBuffers = 12;
+			break;
+			case 19:
+			plugin->nBuffers = 12;
+			break;
+			case 20:
+			plugin->nBuffers = 12;
+			break;
+			case 21:
+			plugin->nBuffers = 12;
+			break;
+			case 22:
+			plugin->nBuffers = 12;
+			break;
+			case 23:
+			plugin->nBuffers = 12;
+			break;
+			case 24:
+			plugin->nBuffers = 12;
+			break;
+			default:
+			plugin->nBuffers = 4;
+			break;
+		}
+			plugin->N = plugin->nBuffers*n_samples;
+			hann2(plugin->N,plugin->w);
+			for (int i=1 ; i<= plugin->nBuffers; i++)
+			{
+			plugin->b[i-1] = &plugin->frames[(i-1)*plugin->hopa];
+			}
+	}
+    
+	for (int k=1; k<= plugin->Qcolumn-1; k++)
+    {
+		plugin->Hops[k-1] = plugin->Hops[k];
+	}
+    
+    plugin->Hops[plugin->Qcolumn-1] = hops;
     
     if ( ((plugin->hopa) != (int)n_samples) )
     {
@@ -205,7 +307,7 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		}
 		else
 		{
-			shift(plugin->N, plugin->hopa, hops, plugin->frames, plugin->w, plugin->XaPrevious, plugin->PhiPrevious, plugin->Q, plugin->yshift, plugin->Xa, plugin->Xs, plugin->q, plugin->qaux, plugin->framesaux, plugin->Phi, plugin->ysaida, plugin->ysaida2,  plugin->Qcolumn);
+			shift(plugin->N, plugin->hopa, plugin->Hops, plugin->frames, plugin->w, plugin->XaPrevious, plugin->PhiPrevious, plugin->Q, plugin->yshift, plugin->Xa, plugin->Xs, plugin->q, plugin->qaux, plugin->framesaux, plugin->Phi, plugin->ysaida, plugin->ysaida2,  plugin->Qcolumn);
 			for (int i=1; i<=plugin->hopa; i++)
 			{
 				plugin->out_1[i-1] = (float)plugin->yshift[i-1];
