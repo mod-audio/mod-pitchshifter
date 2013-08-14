@@ -63,6 +63,9 @@ public:
     float max;
     
     int *Hops;
+    
+    fftw_plan p;
+	fftw_plan p2;
 };
 
 /**********************************************************************************************************************************************************/
@@ -142,6 +145,9 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 	{
 		plugin->Hops[k-1] = plugin->hopa;
 	}
+	
+	plugin->p = fftw_plan_dft_1d(plugin->N, reinterpret_cast<fftw_complex*>(plugin->framesaux), reinterpret_cast<fftw_complex*>(plugin->Xa), FFTW_FORWARD, FFTW_ESTIMATE);
+	plugin->p2 = fftw_plan_dft_1d(plugin->N, reinterpret_cast<fftw_complex*>(plugin->Xs), reinterpret_cast<fftw_complex*>(plugin->qaux), FFTW_BACKWARD, FFTW_ESTIMATE);
 	
     return (LV2_Handle)plugin;
 }
@@ -305,6 +311,10 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		}
 			plugin->N = plugin->nBuffers*n_samples;
 			hann2(plugin->N,plugin->w);
+			fftw_destroy_plan(plugin->p);
+			fftw_destroy_plan(plugin->p2);
+			plugin->p = fftw_plan_dft_1d(plugin->N, reinterpret_cast<fftw_complex*>(plugin->framesaux), reinterpret_cast<fftw_complex*>(plugin->Xa), FFTW_FORWARD, FFTW_ESTIMATE);
+			plugin->p2 = fftw_plan_dft_1d(plugin->N, reinterpret_cast<fftw_complex*>(plugin->Xs), reinterpret_cast<fftw_complex*>(plugin->qaux), FFTW_BACKWARD, FFTW_ESTIMATE);
 			for (int i=1 ; i<= plugin->nBuffers; i++)
 			{
 			plugin->b[i-1] = &plugin->frames[(i-1)*plugin->hopa];
@@ -323,6 +333,10 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		plugin->hopa = n_samples;
 		plugin->N = plugin->nBuffers*n_samples;
 		hann2(plugin->N,plugin->w);
+		fftw_destroy_plan(plugin->p);
+		fftw_destroy_plan(plugin->p2);
+		plugin->p = fftw_plan_dft_1d(plugin->N, reinterpret_cast<fftw_complex*>(plugin->framesaux), reinterpret_cast<fftw_complex*>(plugin->Xa), FFTW_FORWARD, FFTW_ESTIMATE);
+		plugin->p2 = fftw_plan_dft_1d(plugin->N, reinterpret_cast<fftw_complex*>(plugin->Xs), reinterpret_cast<fftw_complex*>(plugin->qaux), FFTW_BACKWARD, FFTW_ESTIMATE);
 		for (int i=1 ; i<= plugin->nBuffers; i++)
 		{
 			plugin->b[i-1] = &plugin->frames[(i-1)*plugin->hopa];
@@ -344,7 +358,7 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		}
 		else
 		{
-			shift(plugin->N, plugin->hopa, plugin->Hops, plugin->frames, plugin->w, plugin->XaPrevious, plugin->PhiPrevious, plugin->Q, plugin->yshift, plugin->Xa, plugin->Xs, plugin->q, plugin->qaux, plugin->framesaux, plugin->Phi, plugin->ysaida, plugin->ysaida2,  plugin->Qcolumn);
+			shift(plugin->N, plugin->hopa, plugin->Hops, plugin->frames, plugin->w, plugin->XaPrevious, plugin->PhiPrevious, plugin->Q, plugin->yshift, plugin->Xa, plugin->Xs, plugin->q, plugin->qaux, plugin->framesaux, plugin->Phi, plugin->ysaida, plugin->ysaida2,  plugin->Qcolumn, plugin->p, plugin->p2);
 			if (c == 1)
 			{
 				for (int i=1; i<=plugin->hopa; i++)
@@ -382,6 +396,9 @@ void PitchShifter::cleanup(LV2_Handle instance)
 	free(plugin->Q);
 	free(plugin->PhiPrevious);
 	free(plugin->XaPrevious);
+	
+	fftw_destroy_plan(plugin->p);
+	fftw_destroy_plan(plugin->p2);
 	
 	
     delete ((PitchShifter *) instance);

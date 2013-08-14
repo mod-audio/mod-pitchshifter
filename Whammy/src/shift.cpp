@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 
-void shift(int N, int hopa, int *hops, double *frames, double *w, complex<double> *XaPrevious, double *PhiPrevious, double **Q, double *yshift, complex<double> *Xa, complex<double> *Xs, double *q, complex<double> *qaux, complex<double> *framesaux, double *Phi, double *ysaida, double *ysaida2, int Qcolumn)
+void shift(int N, int hopa, int *hops, double *frames, double *w, complex<double> *XaPrevious, double *PhiPrevious, double **Q, double *yshift, complex<double> *Xa, complex<double> *Xs, double *q, complex<double> *qaux, complex<double> *framesaux, double *Phi, double *ysaida, double *ysaida2, int Qcolumn, fftw_plan p, fftw_plan p2)
 {
 	//Some declaration
 	double AUX;
@@ -28,13 +28,18 @@ void shift(int N, int hopa, int *hops, double *frames, double *w, complex<double
 	int n2;
 	double n3;
 	
-	fftw_plan p;
-	fftw_plan p2;
+	/**************************/
+	//fftw_plan p;
+	//fftw_plan p2;
+	/*************************/
 	
 	//Some inicialization
 	
-	p = fftw_plan_dft_1d(N, reinterpret_cast<fftw_complex*>(framesaux), reinterpret_cast<fftw_complex*>(Xa), FFTW_FORWARD, FFTW_ESTIMATE);
-	p2 = fftw_plan_dft_1d(N, reinterpret_cast<fftw_complex*>(Xs), reinterpret_cast<fftw_complex*>(qaux), FFTW_BACKWARD, FFTW_ESTIMATE);
+	/*************************/
+	//p = fftw_plan_dft_1d(N, reinterpret_cast<fftw_complex*>(framesaux), reinterpret_cast<fftw_complex*>(Xa), FFTW_FORWARD, FFTW_ESTIMATE);
+	//p2 = fftw_plan_dft_1d(N, reinterpret_cast<fftw_complex*>(Xs), reinterpret_cast<fftw_complex*>(qaux), FFTW_BACKWARD, FFTW_ESTIMATE);
+	/*************************/
+	
 	j = complex<double>(0.0, 1.0);
 	for (int i=1; i<=L; i++)
 	{
@@ -102,7 +107,8 @@ void shift(int N, int hopa, int *hops, double *frames, double *w, complex<double
             yshift[n-1] = ysaida2[n1-1] + ((ysaida2[n2-1]-ysaida2[n1-1]))*(n3 - (double)n1);
 		}
 		
-		fftw_destroy_plan(p);
-		fftw_destroy_plan(p2);
-	
+		/*************************/
+		//fftw_destroy_plan(p);
+		//fftw_destroy_plan(p2);
+		/*************************/
 }
