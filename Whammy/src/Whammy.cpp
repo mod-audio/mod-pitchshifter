@@ -43,6 +43,7 @@ public:
     double **b;
     double *PhiPrevious;
     complex<double> *XaPrevious;
+    double *XaPrevious_arg;
     double **Q;
     int cont;
     
@@ -105,6 +106,7 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
     plugin->frames = (double*)malloc(plugin->N*sizeof(double));
     plugin->PhiPrevious = (double*)malloc(plugin->N*sizeof(double));
     plugin->XaPrevious = (complex<double>*)malloc(plugin->N*sizeof(complex<double>));
+    plugin->XaPrevious_arg = (double*)malloc(plugin->N*sizeof(double));
     plugin->Q = (double**)malloc(plugin->N*sizeof(double*));
     plugin->b = (double**)malloc(plugin->hopa*sizeof(double*));
     for (int i=1; i<=plugin->N; i++)
@@ -135,6 +137,7 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 		plugin->frames[i-1] = 0;
 		plugin->PhiPrevious[i-1] = 0;
 		plugin->XaPrevious[i-1] = 0;
+		plugin->XaPrevious_arg[i-1] = 0;
 		for (int k=1; k<=plugin->Qcolumn; k++)
 		{
 			plugin->Q[i-1][k-1] = 0;
@@ -358,7 +361,7 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		}
 		else
 		{
-			shift(plugin->N, plugin->hopa, plugin->Hops, plugin->frames, plugin->w, plugin->XaPrevious, plugin->PhiPrevious, plugin->Q, plugin->yshift, plugin->Xa, plugin->Xs, plugin->q, plugin->qaux, plugin->framesaux, plugin->Phi, plugin->ysaida, plugin->ysaida2,  plugin->Qcolumn, plugin->p, plugin->p2);
+			shift(plugin->N, plugin->hopa, plugin->Hops, plugin->frames, plugin->w, plugin->XaPrevious, plugin->XaPrevious_arg, plugin->PhiPrevious, plugin->Q, plugin->yshift, plugin->Xa, plugin->Xs, plugin->q, plugin->qaux, plugin->framesaux, plugin->Phi, plugin->ysaida, plugin->ysaida2,  plugin->Qcolumn, plugin->p, plugin->p2);
 			if (c == 1)
 			{
 				for (int i=1; i<=plugin->hopa; i++)
@@ -396,6 +399,7 @@ void PitchShifter::cleanup(LV2_Handle instance)
 	free(plugin->Q);
 	free(plugin->PhiPrevious);
 	free(plugin->XaPrevious);
+	free(plugin->XaPrevious_arg);
 	
 	fftw_destroy_plan(plugin->p);
 	fftw_destroy_plan(plugin->p2);
