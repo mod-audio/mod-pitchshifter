@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 
-void shift(int N, int hopa, int *hops, double *frames, double *w, complex<double> *XaPrevious, double *PhiPrevious, double **Q, double *yshift, complex<double> *Xa, complex<double> *Xs, double *q, complex<double> *qaux, complex<double> *framesaux, double *Phi, double *ysaida, double *ysaida2, int Qcolumn, fftw_plan p, fftw_plan p2)
+void shift(int N, int hopa, int *hops, double *frames, double *w, complex<double> *XaPrevious, double *XaPrevious_arg, double *PhiPrevious, double **Q, double *yshift, complex<double> *Xa, complex<double> *Xs, double *q, complex<double> *qaux, complex<double> *framesaux, double *Phi, double *ysaida, double *ysaida2, int Qcolumn, fftw_plan p, fftw_plan p2)
 {
 	//Some declaration
 	double AUX;
@@ -27,6 +27,8 @@ void shift(int N, int hopa, int *hops, double *frames, double *w, complex<double
 	int n1;
 	int n2;
 	double n3;
+	
+	double Xa_arg;
 	
 	/**************************/
 	//fftw_plan p;
@@ -62,14 +64,19 @@ void shift(int N, int hopa, int *hops, double *frames, double *w, complex<double
 	/*Processing*/
 	for (int i=1; i<=N; i++)
 	{
-		d_phi = arg(Xa[i-1]) - arg(XaPrevious[i-1]);
-        d_phi_prime = d_phi - ((2*M_PI*((double)hopa))/((double)N))*((double)i-1);
-        AUX = ((d_phi_prime +M_PI)/(2*M_PI));
-        AUX = floor(AUX);
-        d_phi_wrapped = d_phi_prime-AUX*(2*M_PI);
-        omega_true_sobre_fs = (2*M_PI/((double)N))*((double)i-1) + d_phi_wrapped/((double)hopa);
-        Phi[i-1] = PhiPrevious[i-1] + ((double)hops[Qcolumn-1])*omega_true_sobre_fs;
-        Xs[i-1] = ((complex<double>)abs(Xa[i-1]))*exp(j*((complex<double>)Phi[i-1]));
+		Xa_arg = arg(Xa[i-1]);
+
+		d_phi = Xa_arg - XaPrevious_arg[i-1];
+        d_phi_prime = d_phi - ((2*M_PI * hopa) / N) * (i-1);
+        AUX = floor((d_phi_prime + M_PI) / (2*M_PI));
+        d_phi_wrapped = d_phi_prime - AUX * (2*M_PI);
+        omega_true_sobre_fs = (2*M_PI/N) * (i-1) + d_phi_wrapped / hopa;
+
+        Phi[i-1] = PhiPrevious[i-1] + (hops[Qcolumn-1])*omega_true_sobre_fs;
+
+        Xs[i-1] = (complex<double>)abs(Xa[i-1]) * exp(j * ((complex<double>)Phi[i-1]));
+
+		XaPrevious_arg[i-1] = Xa_arg;
         XaPrevious[i-1] = Xa[i-1];
         PhiPrevious[i-1] = Phi[i-1];
 	}
