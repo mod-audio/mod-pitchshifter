@@ -63,6 +63,7 @@ public:
     int nBuffers;
     double s;
     float max;
+    float min;
     
     int *Hops;
     
@@ -210,6 +211,7 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
     int hops;
     //double s_before = plugin->s;
     float max_before = plugin->max;
+    float min_before = plugin->min;
     plugin->s = (double)(*(plugin->step));
     //hops = round(plugin->hopa*(pow(2,(plugin->s/12))));
     
@@ -224,10 +226,12 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
     if (a > b)
     {
 		plugin->max = a;
+		plugin->min = b;
 	}
 	else
 	{
 		plugin->max = b;
+		plugin->min = a;
 	}
     
     float s_;
@@ -236,7 +240,7 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
     hops = round(plugin->hopa*(pow(2,(s_/12))));
     
     
-    if (plugin->max != max_before)
+    if ((plugin->max != max_before)||(plugin->min != min_before))
     {
 		switch ( (int)(plugin->max))
 		{
@@ -312,6 +316,14 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 			default:
 			plugin->nBuffers = 4;
 			break;
+		}
+		if (plugin->min < 0)
+		{
+			plugin->Qcolumn = 2*plugin->nBuffers;
+		}
+		else
+		{
+			plugin->Qcolumn = plugin->nBuffers;
 		}
 			plugin->N = plugin->nBuffers*n_samples;
 			hann2(plugin->N,plugin->w);
