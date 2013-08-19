@@ -198,6 +198,22 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
     PitchShifter *plugin;
     plugin = (PitchShifter *) instance;
     /* double *pfOutput; */
+    float media = 0;
+    for (uint32_t i=1; i<n_samples; i++)
+    {
+		media = media + abs(plugin->in[i-1]);
+	}
+	
+	if (media == 0)
+	{
+		for (uint32_t i=1; i<n_samples; i++)
+		{
+			plugin->out_1[i-1] = 0;
+		}
+	}
+	else
+	{
+    
     int hops;
     int nBuffersAux;
     plugin->s = (double)(*(plugin->step));
@@ -257,6 +273,8 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 				plugin->out_1[i-1] = (float)plugin->yshift[i-1];
 			}
 		}
+	}
+		
 
 }
 
