@@ -1,5 +1,7 @@
 #include <fftw3.h>
 #include "shift.h"
+#include "Exp.h"
+#include "angle.h"
 #include <complex>
 #include <cmath>
 #include <stdio.h>
@@ -64,7 +66,7 @@ void shift(int N, int hopa, int *hops, double *frames, double *w, complex<double
 	/*Processing*/
 	for (int i=1; i<=N; i++)
 	{
-		Xa_arg = arg(Xa[i-1]);
+		Xa_arg = angle(Xa[i-1]);
 
 		d_phi = Xa_arg - XaPrevious_arg[i-1];
         d_phi_prime = d_phi - ((2*M_PI * hopa) / N) * (i-1);
@@ -74,7 +76,7 @@ void shift(int N, int hopa, int *hops, double *frames, double *w, complex<double
 
         Phi[i-1] = PhiPrevious[i-1] + (hops[Qcolumn-1])*omega_true_sobre_fs;
 
-        Xs[i-1] = (complex<double>)abs(Xa[i-1]) * exp(j * ((complex<double>)Phi[i-1]));
+        Xs[i-1] = (complex<double>)abs(Xa[i-1]) * ExponencialComplexa(Phi[i-1]);
 
 		XaPrevious_arg[i-1] = Xa_arg;
         XaPrevious[i-1] = Xa[i-1];
