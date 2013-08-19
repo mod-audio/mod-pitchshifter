@@ -94,8 +94,8 @@ const LV2_Descriptor* lv2_descriptor(uint32_t index)
 LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features)
 {
     PitchShifter *plugin = new PitchShifter();
-    plugin->Qcolumn = 24;
-    plugin->nBuffers = 12;
+    plugin->Qcolumn = 32;
+    plugin->nBuffers = 16;
     //Começam os testes
     plugin->hopa = TAMANHO_DO_BUFFER;
     plugin->N = plugin->nBuffers*TAMANHO_DO_BUFFER;
@@ -203,6 +203,15 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
     plugin->s = (double)(*(plugin->step));
     hops = round(plugin->hopa*(pow(2,(plugin->s/12))));
     nBuffersAux = (float)(*(plugin->buffers));
+    
+    if (plugin->s < 0)
+    {
+		plugin->Qcolumn = 2*nBuffersAux;
+	}
+	else
+	{
+		plugin->Qcolumn = nBuffersAux;
+	}
     
     for (int k=1; k<= plugin->Qcolumn-1; k++)
     {
