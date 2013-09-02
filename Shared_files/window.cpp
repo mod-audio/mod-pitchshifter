@@ -1,21 +1,14 @@
 #include <complex>
 #include <cmath>
 #include "window.h"
+#include <armadillo>
 
-void hann(int n, double *w)
-{
-	for (int i=1; i<=n; i++)
-	{
-		w[i-1] = 0.5*(1 - cos(2*M_PI*(i-1)/n));
-	}
-}
+using namespace arma;
 
-void hann2(int n, double *w)
+void hann(int n, vec *w)
 {
-	double wlinha[2*n+1];
-	hann(2*n+1, wlinha);
-	for (int i=1; i<=n; i++)
-	{
-		w[i-1] = wlinha[2*i-1];
-	}
+	vec I(n);
+	I = linspace( 0, n-1, n);
+	I = 0.5*(1-cos(2*M_PI*I/(n-1)));
+	w[0] = I;
 }

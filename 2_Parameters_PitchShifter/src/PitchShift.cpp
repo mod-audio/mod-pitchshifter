@@ -8,6 +8,9 @@
 #include "window.h"
 #include "angle.h"
 #include <fftw3.h>
+#include <armadillo>
+
+using namespace arma;
 
 /**********************************************************************************************************************************************************/
 
@@ -36,32 +39,37 @@ public:
     
     int hopa;
     int N;
-    double *w;
-    double *frames;
-    //double *b1, *b2, *b3, *b4, *b5, *b6, *b7, *b8;
-    double **b;
-    double *PhiPrevious;
-    complex<double> *XaPrevious;
-    double *XaPrevious_arg;
-    double **Q;
     int cont;
-    
-    complex<double> *Xa;
-    complex<double> *Xs;
-    double *q;
-    complex<double> *qaux;
-    complex<double> *framesaux;
-    double *Phi;
-    double *ysaida;
-    double *ysaida2;
-    
-    double *yshift;
-    
     int Qcolumn;
     int nBuffers;
     double s;
     
+    double *frames;
+    double **b;
+    double *ysaida;
+    double *ysaida2;
+    double *yshift;
     int *Hops;
+    
+    vec w;
+    cx_vec frames2;
+    cx_vec Xa;
+    cx_vec Xs;
+    cx_vec XaPrevious;
+    vec Xa_arg;
+    vec XaPrevious_arg;
+    vec Phi;
+    vec PhiPrevious;
+    vec d_phi;
+    vec d_phi_prime;
+    vec d_phi_wrapped;
+    vec omega_true_sobre_fs;
+    vec I;
+    vec AUX;
+    vec Xa_abs;
+    vec q;
+    cx_vec qaux;
+    mat Q;
     
     fftw_plan p;
 	fftw_plan p2;
@@ -99,30 +107,37 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
     //Começam os testes
     plugin->hopa = TAMANHO_DO_BUFFER;
     plugin->N = plugin->nBuffers*TAMANHO_DO_BUFFER;
+    
+    
     plugin->Hops = (int*)malloc(plugin->Qcolumn*sizeof(int));
-    plugin->w = (double*)malloc(plugin->N*sizeof(double));
     plugin->frames = (double*)malloc(plugin->N*sizeof(double));
-    plugin->PhiPrevious = (double*)malloc(plugin->N*sizeof(double));
-    plugin->XaPrevious = (complex<double>*)malloc(plugin->N*sizeof(complex<double>));
-    plugin->XaPrevious_arg = (double*)malloc(plugin->N*sizeof(double));
-    plugin->Q = (double**)malloc(plugin->N*sizeof(double*));
     plugin->b = (double**)malloc(plugin->hopa*sizeof(double*));
-    for (int i=1; i<=plugin->N; i++)
-    {
-		plugin->Q[i-1] = (double*)malloc(plugin->Qcolumn*sizeof(double));
-	}
+    plugin->ysaida = (double*)malloc((plugin->N + 2*(plugin->Qcolumn-1)*plugin->hopa)*sizeof(double));
+    plugin->yshift = (double*)malloc(plugin->hopa*sizeof(double));
+    
+    plugin->w.resize(plugin->N);
+    plugin->frames2.resize(plugin->N);
+    plugin->Xa.resize(plugin->N);
+	plugin->Xs.resize(plugin->N);
+	plugin->XaPrevious.resize(plugin->N);
+	plugin->Xa_arg.resize(plugin->N);
+	plugin->XaPrevious_arg.resize(plugin->N);
+	plugin->Phi.resize(plugin->N);
+    plugin->PhiPrevious.resize(plugin->N);
+    plugin->d_phi.resize(plugin->N);
+	plugin->d_phi_prime.resize(plugin->N);
+	plugin->d_phi_wrapped.resize(plugin->N);
+	plugin->omega_true_sobre_fs.resize(plugin->N);
+	plugin->I.resize(plugin->N);
+	plugin->AUX.resize(plugin->N);
+	plugin->Xa_abs.resize(plugin->N);
+	plugin->q.resize(plugin->N);
+	plugin->qaux.resize(plugin->N);
+	plugin->Q.resize(plugin->N, plugin->Qcolumn);
 	
-	plugin->Xa = (complex<double>*)malloc(plugin->N*sizeof(complex<double>));
-	plugin->Xs = (complex<double>*)malloc(plugin->N*sizeof(complex<double>));
-	plugin->q = (double*)malloc(plugin->N*sizeof(double));
-	plugin->qaux = (complex<double>*)malloc(plugin->N*sizeof(complex<double>));
-	plugin->framesaux = (complex<double>*)malloc(plugin->N*sizeof(complex<double>));
-	plugin->Phi = (double*)malloc(plugin->N*sizeof(double));
-	plugin->ysaida = (double*)malloc((plugin->N + 2*(plugin->Qcolumn-1)*plugin->hopa)*sizeof(double));
+	plugin->I = linspace(0, plugin->N-1,plugin->N);
 	
-	plugin->yshift = (double*)malloc(plugin->hopa*sizeof(double));
-	
-    hann2(plugin->N,plugin->w);
+    hann(plugin->N,&plugin->w);
     
     for (int i=1 ; i<= (plugin->nBuffers); i++)
     {
@@ -133,12 +148,12 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
     for (int i=1;i<=plugin->N;i++)
     {
 		plugin->frames[i-1] = 0;
-		plugin->PhiPrevious[i-1] = 0;
-		plugin->XaPrevious[i-1] = 0;
-		plugin->XaPrevious_arg[i-1] = 0;
+		plugin->PhiPrevious(i-1) = 0;
+		plugin->XaPrevious(i-1) = 0;
+		plugin->XaPrevious_arg(i-1) = 0;
 		for (int k=1; k<=plugin->Qcolumn; k++)
 		{
-			plugin->Q[i-1][k-1] = 0;
+			plugin->Q(i-1,k-1) = 0;
 		}
 	}
 	
@@ -147,8 +162,8 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 		plugin->Hops[k-1] = plugin->hopa;
 	}
 	
-	plugin->p = fftw_plan_dft_1d(plugin->N, reinterpret_cast<fftw_complex*>(plugin->framesaux), reinterpret_cast<fftw_complex*>(plugin->Xa), FFTW_FORWARD, FFTW_ESTIMATE);
-	plugin->p2 = fftw_plan_dft_1d(plugin->N, reinterpret_cast<fftw_complex*>(plugin->Xs), reinterpret_cast<fftw_complex*>(plugin->qaux), FFTW_BACKWARD, FFTW_ESTIMATE);
+	plugin->p = fftw_plan_dft_1d(plugin->N, reinterpret_cast<fftw_complex*>(plugin->frames2.colptr(0)), reinterpret_cast<fftw_complex*>(plugin->Xa.colptr(0)), FFTW_FORWARD, FFTW_ESTIMATE);
+	plugin->p2 = fftw_plan_dft_1d(plugin->N, reinterpret_cast<fftw_complex*>(plugin->Xs.colptr(0)), reinterpret_cast<fftw_complex*>(plugin->qaux.colptr(0)), FFTW_BACKWARD, FFTW_ESTIMATE);
 	
     return (LV2_Handle)plugin;
 }
@@ -220,6 +235,10 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
     hops = round(plugin->hopa*(pow(2,(plugin->s/12))));
     nBuffersAux = (float)(*(plugin->buffers));
     
+    int QcolumnAux;
+    
+    QcolumnAux = plugin->Qcolumn;
+    
     if (plugin->s < 0)
     {
 		plugin->Qcolumn = 2*nBuffersAux;
@@ -241,15 +260,43 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		plugin->nBuffers = nBuffersAux;
 		plugin->hopa = n_samples;
 		plugin->N = plugin->nBuffers*n_samples;
-		hann2(plugin->N,plugin->w);
+		
+		plugin->w.resize(plugin->N);
+		plugin->frames2.resize(plugin->N);
+		plugin->Xa.resize(plugin->N);
+		plugin->Xs.resize(plugin->N);
+		plugin->XaPrevious.resize(plugin->N);
+		plugin->Xa_arg.resize(plugin->N);
+		plugin->XaPrevious_arg.resize(plugin->N);
+		plugin->Phi.resize(plugin->N);
+		plugin->PhiPrevious.resize(plugin->N);
+		plugin->d_phi.resize(plugin->N);
+		plugin->d_phi_prime.resize(plugin->N);
+		plugin->d_phi_wrapped.resize(plugin->N);
+		plugin->omega_true_sobre_fs.resize(plugin->N);
+		plugin->I.resize(plugin->N);
+		plugin->AUX.resize(plugin->N);
+		plugin->Xa_abs.resize(plugin->N);
+		plugin->q.resize(plugin->N);
+		plugin->qaux.resize(plugin->N);
+		plugin->Q.resize(plugin->N, plugin->Qcolumn);
+		
+		plugin->I = linspace(0, plugin->N-1,plugin->N);
+		
+		hann(plugin->N,&plugin->w);
 		fftw_destroy_plan(plugin->p);
 		fftw_destroy_plan(plugin->p2);
-		plugin->p = fftw_plan_dft_1d(plugin->N, reinterpret_cast<fftw_complex*>(plugin->framesaux), reinterpret_cast<fftw_complex*>(plugin->Xa), FFTW_FORWARD, FFTW_ESTIMATE);
-		plugin->p2 = fftw_plan_dft_1d(plugin->N, reinterpret_cast<fftw_complex*>(plugin->Xs), reinterpret_cast<fftw_complex*>(plugin->qaux), FFTW_BACKWARD, FFTW_ESTIMATE);
+		plugin->p = fftw_plan_dft_1d(plugin->N, reinterpret_cast<fftw_complex*>(plugin->frames2.colptr(0)), reinterpret_cast<fftw_complex*>(plugin->Xa.colptr(0)), FFTW_FORWARD, FFTW_ESTIMATE);
+		plugin->p2 = fftw_plan_dft_1d(plugin->N, reinterpret_cast<fftw_complex*>(plugin->Xs.colptr(0)), reinterpret_cast<fftw_complex*>(plugin->qaux.colptr(0)), FFTW_BACKWARD, FFTW_ESTIMATE);
 		for (int i=1 ; i<= plugin->nBuffers; i++)
 		{
 			plugin->b[i-1] = &plugin->frames[(i-1)*plugin->hopa];
 		}
+	}
+	
+		if(plugin->Qcolumn != QcolumnAux)
+	{
+		plugin->Q.resize(plugin->N, plugin->Qcolumn);
 	}
     
 		for (int i=1; i<=plugin->hopa; i++)
@@ -267,7 +314,7 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		}
 		else
 		{
-			shift(plugin->N, plugin->hopa, plugin->Hops, plugin->frames, plugin->w, plugin->XaPrevious, plugin->XaPrevious_arg, plugin->PhiPrevious, plugin->Q, plugin->yshift, plugin->Xa, plugin->Xs, plugin->q, plugin->qaux, plugin->framesaux, plugin->Phi, plugin->ysaida, plugin->ysaida2,  plugin->Qcolumn, plugin->p, plugin->p2);
+			shift(plugin->N, plugin->hopa, plugin->Hops, plugin->frames, &plugin->frames2, &plugin->w, &plugin->XaPrevious, &plugin->Xa_arg, &plugin->Xa_abs, &plugin->XaPrevious_arg, &plugin->PhiPrevious, &plugin->Q, plugin->yshift, &plugin->Xa, &plugin->Xs, &plugin->q, &plugin->qaux, &plugin->Phi, plugin->ysaida, plugin->ysaida2,  plugin->Qcolumn, &plugin->d_phi, &plugin->d_phi_prime, &plugin->d_phi_wrapped, &plugin->omega_true_sobre_fs, &plugin->I, &plugin->AUX, plugin->p, plugin->p2);
 			for (int i=1; i<=plugin->hopa; i++)
 			{
 				plugin->out_1[i-1] = (float)plugin->yshift[i-1];
@@ -284,23 +331,34 @@ void PitchShifter::cleanup(LV2_Handle instance)
 {
 	PitchShifter *plugin;
 	plugin = (PitchShifter *) instance;
-	free(plugin->Xa);
-	free(plugin->Xs);
-	free(plugin->q);
-	free(plugin->qaux);
-	free(plugin->Phi);
-	free(plugin->framesaux);
 	free(plugin->ysaida);
-	
+	free(plugin->yshift);
+	free(plugin->Hops);
 	free(plugin->frames);
-	free(plugin->w);
-	free(plugin->Q);
-	free(plugin->PhiPrevious);
-	free(plugin->XaPrevious);
-	free(plugin->XaPrevious_arg);
+	free(plugin->b);
 	
 	fftw_destroy_plan(plugin->p);
 	fftw_destroy_plan(plugin->p2);
+	
+	plugin->Q.clear();
+	plugin->Xa.clear();
+	plugin->Xa_arg.clear();
+	plugin->Xa_abs.clear();
+	plugin->Xs.clear();
+	plugin->q.clear();
+	plugin->qaux.clear();
+	plugin->Phi.clear();
+	plugin->frames2.clear();
+	plugin->w.clear();
+	plugin->PhiPrevious.clear();
+	plugin->XaPrevious.clear();
+	plugin->XaPrevious_arg.clear();
+	plugin->d_phi.clear();
+	plugin->d_phi_prime.clear();
+	plugin->d_phi_wrapped.clear();
+	plugin->I.clear();
+	plugin->omega_true_sobre_fs.clear();
+	plugin->AUX.clear();
 	
 	
     delete ((PitchShifter *) instance);

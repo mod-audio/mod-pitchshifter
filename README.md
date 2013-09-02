@@ -5,6 +5,10 @@ Pitch Shifter effects developed by mod team
 
 Installation:
 
+	Dependencies:
+	-FFTW
+	-Armadillo
+
 	./make.sh
 	sudo ./make_install.sh
 	

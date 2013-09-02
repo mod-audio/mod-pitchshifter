@@ -8,10 +8,10 @@ LD = g++
 
 # flags
 CFLAGS = -I. -O3 -ffast-math -msse -msse3 -mfpmath=sse -Wall -Wextra -march=native -mtune=native -c -fPIC -DPIC
-LDFLAGS = -shared -lc -lm -fPIC -DPIC -nostartfiles
+LDFLAGS = -shared -lc -lm -fPIC -DPIC
 
 # libs
-LIBS = -lfftw3 -lm
+LIBS = -lfftw3 -lm -larmadillo
 
 # remove command
 RM = rm -f
