@@ -102,6 +102,14 @@ const LV2_Descriptor* lv2_descriptor(uint32_t index)
 LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features)
 {
     PitchShifter *plugin = new PitchShifter();
+    
+    
+    //int TESTE_FFT = fftw_init_threads();
+    //printf("TESTE_FFT = %d \n \n", TESTE_FFT);
+    //fftw_plan_with_nthreads(2);
+
+    
+    
     plugin->Qcolumn = 32;
     plugin->nBuffers = 16;
     //Começam os testes
@@ -115,24 +123,24 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
     plugin->ysaida = (double*)malloc((plugin->N + 2*(plugin->Qcolumn-1)*plugin->hopa)*sizeof(double));
     plugin->yshift = (double*)malloc(plugin->hopa*sizeof(double));
     
-    plugin->w.resize(plugin->N);
-    plugin->frames2.resize(plugin->N);
-    plugin->Xa.resize(plugin->N);
-	plugin->Xs.resize(plugin->N);
+    plugin->w.set_size(plugin->N);
+    plugin->frames2.set_size(plugin->N);
+    plugin->Xa.set_size(plugin->N);
+	plugin->Xs.set_size(plugin->N);
 	plugin->XaPrevious.resize(plugin->N);
-	plugin->Xa_arg.resize(plugin->N);
+	plugin->Xa_arg.set_size(plugin->N);
 	plugin->XaPrevious_arg.resize(plugin->N);
-	plugin->Phi.resize(plugin->N);
+	plugin->Phi.set_size(plugin->N);
     plugin->PhiPrevious.resize(plugin->N);
-    plugin->d_phi.resize(plugin->N);
-	plugin->d_phi_prime.resize(plugin->N);
-	plugin->d_phi_wrapped.resize(plugin->N);
-	plugin->omega_true_sobre_fs.resize(plugin->N);
-	plugin->I.resize(plugin->N);
-	plugin->AUX.resize(plugin->N);
-	plugin->Xa_abs.resize(plugin->N);
-	plugin->q.resize(plugin->N);
-	plugin->qaux.resize(plugin->N);
+    plugin->d_phi.set_size(plugin->N);
+	plugin->d_phi_prime.set_size(plugin->N);
+	plugin->d_phi_wrapped.set_size(plugin->N);
+	plugin->omega_true_sobre_fs.set_size(plugin->N);
+	plugin->I.set_size(plugin->N);
+	plugin->AUX.set_size(plugin->N);
+	plugin->Xa_abs.set_size(plugin->N);
+	plugin->q.set_size(plugin->N);
+	plugin->qaux.set_size(plugin->N);
 	plugin->Q.resize(plugin->N, plugin->Qcolumn);
 	
 	plugin->I = linspace(0, plugin->N-1,plugin->N);
@@ -261,24 +269,24 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		plugin->hopa = n_samples;
 		plugin->N = plugin->nBuffers*n_samples;
 		
-		plugin->w.resize(plugin->N);
-		plugin->frames2.resize(plugin->N);
-		plugin->Xa.resize(plugin->N);
-		plugin->Xs.resize(plugin->N);
+		plugin->w.set_size(plugin->N);
+		plugin->frames2.set_size(plugin->N);
+		plugin->Xa.set_size(plugin->N);
+		plugin->Xs.set_size(plugin->N);
 		plugin->XaPrevious.resize(plugin->N);
-		plugin->Xa_arg.resize(plugin->N);
+		plugin->Xa_arg.set_size(plugin->N);
 		plugin->XaPrevious_arg.resize(plugin->N);
-		plugin->Phi.resize(plugin->N);
+		plugin->Phi.set_size(plugin->N);
 		plugin->PhiPrevious.resize(plugin->N);
-		plugin->d_phi.resize(plugin->N);
-		plugin->d_phi_prime.resize(plugin->N);
-		plugin->d_phi_wrapped.resize(plugin->N);
-		plugin->omega_true_sobre_fs.resize(plugin->N);
-		plugin->I.resize(plugin->N);
-		plugin->AUX.resize(plugin->N);
-		plugin->Xa_abs.resize(plugin->N);
-		plugin->q.resize(plugin->N);
-		plugin->qaux.resize(plugin->N);
+		plugin->d_phi.set_size(plugin->N);
+		plugin->d_phi_prime.set_size(plugin->N);
+		plugin->d_phi_wrapped.set_size(plugin->N);
+		plugin->omega_true_sobre_fs.set_size(plugin->N);
+		plugin->I.set_size(plugin->N);
+		plugin->AUX.set_size(plugin->N);
+		plugin->Xa_abs.set_size(plugin->N);
+		plugin->q.set_size(plugin->N);
+		plugin->qaux.set_size(plugin->N);
 		plugin->Q.resize(plugin->N, plugin->Qcolumn);
 		
 		plugin->I = linspace(0, plugin->N-1,plugin->N);
@@ -359,6 +367,9 @@ void PitchShifter::cleanup(LV2_Handle instance)
 	plugin->I.clear();
 	plugin->omega_true_sobre_fs.clear();
 	plugin->AUX.clear();
+	
+	fftw_cleanup();
+	//fftw_cleanup_threads();
 	
 	
     delete ((PitchShifter *) instance);
