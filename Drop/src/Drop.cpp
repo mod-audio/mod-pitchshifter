@@ -101,8 +101,8 @@ const LV2_Descriptor* lv2_descriptor(uint32_t index)
 LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features)
 {
     PitchShifter *plugin = new PitchShifter();
-    plugin->Qcolumn = 12;
-    plugin->nBuffers = 12;
+    plugin->Qcolumn = 8;
+    plugin->nBuffers = 4;
     //Começam os testes
     plugin->hopa = TAMANHO_DO_BUFFER;
     plugin->N = plugin->nBuffers*TAMANHO_DO_BUFFER;
@@ -230,83 +230,9 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
     plugin->s = (double)(*(plugin->step));
     hops = round(plugin->hopa*(pow(2,(plugin->s/12))));
     
-    if ((plugin->s != s_before)||(plugin->cont==0))
+    if ((plugin->cont==0))
     {
-		switch ( (int)(plugin->s))
-		{
-			case 2:
-			plugin->nBuffers = 5;
-			break;
-			case 3:
-			plugin->nBuffers = 6;
-			break;
-			case 4:
-			plugin->nBuffers = 8;
-			break;
-			case 5:
-			plugin->nBuffers = 9;
-			break;
-			case 6:
-			plugin->nBuffers = 10;
-			break;
-			case 7:
-			plugin->nBuffers = 10;
-			break;
-			case 8:
-			plugin->nBuffers = 10;
-			break;
-			case 9:
-			plugin->nBuffers = 10;
-			break;
-			case 10:
-			plugin->nBuffers = 10;
-			break;
-			case 11:
-			plugin->nBuffers = 11;
-			break;
-			case 12:
-			plugin->nBuffers = 12;
-			break;
-			case 13:
-			plugin->nBuffers = 12;
-			break;
-			case 14:
-			plugin->nBuffers = 12;
-			break;
-			case 15:
-			plugin->nBuffers = 12;
-			break;
-			case 16:
-			plugin->nBuffers = 12;
-			break;
-			case 17:
-			plugin->nBuffers = 12;
-			break;
-			case 18:
-			plugin->nBuffers = 12;
-			break;
-			case 19:
-			plugin->nBuffers = 12;
-			break;
-			case 20:
-			plugin->nBuffers = 12;
-			break;
-			case 21:
-			plugin->nBuffers = 12;
-			break;
-			case 22:
-			plugin->nBuffers = 12;
-			break;
-			case 23:
-			plugin->nBuffers = 12;
-			break;
-			case 24:
-			plugin->nBuffers = 12;
-			break;
-			default:
-			plugin->nBuffers = 4;
-			break;
-		}
+		
 			plugin->hopa = n_samples;
 			plugin->N = plugin->nBuffers*n_samples;
 		
