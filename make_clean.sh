@@ -4,6 +4,9 @@ cd ..
 cd Capo
 make clean
 cd ..
+cd SuperCapo
+make clean
+cd ..
 cd Drop
 make clean
 cd ..

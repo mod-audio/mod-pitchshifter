@@ -4,6 +4,9 @@ cd ..
 cd Capo
 make install
 cd ..
+cd SuperCapo
+make install
+cd ..
 cd Drop
 make install
 cd ..
