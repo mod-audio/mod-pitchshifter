@@ -14,7 +14,7 @@ using namespace arma;
 
 /**********************************************************************************************************************************************************/
 
-#define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/Capo"
+#define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/SuperCapo"
 #define TAMANHO_DO_BUFFER 1024
 enum {IN, OUT_1, STEP, PLUGIN_PORT_COUNT};
 
@@ -101,8 +101,8 @@ const LV2_Descriptor* lv2_descriptor(uint32_t index)
 LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features)
 {
     PitchShifter *plugin = new PitchShifter();
-    plugin->Qcolumn = 8;
-    plugin->nBuffers = 8;
+    plugin->Qcolumn = 12;
+    plugin->nBuffers = 12;
     //Começam os testes
     plugin->hopa = TAMANHO_DO_BUFFER;
     plugin->N = plugin->nBuffers*TAMANHO_DO_BUFFER;

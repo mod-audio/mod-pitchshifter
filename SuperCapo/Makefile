@@ -1,6 +1,6 @@
 
 # installation path
-INSTALL_PATH = /usr/local/lib/lv2/mod-pitchshifter2.lv2
+INSTALL_PATH = /usr/local/lib/lv2/mod-supercapo.lv2
 
 # compiler and linker
 CC = g++
@@ -21,7 +21,7 @@ SRC = $(wildcard src/*.cpp)
 OBJ = $(SRC:.cpp=.o)
 
 # plugin name
-PLUGIN = mod-pitchshifter2.so
+PLUGIN = mod-supercapo.so
 
 $(PLUGIN): $(OBJ)
 	$(LD) $(LDFLAGS) $(OBJ) -o $(PLUGIN) $(LIBS)

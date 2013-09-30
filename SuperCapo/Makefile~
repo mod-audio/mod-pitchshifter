@@ -1,13 +1,13 @@
 
 # installation path
-INSTALL_PATH = /usr/local/lib/lv2/mod-pitchshifter2.lv2
+INSTALL_PATH = /usr/local/lib/lv2/mod-drop.lv2
 
 # compiler and linker
 CC = g++
 LD = g++
 
 # flags
-CFLAGS = -I. -O3 -ffast-math -Wall -Wextra -march=native -mtune=native -c -fPIC -DPIC
+CFLAGS = -I. -O3 -ffast-math -msse -msse3 -mfpmath=sse -Wall -Wextra -march=native -mtune=native -c -fPIC -DPIC
 LDFLAGS = -shared -lc -lm -fPIC -DPIC
 
 # libs
@@ -21,7 +21,7 @@ SRC = $(wildcard src/*.cpp)
 OBJ = $(SRC:.cpp=.o)
 
 # plugin name
-PLUGIN = mod-pitchshifter2.so
+PLUGIN = mod-pitchshifter.so
 
 $(PLUGIN): $(OBJ)
 	$(LD) $(LDFLAGS) $(OBJ) -o $(PLUGIN) $(LIBS)
