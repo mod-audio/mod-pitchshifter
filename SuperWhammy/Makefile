@@ -1,6 +1,6 @@
 
 # installation path
-INSTALL_PATH = /usr/local/lib/lv2/mod-drop.lv2
+INSTALL_PATH = /usr/local/lib/lv2/mod-superwhammy.lv2
 
 # compiler and linker
 CC = g++
@@ -21,7 +21,7 @@ SRC = $(wildcard src/*.cpp)
 OBJ = $(SRC:.cpp=.o)
 
 # plugin name
-PLUGIN = mod-pitchshifter.so
+PLUGIN = mod-superwhammy.so
 
 $(PLUGIN): $(OBJ)
 	$(LD) $(LDFLAGS) $(OBJ) -o $(PLUGIN) $(LIBS)
