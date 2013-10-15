@@ -16,7 +16,7 @@ using namespace arma;
 
 #define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/Drop"
 #define TAMANHO_DO_BUFFER 1024
-enum {IN, OUT_1, STEP, PLUGIN_PORT_COUNT};
+enum {IN, OUT_1, STEP, GAIN, PLUGIN_PORT_COUNT};
 
 /**********************************************************************************************************************************************************/
 
@@ -35,6 +35,9 @@ public:
     float *in;
     float *out_1;
     float *step;
+    float *gain;
+    
+    float g;
     
     int hopa;
     int N;
@@ -107,6 +110,7 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
     plugin->hopa = TAMANHO_DO_BUFFER;
     plugin->N = plugin->nBuffers*TAMANHO_DO_BUFFER;
     
+    plugin->g = 1;
     
     plugin->Hops = (int*)malloc(plugin->Qcolumn*sizeof(int));
     plugin->frames = (double*)malloc(plugin->N*sizeof(double));
@@ -199,6 +203,9 @@ void PitchShifter::connect_port(LV2_Handle instance, uint32_t port, void *data)
         case STEP:
             plugin->step = (float*) data;
             break;
+        case GAIN:
+            plugin->gain = (float*) data;
+            break;
     }
 }
 
@@ -226,7 +233,9 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 	{
 		
     int hops;
-    double s_before = plugin->s;
+    //double s_before = plugin->s;
+    double g_before = plugin->g;
+    plugin->g = pow(10, (float)(*(plugin->gain))/20.0);
     plugin->s = (double)(*(plugin->step));
     hops = round(plugin->hopa*(pow(2,(plugin->s/12))));
     
@@ -332,7 +341,7 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 			shift(plugin->N, plugin->hopa, plugin->Hops, plugin->frames, &plugin->frames2, &plugin->w, &plugin->XaPrevious, &plugin->Xa_arg, &plugin->Xa_abs, &plugin->XaPrevious_arg, &plugin->PhiPrevious, &plugin->Q, plugin->yshift, &plugin->Xa, &plugin->Xs, &plugin->q, &plugin->qaux, &plugin->Phi, plugin->ysaida, plugin->ysaida2,  plugin->Qcolumn, &plugin->d_phi, &plugin->d_phi_prime, &plugin->d_phi_wrapped, &plugin->omega_true_sobre_fs, &plugin->I, &plugin->AUX, plugin->p, plugin->p2);
 			for (int i=1; i<=plugin->hopa; i++)
 			{
-				plugin->out_1[i-1] = (float)plugin->yshift[i-1];
+				plugin->out_1[i-1] = (g_before + ((plugin->g - g_before)/(plugin->hopa - 1))*(i-1) )*(float)plugin->yshift[i-1];
 			}
 		}
 		

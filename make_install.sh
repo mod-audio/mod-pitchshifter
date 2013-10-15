@@ -13,6 +13,9 @@ cd ..
 cd Whammy
 make install
 cd ..
+cd SuperWhammy
+make install
+cd ..
 cd Generic_PitchShifter
 make install
 cd ..

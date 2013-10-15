@@ -13,7 +13,7 @@
 
 #define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/SuperWhammy"
 #define TAMANHO_DO_BUFFER 1024
-enum {IN, OUT_1, STEP, FIRST, LAST, CLEAN, PLUGIN_PORT_COUNT};
+enum {IN, OUT_1, STEP, FIRST, LAST, CLEAN, GAIN, PLUGIN_PORT_COUNT};
 
 /**********************************************************************************************************************************************************/
 
@@ -35,6 +35,9 @@ public:
     float *first;
     float *last;
     float *clean;
+    float *gain;
+    
+    float g;
     
     float max;
     float min;
@@ -110,6 +113,7 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
     plugin->hopa = TAMANHO_DO_BUFFER;
     plugin->N = plugin->nBuffers*TAMANHO_DO_BUFFER;
     
+    plugin->g = 1;    
     
     plugin->Hops = (int*)malloc(plugin->Qcolumn*sizeof(int));
     plugin->frames = (double*)malloc(plugin->N*sizeof(double));
@@ -211,6 +215,9 @@ void PitchShifter::connect_port(LV2_Handle instance, uint32_t port, void *data)
         case CLEAN:
             plugin->clean = (float*) data;
             break;
+        case GAIN:
+            plugin->gain = (float*) data;
+            break;
     }
 }
 
@@ -238,9 +245,12 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 	{
 		
     int hops;
+    
+    double g_before = plugin->g;
+    plugin->g = pow(10, (float)(*(plugin->gain))/20.0);
 
-    float max_before = plugin->max;
-    float min_before = plugin->min;
+    //float max_before = plugin->max;
+    //float min_before = plugin->min;
     plugin->s = (double)(*(plugin->step));
     
     float a;
@@ -332,14 +342,14 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 			{
 				for (int i=1; i<=plugin->hopa; i++)
 				{
-					plugin->out_1[i-1] = (float)plugin->yshift[i-1] + 0.25*(float)plugin->frames[i-1];
+					plugin->out_1[i-1] = (g_before + ((plugin->g - g_before)/(plugin->hopa - 1))*(i-1) )*(float)plugin->yshift[i-1] + (float)plugin->frames[i-1];
 				}
 			}
 			else
 			{
 				for (int i=1; i<=plugin->hopa; i++)
 				{
-					plugin->out_1[i-1] = (float)plugin->yshift[i-1];
+				plugin->out_1[i-1] = (g_before + ((plugin->g - g_before)/(plugin->hopa - 1))*(i-1) )*(float)plugin->yshift[i-1];
 				}
 			}
 		}

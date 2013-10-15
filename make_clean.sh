@@ -13,6 +13,9 @@ cd ..
 cd Whammy
 make clean
 cd ..
+cd SuperWhammy
+make clean
+cd ..
 cd Generic_PitchShifter
 make clean
 cd ..

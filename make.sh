@@ -13,6 +13,9 @@ cd ..
 cd Whammy
 make
 cd ..
+cd SuperWhammy
+make
+cd ..
 cd Generic_PitchShifter
 make
 cd ..
