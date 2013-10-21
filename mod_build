@@ -1,0 +1,25 @@
+#!/bin/bash
+
+
+list_bundles() {
+    echo "mod-drop.lv2"
+    echo "mod-capo.lv2"
+    echo "mod-supercapo.lv2"
+    echo "mod-whammy.lv2"
+}
+
+if [ "x${1}x" == "x-lx" ]; then
+    list_bundles
+    exit 0
+fi
+
+if [ "x${LV2_PATH}x" == "xx" ]; then
+    LV2_PATH=~/.lv2/
+fi
+
+for i in Drop Capo SuperCapo Whammy; do
+    cd $i
+    make
+    make INSTALL_PATH=$LV2_PATH install
+    cd ..
+done

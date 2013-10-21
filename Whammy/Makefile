@@ -1,6 +1,8 @@
 
 # installation path
-INSTALL_PATH = /usr/local/lib/lv2/mod-whammy.lv2
+ifndef INSTALL_PATH
+	INSTALL_PATH = /usr/local/lib/lv2/
+endif
 
 # compiler and linker
 CC = g++
@@ -33,6 +35,7 @@ clean:
 	$(RM) src/*.o $(PLUGIN)
 
 install:
-	mkdir -p $(INSTALL_PATH)
-	cp $(PLUGIN) $(INSTALL_PATH)
-	cp ttl/*.ttl $(INSTALL_PATH)
+	mkdir -p $(INSTALL_PATH)/mod-whammy.lv2
+	cp $(PLUGIN) $(INSTALL_PATH)/mod-whammy.lv2
+	cp ttl/*.ttl $(INSTALL_PATH)/mod-whammy.lv2
+	test -f ttl/modgui && cp -r ttl/modgui/ $(INSTALL_PATH)/mod-whammy.lv2/ || true
