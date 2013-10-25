@@ -2,7 +2,7 @@
 @prefix doap: <http://usefulinc.com/ns/doap#>.
 @prefix epp: <http://lv2plug.in/ns/ext/port-props/#>.
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
-@prefix units: <http://lv2plug.in/ns/extension/units#> .
+@prefix mod: <http://portalmod.com/ns/modgui#>.
 
 <http://portalmod.com/plugins/mod-devel/Drop>
 a lv2:Plugin, lv2:SpectralPlugin;
@@ -20,6 +20,9 @@ doap:maintainer [
     foaf:homepage <http://portalmod.com>;
     foaf:mbox <mailto:devel@portalmod.com>;
     ];
+    
+    lv2:minorVersion 0;
+	lv2:microVersion 2;
 
 doap:license <GPL>;
 lv2:port 
@@ -44,14 +47,12 @@ lv2:port
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 0;
-],
-[
-    a lv2:ControlPort, lv2:InputPort;
-    lv2:index 3;
-    lv2:symbol "Gain";
-    lv2:name "Gain";
-    units:unit units:db ;
-    lv2:default 3;
-    lv2:minimum -20;
-    lv2:maximum 20;
-].
+];
+    mod:gui [
+        a mod:Gui;
+        mod:resourcesDirectory <modgui>;
+        mod:iconTemplate <modgui/icon-drop.html>;
+        mod:templateData <modgui/data-drop.json>;
+        mod:screenshot <modgui/Drop.png>;
+        mod:thumbnail <modgui/Drop-thumb.png>;
+    ] .
