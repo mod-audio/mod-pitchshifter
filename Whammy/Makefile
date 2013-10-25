@@ -38,4 +38,4 @@ install:
 	mkdir -p $(INSTALL_PATH)/mod-whammy.lv2
 	cp $(PLUGIN) $(INSTALL_PATH)/mod-whammy.lv2
 	cp ttl/*.ttl $(INSTALL_PATH)/mod-whammy.lv2
-	test -f ttl/modgui && cp -r ttl/modgui/ $(INSTALL_PATH)/mod-whammy.lv2/ || true
+	test -d ttl/modgui && cp -r ttl/modgui/ $(INSTALL_PATH)/mod-whammy.lv2/ || true
