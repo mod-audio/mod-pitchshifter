@@ -1,6 +1,6 @@
 
 # installation path
-INSTALL_PATH = /usr/local/lib/lv2/mod-superwhammy.lv2
+INSTALL_PATH = /usr/local/lib/lv2/
 
 # compiler and linker
 CC = g++
@@ -33,6 +33,7 @@ clean:
 	$(RM) src/*.o $(PLUGIN)
 
 install:
-	mkdir -p $(INSTALL_PATH)
-	cp $(PLUGIN) $(INSTALL_PATH)
-	cp ttl/*.ttl $(INSTALL_PATH)
+	mkdir -p $(INSTALL_PATH)/mod-superwhammy.lv2/
+	cp $(PLUGIN) $(INSTALL_PATH)/mod-superwhammy.lv2/
+	cp ttl/*.ttl $(INSTALL_PATH)/mod-superwhammy.lv2/
+	test -d ttl/modgui && cp -r ttl/modgui/ $(INSTALL_PATH)/mod-superwhammy.lv2/ || true
