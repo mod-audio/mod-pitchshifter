@@ -58,7 +58,7 @@ lv2:port
     lv2:default 3;
     lv2:minimum -20;
     lv2:maximum 20;
-].
+];
     mod:gui [
         a mod:Gui;
         mod:resourcesDirectory <modgui>;
