@@ -51,7 +51,7 @@ lv2:port
 ],
 [
     a lv2:ControlPort, lv2:InputPort;
-    lv2:index 6;
+    lv2:index 3;
     lv2:symbol "Gain";
     lv2:name "Gain";
     units:unit units:db ;
