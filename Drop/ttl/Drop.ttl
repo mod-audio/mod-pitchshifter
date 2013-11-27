@@ -3,6 +3,7 @@
 @prefix epp: <http://lv2plug.in/ns/ext/port-props/#>.
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
 @prefix mod: <http://portalmod.com/ns/modgui#>.
+@prefix units: <http://lv2plug.in/ns/extension/units#> .
 
 <http://portalmod.com/plugins/mod-devel/Drop>
 a lv2:Plugin, lv2:SpectralPlugin;
@@ -50,7 +51,7 @@ lv2:port
 ],
 [
     a lv2:ControlPort, lv2:InputPort;
-    lv2:index 3;
+    lv2:index 6;
     lv2:symbol "Gain";
     lv2:name "Gain";
     units:unit units:db ;
