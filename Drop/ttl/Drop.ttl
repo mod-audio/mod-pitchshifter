@@ -26,7 +26,13 @@ doap:maintainer [
 	lv2:microVersion 2;
 
 doap:license <GPL>;
-lv2:port 
+
+rdfs:comment """
+It's a pitch shifter which can drop the pitch until 12 semitones (steps). Despite being more limited than Super Whammy, it uses less processing.
+
+""";
+
+lv2:port
 [
     a lv2:AudioPort, lv2:InputPort;
     lv2:index 0;
