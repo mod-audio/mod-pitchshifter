@@ -2,9 +2,10 @@
 @prefix doap: <http://usefulinc.com/ns/doap#>.
 @prefix epp: <http://lv2plug.in/ns/ext/port-props/#>.
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
-@prefix units: <http://lv2plug.in/ns/extension/units#> .
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
 @prefix mod: <http://portalmod.com/ns/modgui#>.
 @prefix host: <http://portalmod.com/ns/modhost#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 
 <http://portalmod.com/plugins/mod-devel/SuperWhammy>
 a lv2:Plugin, lv2:SpectralPlugin;
@@ -25,7 +26,13 @@ doap:maintainer [
 
 doap:license <GPL>;
 host:recommendedBufferSize 256;
-lv2:port 
+
+rdfs:comment """
+A pitch shifter that can shift an input pitch from 12 semitones down to 24 semitones up. "First" and "Last" determine the range of variation where the "Step" parameter will work. "First" doesn't need to be necessarily smaller than "Last". "Clean" parameter allows you to hear the bypass sound summed with the pitch shifted signal and "Gain" it's the effect gain, does not affect the clean signal.
+
+""";
+
+lv2:port
 [
     a lv2:AudioPort, lv2:InputPort;
     lv2:index 0;
