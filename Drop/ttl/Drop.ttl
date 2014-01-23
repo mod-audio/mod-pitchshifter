@@ -4,6 +4,7 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
 @prefix mod: <http://portalmod.com/ns/modgui#>.
 @prefix units: <http://lv2plug.in/ns/extension/units#> .
+@prefix host: <http://portalmod.com/ns/modhost#> .
 
 <http://portalmod.com/plugins/mod-devel/Drop>
 a lv2:Plugin, lv2:SpectralPlugin;
@@ -26,6 +27,7 @@ doap:maintainer [
 	lv2:microVersion 2;
 
 doap:license <GPL>;
+host:recommendedBufferSize 256;
 lv2:port 
 [
     a lv2:AudioPort, lv2:InputPort;
