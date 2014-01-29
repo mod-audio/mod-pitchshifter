@@ -3,7 +3,8 @@
 @prefix epp: <http://lv2plug.in/ns/ext/port-props/#>.
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
 @prefix mod: <http://portalmod.com/ns/modgui#>.
-@prefix units: <http://lv2plug.in/ns/extensions/units#> .
+@prefix units: <http://lv2plug.in/ns/extension/units#> .
+@prefix host: <http://portalmod.com/ns/modhost#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 
 <http://portalmod.com/plugins/mod-devel/Capo>
@@ -24,6 +25,7 @@ doap:maintainer [
     ];
 
 doap:license <GPL>;
+host:recommendedBufferSize 256;
 
 lv2:minorVersion 0;
 lv2:microVersion 4;

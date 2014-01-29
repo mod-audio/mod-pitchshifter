@@ -4,6 +4,7 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .
 @prefix mod: <http://portalmod.com/ns/modgui#>.
+@prefix host: <http://portalmod.com/ns/modhost#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 
 <http://portalmod.com/plugins/mod-devel/SuperCapo>
@@ -24,6 +25,7 @@ doap:maintainer [
     ];
 
 doap:license <GPL>;
+host:recommendedBufferSize 256;
 
 rdfs:comment """
 It's a pitch shifter which can rise the pitch until 24 semitones (steps). Despite being more limited than Super Whammy, it uses less processing, but more than Capo.
