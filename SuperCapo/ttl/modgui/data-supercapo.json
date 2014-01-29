@@ -5,7 +5,11 @@
         {
             "name": "Step", 
             "symbol": "Step"
+        }, 
+        {
+            "name": "Gain", 
+            "symbol": "Gain"
         }
     ], 
-    "label": "Super Capo"
+    "label": "SuperCapo"
 }

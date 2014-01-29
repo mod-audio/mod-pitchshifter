@@ -5,6 +5,10 @@
         {
             "name": "Step", 
             "symbol": "Step"
+        }, 
+        {
+            "name": "Gain", 
+            "symbol": "Gain"
         }
     ], 
     "label": "Drop"
