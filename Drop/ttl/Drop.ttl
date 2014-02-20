@@ -29,7 +29,7 @@ doap:maintainer [
 
 doap:license <GPL>;
 
-host:recommendedBufferSize 256;
+host:recommendedBufferSize 128;
 
 rdfs:comment """
 It's a pitch shifter which can drop the pitch until 12 semitones (steps). Despite being more limited than Super Whammy, it uses less processing.

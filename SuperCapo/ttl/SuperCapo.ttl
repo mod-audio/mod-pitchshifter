@@ -25,7 +25,7 @@ doap:maintainer [
     ];
 
 doap:license <GPL>;
-host:recommendedBufferSize 256;
+host:recommendedBufferSize 128;
 
 rdfs:comment """
 It's a pitch shifter which can rise the pitch until 24 semitones (steps). Despite being more limited than Super Whammy, it uses less processing, but more than Capo.
