@@ -12,7 +12,7 @@
 /**********************************************************************************************************************************************************/
 
 #define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/SuperWhammy"
-#define TAMANHO_DO_BUFFER 1024
+#define TAMANHO_DO_BUFFER 128
 enum {IN, OUT_1, STEP, FIRST, LAST, CLEAN, GAIN, PLUGIN_PORT_COUNT};
 
 /**********************************************************************************************************************************************************/
@@ -57,7 +57,7 @@ public:
     int *Hops;
     
     vec w;
-    cx_vec frames2;
+    vec frames2;
     cx_vec Xa;
     cx_vec Xs;
     cx_vec XaPrevious;
@@ -108,7 +108,7 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 {
     PitchShifter *plugin = new PitchShifter();
     plugin->Qcolumn = 24;
-    plugin->nBuffers = 12;
+    plugin->nBuffers = 22;
     //Começam os testes
     plugin->hopa = TAMANHO_DO_BUFFER;
     plugin->N = plugin->nBuffers*TAMANHO_DO_BUFFER;
@@ -118,30 +118,30 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
     plugin->Hops = (int*)malloc(plugin->Qcolumn*sizeof(int));
     plugin->frames = (double*)malloc(plugin->N*sizeof(double));
     plugin->b = (double**)malloc(plugin->hopa*sizeof(double*));
-    plugin->ysaida = (double*)malloc((plugin->N + 2*(plugin->Qcolumn-1)*plugin->hopa)*sizeof(double));
+    plugin->ysaida = (double*)malloc(2*(plugin->N + 2*(plugin->Qcolumn-1)*plugin->hopa)*sizeof(double));
     plugin->yshift = (double*)malloc(plugin->hopa*sizeof(double));
     
     plugin->w.resize(plugin->N);
     plugin->frames2.resize(plugin->N);
-    plugin->Xa.resize(plugin->N);
-	plugin->Xs.resize(plugin->N);
-	plugin->XaPrevious.resize(plugin->N);
-	plugin->Xa_arg.resize(plugin->N);
-	plugin->XaPrevious_arg.resize(plugin->N);
-	plugin->Phi.resize(plugin->N);
-    plugin->PhiPrevious.resize(plugin->N);
-    plugin->d_phi.resize(plugin->N);
-	plugin->d_phi_prime.resize(plugin->N);
-	plugin->d_phi_wrapped.resize(plugin->N);
-	plugin->omega_true_sobre_fs.resize(plugin->N);
-	plugin->I.resize(plugin->N);
-	plugin->AUX.resize(plugin->N);
-	plugin->Xa_abs.resize(plugin->N);
+    plugin->Xa.resize(plugin->N/2 + 1);
+	plugin->Xs.resize(plugin->N/2 + 1);
+	plugin->XaPrevious.resize(plugin->N/2 + 1);
+	plugin->Xa_arg.resize(plugin->N/2 + 1);
+	plugin->XaPrevious_arg.resize(plugin->N/2 + 1);
+	plugin->Phi.resize(plugin->N/2 + 1);
+    plugin->PhiPrevious.resize(plugin->N/2 + 1);
+    plugin->d_phi.resize(plugin->N/2 + 1);
+	plugin->d_phi_prime.resize(plugin->N/2 + 1);
+	plugin->d_phi_wrapped.resize(plugin->N/2 + 1);
+	plugin->omega_true_sobre_fs.resize(plugin->N/2 + 1);
+	plugin->I.resize(plugin->N/2 + 1);
+	plugin->AUX.resize(plugin->N/2 + 1);
+	plugin->Xa_abs.resize(plugin->N/2 + 1);
 	plugin->q.resize(plugin->N);
 	plugin->qaux.resize(plugin->N);
 	plugin->Q.resize(plugin->N, plugin->Qcolumn);
 	
-	plugin->I = linspace(0, plugin->N-1,plugin->N);
+	plugin->I = linspace(0, plugin->N/2,plugin->N/2 + 1);
 	
     hann(plugin->N,&plugin->w);
     
@@ -150,13 +150,13 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 		plugin->b[i-1] = &plugin->frames[(i-1)*plugin->hopa];
 	}
 
+	plugin->PhiPrevious.zeros();
+	plugin->XaPrevious.zeros();
+	plugin->XaPrevious_arg.zeros();
     plugin->cont = 0;
     for (int i=1;i<=plugin->N;i++)
     {
 		plugin->frames[i-1] = 0;
-		plugin->PhiPrevious(i-1) = 0;
-		plugin->XaPrevious(i-1) = 0;
-		plugin->XaPrevious_arg(i-1) = 0;
 		for (int k=1; k<=plugin->Qcolumn; k++)
 		{
 			plugin->Q(i-1,k-1) = 0;
@@ -168,8 +168,8 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 		plugin->Hops[k-1] = plugin->hopa;
 	}
 	
-	plugin->p = fftw_plan_dft_1d(plugin->N, reinterpret_cast<fftw_complex*>(plugin->frames2.colptr(0)), reinterpret_cast<fftw_complex*>(plugin->Xa.colptr(0)), FFTW_FORWARD, FFTW_ESTIMATE);
-	plugin->p2 = fftw_plan_dft_1d(plugin->N, reinterpret_cast<fftw_complex*>(plugin->Xs.colptr(0)), reinterpret_cast<fftw_complex*>(plugin->qaux.colptr(0)), FFTW_BACKWARD, FFTW_ESTIMATE);
+	plugin->p = fftw_plan_dft_r2c_1d(plugin->N, plugin->frames2.colptr(0), reinterpret_cast<fftw_complex*>(plugin->Xa.colptr(0)), FFTW_ESTIMATE);
+	plugin->p2 = fftw_plan_dft_c2r_1d(plugin->N, reinterpret_cast<fftw_complex*>(plugin->Xs.colptr(0)), plugin->q.colptr(0), FFTW_ESTIMATE);
 	
     return (LV2_Handle)plugin;
 }
@@ -289,37 +289,44 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		plugin->hopa = n_samples;
 		plugin->N = plugin->nBuffers*n_samples;
 		
+		plugin->frames = (double*)realloc(plugin->frames,plugin->N*sizeof(double));
+		plugin->b = (double**)realloc(plugin->b,plugin->hopa*sizeof(double*));
+		plugin->ysaida = (double*)realloc(plugin->ysaida,2*(plugin->N + 2*(plugin->Qcolumn-1)*plugin->hopa)*sizeof(double));
+		plugin->yshift = (double*)realloc(plugin->yshift,plugin->hopa*sizeof(double));
+		
 		plugin->w.resize(plugin->N);
 		plugin->frames2.resize(plugin->N);
-		plugin->Xa.resize(plugin->N);
-		plugin->Xs.resize(plugin->N);
-		plugin->XaPrevious.resize(plugin->N);
-		plugin->Xa_arg.resize(plugin->N);
-		plugin->XaPrevious_arg.resize(plugin->N);
-		plugin->Phi.resize(plugin->N);
-		plugin->PhiPrevious.resize(plugin->N);
-		plugin->d_phi.resize(plugin->N);
-		plugin->d_phi_prime.resize(plugin->N);
-		plugin->d_phi_wrapped.resize(plugin->N);
-		plugin->omega_true_sobre_fs.resize(plugin->N);
-		plugin->I.resize(plugin->N);
-		plugin->AUX.resize(plugin->N);
-		plugin->Xa_abs.resize(plugin->N);
+		plugin->Xa.resize(plugin->N/2 + 1);
+		plugin->Xs.resize(plugin->N/2 + 1);
+		plugin->XaPrevious.resize(plugin->N/2 + 1);
+		plugin->Xa_arg.resize(plugin->N/2 + 1);
+		plugin->XaPrevious_arg.resize(plugin->N/2 + 1);
+		plugin->Phi.resize(plugin->N/2 + 1);
+		plugin->PhiPrevious.resize(plugin->N/2 + 1);
+		plugin->d_phi.resize(plugin->N/2 + 1);
+		plugin->d_phi_prime.resize(plugin->N/2 + 1);
+		plugin->d_phi_wrapped.resize(plugin->N/2 + 1);
+		plugin->omega_true_sobre_fs.resize(plugin->N/2 + 1);
+		plugin->I.resize(plugin->N/2 + 1);
+		plugin->AUX.resize(plugin->N/2 + 1);
+		plugin->Xa_abs.resize(plugin->N/2 + 1);
 		plugin->q.resize(plugin->N);
 		plugin->qaux.resize(plugin->N);
 		plugin->Q.resize(plugin->N, plugin->Qcolumn);
-		
-		plugin->I = linspace(0, plugin->N-1,plugin->N);
+	
+		plugin->I = linspace(0, plugin->N/2,plugin->N/2 + 1);
 		
 		hann(plugin->N,&plugin->w);
 		fftw_destroy_plan(plugin->p);
 		fftw_destroy_plan(plugin->p2);
-		plugin->p = fftw_plan_dft_1d(plugin->N, reinterpret_cast<fftw_complex*>(plugin->frames2.colptr(0)), reinterpret_cast<fftw_complex*>(plugin->Xa.colptr(0)), FFTW_FORWARD, FFTW_ESTIMATE);
-		plugin->p2 = fftw_plan_dft_1d(plugin->N, reinterpret_cast<fftw_complex*>(plugin->Xs.colptr(0)), reinterpret_cast<fftw_complex*>(plugin->qaux.colptr(0)), FFTW_BACKWARD, FFTW_ESTIMATE);
+		plugin->p = fftw_plan_dft_r2c_1d(plugin->N, plugin->frames2.colptr(0), reinterpret_cast<fftw_complex*>(plugin->Xa.colptr(0)), FFTW_ESTIMATE);
+		plugin->p2 = fftw_plan_dft_c2r_1d(plugin->N, reinterpret_cast<fftw_complex*>(plugin->Xs.colptr(0)), plugin->q.colptr(0), FFTW_ESTIMATE);
 		for (int i=1 ; i<= plugin->nBuffers; i++)
 		{
 			plugin->b[i-1] = &plugin->frames[(i-1)*plugin->hopa];
 		}
+		
+		return;
 	}
     
 		for (int i=1; i<=plugin->hopa; i++)
