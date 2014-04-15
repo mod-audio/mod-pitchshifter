@@ -1,0 +1,23 @@
+{
+    "author": "MOD", 
+    "color": "darkblue", 
+    "controls": [
+        {
+            "name": "Step", 
+            "symbol": "Step"
+        }, 
+        {
+            "name": "First", 
+            "symbol": "First"
+        }, 
+        {
+            "name": "Last", 
+            "symbol": "Last"
+        }, 
+        {
+            "name": "Clean", 
+            "symbol": "Clean"
+        }
+    ], 
+    "label": "Super Whammy"
+}
