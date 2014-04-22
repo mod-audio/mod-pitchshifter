@@ -35,7 +35,7 @@ if [ "x${LV2_PATH}x" == "xx" ]; then
     LV2_PATH=~/.lv2/
 fi
 
-for i in Drop Capo SuperCapo SuperWhammy SuperWhammy8 SuperWhammy10 SuperWhammy12 SuperWhammy14 SuperWhammy16 SuperWhammy20 SuperWhammy22 SuperWhammy28 SuperWhammy30 SuperWhammy32 SuperWhammy34 SuperWhammy36 SuperWhammy38 SuperWhammy40; do
+for i in Drop Capo SuperCapo SuperWhammy SuperWhammy8 SuperWhammy10 SuperWhammy12 SuperWhammy14 SuperWhammy16 SuperWhammy18 SuperWhammy20 SuperWhammy22 SuperWhammy28 SuperWhammy30 SuperWhammy32 SuperWhammy34 SuperWhammy36 SuperWhammy38 SuperWhammy40; do
     cd $i
     make
     make INSTALL_PATH=$LV2_PATH install
