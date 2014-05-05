@@ -22,7 +22,6 @@ void shift(int N, int hopa, int *hops, double *frames, float *frames2, vec *w, c
 	{
 		L = L + hops[i-1];
 	}
-	int Hops = 0;
 	double r;
 	complex<double> j;
 	int n1;
@@ -41,8 +40,6 @@ void shift(int N, int hopa, int *hops, double *frames, float *frames2, vec *w, c
 	{
 		frames2[i-1] = frames[i-1]*w[0](i-1)/(sqrt(((double)N/(2*(double)hopa))));
 	}
-	
-	//frames2[0] = frames2[0]%w[0]/(sqrt(((double)N/(2*(double)hopa))));
 	
 	/*Analysis*/
 	fftwf_execute(p);
@@ -77,30 +74,8 @@ void shift(int N, int hopa, int *hops, double *frames, float *frames2, vec *w, c
         fXs[i-1][1] = imag(Xs[0](i-1));
 	}
 	
-	/*for (int i=1; i<=(N/2 + 1); i++)
-	{
-		Xa_arg[0](i-1) = angle(Xa[0](i-1));
-	}
-	for (int i=1; i<=(N/2 + 1); i++)
-	{
-		d_phi[0](i-1) = Xa_arg[0](i-1) - XaPrevious_arg[0](i-1);
-		d_phi_prime[0](i-1) = d_phi[0](i-1) - ((2*M_PI * hopa) / N) * I[0](i-1);
-		AUX[0](i-1) = floor((d_phi_prime[0](i-1) + M_PI) / (2*M_PI));
-		d_phi_wrapped[0](i-1) = d_phi_prime[0](i-1) - AUX[0](i-1) * (2*M_PI);
-		omega_true_sobre_fs[0](i-1) = (2*M_PI/N) * I[0](i-1) + d_phi_wrapped[0](i-1) / hopa;
-		Phi[0](i-1) = PhiPrevious[0](i-1) + (hops[Qcolumn-1])*omega_true_sobre_fs[0](i-1) ;
-		Xa_abs[0](i-1) = abs(Xa[0](i-1));
-		Xs[0](i-1) = ExponencialComplexa(Phi[0](i-1));
-		Xs[0](i-1) = Xa_abs[0](i-1)*Xs[0](i-1);
-		XaPrevious[0](i-1) = Xa[0](i-1);
-		XaPrevious_arg[0](i-1) = Xa_arg[0](i-1);
-		PhiPrevious[0](i-1) = Phi[0](i-1);
-	}*/
-	
 	/*Synthesis*/
 	fftwf_execute(p2);
-	//q[0] = q[0]/N;
-	//q[0] = q[0] % w[0]/(sqrt((N/(2*hops[Qcolumn-1]))));
 	
 	for (int i=1; i<=N; i++)
 	{

@@ -63,8 +63,6 @@ public:
     cx_vec Xa;
     cx_vec Xs;
     
-    //cx_fvec fXa;
-    //cx_fvec fXs;
     fftwf_complex *fXa;
     fftwf_complex *fXs;
     
@@ -81,7 +79,6 @@ public:
     vec AUX;
     vec Xa_abs;
     
-    //fvec q;
     float *q;
     
     cx_vec qaux;
@@ -118,8 +115,8 @@ const LV2_Descriptor* lv2_descriptor(uint32_t index)
 LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features)
 {
     PitchShifter *plugin = new PitchShifter();
-    plugin->Qcolumn = 28;
-    plugin->nBuffers = 14;
+    plugin->Qcolumn = 40;
+    plugin->nBuffers = 20;
     //Começam os testes
     plugin->hopa = TAMANHO_DO_BUFFER;
     plugin->N = plugin->nBuffers*TAMANHO_DO_BUFFER;
@@ -134,14 +131,11 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
     
     plugin->w.resize(plugin->N);
     
-    //plugin->frames2.resize(plugin->N);
     plugin->frames2 = fftwf_alloc_real(plugin->N);
     
     plugin->Xa.resize(plugin->N/2 + 1);
 	plugin->Xs.resize(plugin->N/2 + 1);
 	
-	//plugin->fXa.resize(plugin->N/2 + 1);
-	//plugin->fXs.resize(plugin->N/2 + 1);
 	plugin->fXa = fftwf_alloc_complex(plugin->N/2 + 1);
 	plugin->fXs = fftwf_alloc_complex(plugin->N/2 + 1);
 	
@@ -158,7 +152,6 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 	plugin->AUX.resize(plugin->N/2 + 1);
 	plugin->Xa_abs.resize(plugin->N/2 + 1);
 	
-	//plugin->q.resize(plugin->N);
 	plugin->q = fftwf_alloc_real(plugin->N);
 
 	plugin->qaux.resize(plugin->N);
@@ -272,8 +265,6 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
     double g_before = plugin->g;
     plugin->g = pow(10, (float)(*(plugin->gain))/20.0);
 
-    //float max_before = plugin->max;
-    //float min_before = plugin->min;
     plugin->s = (double)(*(plugin->step));
     
     float a;
@@ -319,15 +310,12 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		
 		plugin->w.resize(plugin->N);
 		
-		//plugin->frames2.resize(plugin->N);
 		fftwf_free(plugin->frames2);
 		plugin->frames2 = fftwf_alloc_real(plugin->N);
 		
 		plugin->Xa.resize(plugin->N/2 + 1);
 		plugin->Xs.resize(plugin->N/2 + 1);
 		
-		//plugin->fXa.resize(plugin->N/2 + 1);
-		//plugin->fXs.resize(plugin->N/2 + 1);
 		fftwf_free(plugin->fXa);
 		fftwf_free(plugin->fXs);
 		plugin->fXa = fftwf_alloc_complex(plugin->N/2 + 1);
@@ -346,7 +334,6 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		plugin->AUX.resize(plugin->N/2 + 1);
 		plugin->Xa_abs.resize(plugin->N/2 + 1);
 		
-		//plugin->q.resize(plugin->N);
 		fftwf_free(plugin->q);
 		plugin->q = fftwf_alloc_real(plugin->N);
 		
@@ -426,21 +413,17 @@ void PitchShifter::cleanup(LV2_Handle instance)
 	plugin->Q.clear();
 	
 	plugin->Xa.clear();
-	//plugin->fXa.clear();
 	
 	plugin->Xa_arg.clear();
 	plugin->Xa_abs.clear();
 	
 	plugin->Xs.clear();
-	//plugin->fXs.clear();
 	
-	//plugin->q.clear();
 	fftwf_free(plugin->q);
 	
 	plugin->qaux.clear();
 	plugin->Phi.clear();
 	
-	//plugin->frames2.clear();
 	fftwf_free(plugin->frames2);
 	
 	plugin->w.clear();
