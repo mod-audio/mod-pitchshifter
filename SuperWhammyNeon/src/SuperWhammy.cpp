@@ -80,9 +80,6 @@ public:
     vec Xa_abs;
     
     float *q;
-    
-    cx_vec qaux;
-    mat Q;
         
     fftwf_plan p;
 	fftwf_plan p2;
@@ -153,9 +150,6 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 	plugin->Xa_abs.resize(plugin->N/2 + 1);
 	
 	plugin->q = fftwf_alloc_real(plugin->N);
-
-	plugin->qaux.resize(plugin->N);
-	plugin->Q.resize(plugin->N, plugin->Qcolumn);
 	
 	plugin->I = linspace(0, plugin->N/2,plugin->N/2 + 1);
 	
@@ -173,10 +167,6 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
     for (int i=1;i<=plugin->N;i++)
     {
 		plugin->frames[i-1] = 0;
-		for (int k=1; k<=plugin->Qcolumn; k++)
-		{
-			plugin->Q(i-1,k-1) = 0;
-		}
 	}
 	
 	for (int k=1; k<=plugin->Qcolumn; k++)
@@ -336,9 +326,6 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		
 		fftwf_free(plugin->q);
 		plugin->q = fftwf_alloc_real(plugin->N);
-		
-		plugin->qaux.resize(plugin->N);
-		plugin->Q.resize(plugin->N, plugin->Qcolumn);
 	
 		plugin->I = linspace(0, plugin->N/2,plugin->N/2 + 1);
 		
@@ -370,7 +357,7 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		}
 		else
 		{
-			shift(plugin->N, plugin->hopa, plugin->Hops, plugin->frames, plugin->frames2, &plugin->w, &plugin->XaPrevious, &plugin->Xa_arg, &plugin->Xa_abs, &plugin->XaPrevious_arg, &plugin->PhiPrevious, &plugin->Q, plugin->yshift, &plugin->Xa, &plugin->Xs, plugin->q, &plugin->qaux, &plugin->Phi, plugin->ysaida, plugin->ysaida2,  plugin->Qcolumn, &plugin->d_phi, &plugin->d_phi_prime, &plugin->d_phi_wrapped, &plugin->omega_true_sobre_fs, &plugin->I, &plugin->AUX, plugin->p, plugin->p2, plugin->fXa, plugin->fXs);
+			shift(plugin->N, plugin->hopa, plugin->Hops, plugin->frames, plugin->frames2, &plugin->w, &plugin->XaPrevious, &plugin->Xa_arg, &plugin->Xa_abs, &plugin->XaPrevious_arg, &plugin->PhiPrevious, plugin->yshift, &plugin->Xa, &plugin->Xs, plugin->q, &plugin->Phi, plugin->ysaida, plugin->ysaida2,  plugin->Qcolumn, &plugin->d_phi, &plugin->d_phi_prime, &plugin->d_phi_wrapped, &plugin->omega_true_sobre_fs, &plugin->I, &plugin->AUX, plugin->p, plugin->p2, plugin->fXa, plugin->fXs);
 			if (c == 1)
 			{
 				for (int i=1; i<=plugin->hopa; i++)
@@ -410,8 +397,6 @@ void PitchShifter::cleanup(LV2_Handle instance)
 	fftwf_destroy_plan(plugin->p);
 	fftwf_destroy_plan(plugin->p2);
 	
-	plugin->Q.clear();
-	
 	plugin->Xa.clear();
 	
 	plugin->Xa_arg.clear();
@@ -421,7 +406,6 @@ void PitchShifter::cleanup(LV2_Handle instance)
 	
 	fftwf_free(plugin->q);
 	
-	plugin->qaux.clear();
 	plugin->Phi.clear();
 	
 	fftwf_free(plugin->frames2);
