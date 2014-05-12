@@ -6,24 +6,6 @@ list_bundles() {
     echo "mod-capo.lv2"
     echo "mod-supercapo.lv2"
     echo "mod-superwhammy.lv2"
-    echo "mod-superwhammy8.lv2"
-    echo "mod-superwhammy10.lv2"
-    echo "mod-superwhammy12.lv2"
-    echo "mod-superwhammy14.lv2"
-    echo "mod-superwhammy16.lv2"
-    echo "mod-superwhammy18.lv2"
-    echo "mod-superwhammy20.lv2"
-    echo "mod-superwhammy22.lv2"
-    echo "mod-superwhammy24.lv2"
-    echo "mod-superwhammy26.lv2"
-    echo "mod-superwhammy28.lv2"
-    echo "mod-superwhammy30.lv2"
-    echo "mod-superwhammy32.lv2"
-    echo "mod-superwhammy34.lv2"
-    echo "mod-superwhammy36.lv2"
-    echo "mod-superwhammy38.lv2"
-    echo "mod-superwhammy40.lv2"
-
 }
 
 if [ "x${1}x" == "x-lx" ]; then
@@ -35,7 +17,7 @@ if [ "x${LV2_PATH}x" == "xx" ]; then
     LV2_PATH=~/.lv2/
 fi
 
-for i in Drop Capo SuperCapo SuperWhammy SuperWhammy8 SuperWhammy10 SuperWhammy12 SuperWhammy14 SuperWhammy16 SuperWhammy18 SuperWhammy20 SuperWhammy22 SuperWhammy28 SuperWhammy30 SuperWhammy32 SuperWhammy34 SuperWhammy36 SuperWhammy38 SuperWhammy40; do
+for i in Drop Capo SuperCapo SuperWhammy; do
     cd $i
     make
     make INSTALL_PATH=$LV2_PATH install

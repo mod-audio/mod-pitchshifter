@@ -11,7 +11,7 @@
 using namespace arma;
 
 
-void shift(int N, int hopa, int *hops, double *frames, cx_vec *frames2, vec *w, cx_vec *XaPrevious, vec *Xa_arg, vec *Xa_abs, vec *XaPrevious_arg, vec *PhiPrevious, mat *Q, double *yshift, cx_vec *Xa, cx_vec *Xs, vec *q, cx_vec *qaux, vec *Phi, double *ysaida, double *ysaida2, int Qcolumn, vec *d_phi, vec *d_phi_prime, vec *d_phi_wrapped, vec *omega_true_sobre_fs, vec *I, vec *AUX, fftw_plan p, fftw_plan p2)
+void shift(int N, int hopa, int *hops, double *frames, float *frames2, vec *w, cx_vec *XaPrevious, vec *Xa_arg, vec *Xa_abs, vec *XaPrevious_arg, vec *PhiPrevious, double *yshift, cx_vec *Xa, cx_vec *Xs, float *q, vec *Phi, double *ysaida, double *ysaida2, int Qcolumn, vec *d_phi, vec *d_phi_prime, vec *d_phi_wrapped, vec *omega_true_sobre_fs, vec *I, vec *AUX, fftwf_plan p, fftwf_plan p2, fftwf_complex *fXa, fftwf_complex *fXs)
 {
 	static bool first = true;
 	
@@ -22,7 +22,6 @@ void shift(int N, int hopa, int *hops, double *frames, cx_vec *frames2, vec *w, 
 	{
 		L = L + hops[i-1];
 	}
-	int Hops = 0;
 	double r;
 	complex<double> j;
 	int n1;
@@ -39,17 +38,17 @@ void shift(int N, int hopa, int *hops, double *frames, cx_vec *frames2, vec *w, 
 	
 	for (int i=1; i<=N; i++)
 	{
-		frames2[0](i-1) = frames[i-1];
+		frames2[i-1] = frames[i-1]*w[0](i-1)/(sqrt(((double)N/(2*(double)hopa))));
 	}
 	
-	frames2[0] = frames2[0]%w[0]/(sqrt(((double)N/(2*(double)hopa))));
-	
 	/*Analysis*/
-	fftw_execute(p);
+	fftwf_execute(p);
 	
 	/*Processing*/
-	for (int i=1; i<=N; i++)
+	
+	for (int i=1; i<=(N/2 + 1); i++)
 	{
+		Xa[0](i-1) = cx_float(fXa[i-1][0], fXa[i-1][1]);
 		Xa_arg[0](i-1) = angle(Xa[0](i-1));
 	}
 	d_phi[0] = Xa_arg[0] - XaPrevious_arg[0];
@@ -59,7 +58,7 @@ void shift(int N, int hopa, int *hops, double *frames, cx_vec *frames2, vec *w, 
 	omega_true_sobre_fs[0] = (2*M_PI/N) * I[0] + d_phi_wrapped[0] / hopa;
 	Phi[0] = PhiPrevious[0] + (hops[Qcolumn-1])*omega_true_sobre_fs[0] ;
 	Xa_abs[0] = abs(Xa[0]);
-	for (int i=1; i<=N; i++)
+	for (int i=1; i<=(N/2 + 1); i++)
 	{
         Xs[0](i-1) = ExponencialComplexa(Phi[0](i-1));
 	}
@@ -68,10 +67,20 @@ void shift(int N, int hopa, int *hops, double *frames, cx_vec *frames2, vec *w, 
 	XaPrevious_arg[0] = Xa_arg[0];
 	PhiPrevious[0] = Phi[0];
 	
+	
+	for (int i=1; i<=(N/2 + 1); i++)
+	{
+        fXs[i-1][0] = real(Xs[0](i-1));
+        fXs[i-1][1] = imag(Xs[0](i-1));
+	}
+	
 	/*Synthesis*/
-	fftw_execute(p2);
-	q[0] = real(qaux[0])/N;
-	q[0] = q[0] % w[0]/(sqrt((N/(2*hops[Qcolumn-1]))));
+	fftwf_execute(p2);
+	
+	for (int i=1; i<=N; i++)
+	{
+		q[i-1] = q[i-1]*w[0](i-1)/(N*sqrt((N/(2*hops[Qcolumn-1]))));
+	}
 	
 	if ( first == true)
 	{
@@ -82,14 +91,14 @@ void shift(int N, int hopa, int *hops, double *frames, cx_vec *frames2, vec *w, 
 		}
 		for (int i=L-N+1; i<=L; i++)
 		{
-			ysaida[i-1] = q[0](i-(L-N+1));
+			ysaida[i-1] = q[i-(L-N+1)];
 		}
 	}
 	else
 	{
 		for (int i=L-N+1; i<=L; i++)
 		{
-			ysaida[i-1] = ysaida[i-1] + q[0](i-(L-N+1));
+			ysaida[i-1] = ysaida[i-1] + q[i-(L-N+1)];
 		}
 	}
 	//Linear interpolation

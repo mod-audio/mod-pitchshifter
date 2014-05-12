@@ -1,20 +1,17 @@
 
 # installation path
-ifndef INSTALL_PATH
-	INSTALL_PATH = /usr/local/lib/lv2/
-endif
-
+INSTALL_PATH = /usr/local/lib/lv2/
 
 # compiler and linker
 CC = g++
 LD = g++
 
 # flags
-CFLAGS = -I. -O3 -ffast-math -Wall -Wextra -march=native -mtune=native -c -fPIC -DPIC
+CFLAGS = -I. -O3 -ffast-math -msse -msse3 -mfpmath=sse -Wall -Wextra -march=native -mtune=native -c -fPIC -DPIC
 LDFLAGS = -shared -lc -lm -fPIC -DPIC
 
 # libs
-LIBS = -lfftw3 -lm -larmadillo
+LIBS = -lfftw3f -lm -larmadillo
 
 # remove command
 RM = rm -f
@@ -29,6 +26,10 @@ PLUGIN = mod-drop.so
 $(PLUGIN): $(OBJ)
 	$(LD) $(LDFLAGS) $(OBJ) -o $(PLUGIN) $(LIBS)
 
+gentable:
+	cd ./../Shared_files && ./AtanTable.py
+	cd ./../Shared_files && ./CxExpTable.py
+
 %.o: %.cpp
 	$(CC) $(CFLAGS) -o $@ $<
 
@@ -36,7 +37,7 @@ clean:
 	$(RM) src/*.o $(PLUGIN)
 
 install:
-	mkdir -p $(INSTALL_PATH)/mod-drop.lv2
-	cp $(PLUGIN) $(INSTALL_PATH)/mod-drop.lv2
-	cp ttl/*.ttl $(INSTALL_PATH)/mod-drop.lv2
+	mkdir -p $(INSTALL_PATH)/mod-drop.lv2/
+	cp $(PLUGIN) $(INSTALL_PATH)/mod-drop.lv2/
+	cp ttl/*.ttl $(INSTALL_PATH)/mod-drop.lv2/
 	test -d ttl/modgui && cp -r ttl/modgui/ $(INSTALL_PATH)/mod-drop.lv2/ || true

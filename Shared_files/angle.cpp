@@ -7,9 +7,6 @@ using namespace std;
 
 double arctg( double x)
 {
-	int d = 200000;
-	double inicio = 0;
-	double fim = 25000;
 	int flag = 1;
 	
 	if (x < 0)
@@ -18,24 +15,17 @@ double arctg( double x)
 		x = -x;
 	}
 	
-	double n;
-	n = ((x-inicio)/(fim-inicio))*2*d;
-	int n1 = floor(n);
-	int n2 = ceil(n);
+	int n = round(((x-ATAN_inicio)/(ATAN_fim-ATAN_inicio))*ATAN_N);
 	
 	double ArcTg;
-	double ArcTg1;
-	double ArcTg2;
 	
-	if( x > fim)
+	if( x > ATAN_fim)
 	{
 		ArcTg = flag*M_PI/2;
 	}
 	else
 	{
-		ArcTg1 = Arctg[n1];
-		ArcTg2 = Arctg[n2];
-		ArcTg = (ArcTg1 + (ArcTg2-ArcTg1)*(n-n1))*flag;
+		ArcTg = Arctg[n]*flag;
 	}
 	//ArcTg = flag*atan(x);
 	

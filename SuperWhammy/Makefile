@@ -11,7 +11,7 @@ CFLAGS = -I. -O3 -ffast-math -msse -msse3 -mfpmath=sse -Wall -Wextra -march=nati
 LDFLAGS = -shared -lc -lm -fPIC -DPIC
 
 # libs
-LIBS = -lfftw3 -lm -larmadillo
+LIBS = -lfftw3f -lm -larmadillo
 
 # remove command
 RM = rm -f
@@ -25,6 +25,10 @@ PLUGIN = mod-superwhammy.so
 
 $(PLUGIN): $(OBJ)
 	$(LD) $(LDFLAGS) $(OBJ) -o $(PLUGIN) $(LIBS)
+
+gentable:
+	cd ./../Shared_files && ./AtanTable.py
+	cd ./../Shared_files && ./CxExpTable.py
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) -o $@ $<
