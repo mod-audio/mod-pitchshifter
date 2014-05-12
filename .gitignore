@@ -1,4 +1,4 @@
 *.so
 *.o
-./Shared_files/Exponencial.h
-./Shared_files/arc.h
+Shared_files/Exponencial.h
+Shared_files/arc.h
