@@ -1,6 +1,3 @@
-cd 2_Parameters_PitchShifter
-make install
-cd ..
 cd Capo
 make install
 cd ..
@@ -10,12 +7,6 @@ cd ..
 cd Drop
 make install
 cd ..
-cd Whammy
-make install
-cd ..
 cd SuperWhammy
-make install
-cd ..
-cd Generic_PitchShifter
 make install
 cd ..

@@ -1,6 +1,3 @@
-cd 2_Parameters_PitchShifter
-make clean
-cd ..
 cd Capo
 make clean
 cd ..
@@ -10,12 +7,9 @@ cd ..
 cd Drop
 make clean
 cd ..
-cd Whammy
-make clean
-cd ..
 cd SuperWhammy
 make clean
 cd ..
-cd Generic_PitchShifter
-make clean
+cd Shared_files
+rm -f *.o
 cd ..
