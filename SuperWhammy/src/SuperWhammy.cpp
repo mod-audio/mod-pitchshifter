@@ -107,7 +107,7 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 {
     PitchShifter *plugin = new PitchShifter();
     
-    plugin->nBuffers = 20;
+    plugin->nBuffers = 18;
     plugin->Qcolumn = 2*plugin->nBuffers;
     plugin->hopa = TAMANHO_DO_BUFFER;
     plugin->N = plugin->nBuffers*plugin->hopa;
