@@ -9,7 +9,7 @@ getcontext().prec = 50
 if len(sys.argv) > 1:
     N = int(sys.argv[1])
 else:
-    N = Decimal(4000000)
+    N = Decimal(3000000)
 
 dx = Decimal(0.0005)
 

@@ -6,7 +6,7 @@ Pitch Shifter effects developed by mod team
 Installation:
 
 	Dependencies:
-	-FFTW
+	-FFTW (configure fftw with the flags --enable-shared and --enable-float)
 	-Armadillo
 
 	./make.sh
