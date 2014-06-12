@@ -1,7 +1,15 @@
 mod-pitchshifter
 ================
 
-Pitch Shifter effects developed by mod team
+Pitch Shifter lv2 effects developed by mod team
+
+These effects are supposed to work well with the
+following values of Frames/Period: 64, 128, 256, 512
+
+It's advisable that you use a RT kernel configured for audio.
+It will allow you to use lower values of Frames/Period (-> less latency) without x-runs.
+
+You need a PC with at least 2Gb of ram to compile the source code.
 
 Installation:
 
