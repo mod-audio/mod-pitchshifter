@@ -12,7 +12,7 @@
 /**********************************************************************************************************************************************************/
 
 #define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/SuperCapo"
-#define TAMANHO_DO_BUFFER 128
+#define TAMANHO_DO_BUFFER 64
 enum {IN, OUT_1, STEP, GAIN, PLUGIN_PORT_COUNT};
 
 /**********************************************************************************************************************************************************/
@@ -104,7 +104,7 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 {
     PitchShifter *plugin = new PitchShifter();
     
-    plugin->nBuffers = 20;
+    plugin->nBuffers = 36;
     plugin->Qcolumn = plugin->nBuffers;
     plugin->hopa = TAMANHO_DO_BUFFER;
     plugin->N = plugin->nBuffers*plugin->hopa;
@@ -113,7 +113,9 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
     plugin->s = 0;
     plugin->g = 1;    
     
-    plugin->Hops = (int*)calloc(plugin->Qcolumn,sizeof(int)); memset(plugin->Hops, plugin->hopa, plugin->Qcolumn );
+    plugin->Hops = (int*)calloc(plugin->Qcolumn,sizeof(int));
+    for (int i=1;i<=plugin->Qcolumn;i++) plugin->Hops[i-1] = plugin->hopa;
+    
     plugin->frames = (double*)calloc(plugin->N,sizeof(double));
     plugin->ysaida = (double*)calloc(2*(plugin->N + 2*(plugin->Qcolumn-1)*plugin->hopa),sizeof(double));
     plugin->yshift = (double*)calloc(plugin->hopa,sizeof(double));
@@ -195,42 +197,33 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 {
     PitchShifter *plugin;
     plugin = (PitchShifter *) instance;
-
-    float media = 0;
-    
-    for (uint32_t i=1; i<n_samples; i++)
-    {
-		media = media + abs(plugin->in[i-1]);
-	}
-	
-	if (media == 0)
-	{
-		for (uint32_t i=1; i<n_samples; i++)
-		{
-			plugin->out_1[i-1] = 0;
-		}
-	}
-	else
-	{
-		
-    int hops;
-    
-    double g_before = plugin->g;
-    plugin->g = pow(10, (float)(*(plugin->gain))/20.0);
-    plugin->s = (double)(*(plugin->step));
-    hops = round(plugin->hopa*(pow(2,(plugin->s/12))));
-    
-	for (int k=1; k<= plugin->Qcolumn-1; k++)
-    {
-		plugin->Hops[k-1] = plugin->Hops[k];
-	}
-    
-    plugin->Hops[plugin->Qcolumn-1] = hops;
     
     if ( ((plugin->hopa) != (int)n_samples) )
     {
+		
+		switch ((int)n_samples)
+		{
+			case 64:
+				plugin->nBuffers = 38;
+				break;
+			case 128:
+				plugin->nBuffers = 20;
+				break;
+			case 256:
+				plugin->nBuffers = 12;
+				break;
+			case 512:
+				plugin->nBuffers = 6;
+				break;
+		}
+		
+		plugin->Qcolumn = plugin->nBuffers;
+		
 		plugin->hopa = n_samples;
 		plugin->N = plugin->nBuffers*plugin->hopa;
+		
+		plugin->Hops = (int*)realloc(plugin->Hops,plugin->Qcolumn*sizeof(int));
+		for (int i=1;i<=plugin->Qcolumn;i++) plugin->Hops[i-1] = plugin->hopa;
 		
 		plugin->frames = (double*)realloc(plugin->frames,plugin->N*sizeof(double));                                          memset(plugin->frames, 0, plugin->N );
 		plugin->ysaida = (double*)realloc(plugin->ysaida,2*(plugin->N + 2*(plugin->Qcolumn-1)*plugin->hopa)*sizeof(double)); memset(plugin->ysaida, 0, 2*(plugin->N + 2*(plugin->Qcolumn-1)*plugin->hopa) );
@@ -268,6 +261,38 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		
 		return;
 	}
+
+    float media = 0;
+    
+    for (uint32_t i=1; i<n_samples; i++)
+    {
+		media = media + abs(plugin->in[i-1]);
+	}
+	
+	if (media == 0)
+	{
+		for (uint32_t i=1; i<n_samples; i++)
+		{
+			plugin->out_1[i-1] = 0;
+		}
+	}
+	else
+	{
+		
+    int hops;
+    
+    double g_before = plugin->g;
+    plugin->g = pow(10, (float)(*(plugin->gain))/20.0);
+    plugin->s = (double)(*(plugin->step));
+    hops = round(plugin->hopa*(pow(2,(plugin->s/12))));
+    
+	for (int k=1; k<= plugin->Qcolumn-1; k++)
+    {
+		plugin->Hops[k-1] = plugin->Hops[k];
+	}
+    
+    plugin->Hops[plugin->Qcolumn-1] = hops;
+    
     
 		for (int i=1; i<=plugin->hopa; i++)
 		{
