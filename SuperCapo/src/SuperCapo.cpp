@@ -213,7 +213,7 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 				plugin->nBuffers = 12;
 				break;
 			case 512:
-				plugin->nBuffers = 6;
+				plugin->nBuffers = 8;
 				break;
 		}
 		
