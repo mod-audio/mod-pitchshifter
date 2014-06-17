@@ -237,9 +237,9 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		plugin->Hops = (int*)realloc(plugin->Hops,plugin->Qcolumn*sizeof(int));
 		for (int i=1;i<=plugin->Qcolumn;i++) plugin->Hops[i-1] = plugin->hopa;
 		
-		plugin->frames = (double*)realloc(plugin->frames,plugin->N*sizeof(double));                                          memset(plugin->frames, 0, plugin->N );
-		plugin->ysaida = (double*)realloc(plugin->ysaida,2*(plugin->N + 2*(plugin->Qcolumn-1)*plugin->hopa)*sizeof(double)); memset(plugin->ysaida, 0, 2*(plugin->N + 2*(plugin->Qcolumn-1)*plugin->hopa) );
-		plugin->yshift = (double*)realloc(plugin->yshift,plugin->hopa*sizeof(double));                                       memset(plugin->yshift, 0, plugin->hopa );
+		plugin->frames = (double*)realloc(plugin->frames,plugin->N*sizeof(double));                                          memset(plugin->frames, 0, plugin->N*sizeof(double) );
+		plugin->ysaida = (double*)realloc(plugin->ysaida,2*(plugin->N + 2*(plugin->Qcolumn-1)*plugin->hopa)*sizeof(double)); memset(plugin->ysaida, 0, 2*(plugin->N + 2*(plugin->Qcolumn-1)*plugin->hopa)*sizeof(double) );
+		plugin->yshift = (double*)realloc(plugin->yshift,plugin->hopa*sizeof(double));                                       memset(plugin->yshift, 0, plugin->hopa*sizeof(double) );
 		plugin->b = (double**)realloc(plugin->b,plugin->hopa*sizeof(double*));
 		
 		fftwf_free(plugin->frames2); plugin->frames2 = fftwf_alloc_real(plugin->N);
