@@ -1,0 +1,15 @@
+{
+    "author": "MOD", 
+    "color": "darkblue", 
+    "controls": [
+        {
+            "name": "Step", 
+            "symbol": "Step"
+        }, 
+        {
+            "name": "Gain", 
+            "symbol": "Gain"
+        }
+    ], 
+    "label": "Capo"
+}

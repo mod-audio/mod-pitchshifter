@@ -11,3 +11,6 @@ cd ..
 cd SuperWhammy
 make
 cd ..
+cd Harmonizer
+make
+cd ..

@@ -10,6 +10,9 @@ cd ..
 cd SuperWhammy
 make clean
 cd ..
+cd Harmonizer
+make clean
+cd ..
 cd Shared_files
 rm -f *.o
 cd ..

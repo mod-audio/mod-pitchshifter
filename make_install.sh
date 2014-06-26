@@ -10,3 +10,6 @@ cd ..
 cd SuperWhammy
 make install
 cd ..
+cd Harmonizer
+make install
+cd ..
