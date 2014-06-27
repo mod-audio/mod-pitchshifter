@@ -92,6 +92,8 @@ public:
 	
 	int note;
 	int oitava;
+	
+	double SampleRate;
         
     fftwf_plan p;
 	fftwf_plan p2;
@@ -127,6 +129,8 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 {
     PitchShifter *plugin = new PitchShifter();
     
+    plugin->SampleRate = samplerate;
+        
     plugin->nBuffers = 32;
     plugin->Qcolumn = 1*plugin->nBuffers;
     plugin->hopa = TAMANHO_DO_BUFFER;
@@ -358,7 +362,7 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		}
 		else
 		{
-			FindNote(plugin->N, plugin->frames, plugin->frames3, &plugin->Xa2, &plugin->Xs2, plugin->q2, plugin->Qcolumn, plugin->p3, plugin->p4, plugin->fXa2, plugin->fXs2, &plugin->R, &plugin->NORM, &plugin->F, &plugin->AUTO, 48000, &plugin->note, &plugin->oitava );
+			FindNote(plugin->N, plugin->frames, plugin->frames3, &plugin->Xa2, &plugin->Xs2, plugin->q2, plugin->Qcolumn, plugin->p3, plugin->p4, plugin->fXa2, plugin->fXs2, &plugin->R, &plugin->NORM, &plugin->F, &plugin->AUTO, plugin->SampleRate, &plugin->note, &plugin->oitava );
 			FindStep(plugin->note, plugin->oitava, Tone, Scale, Interval, plugin->hopa, plugin->Qcolumn, &plugin->s, plugin->Hops);
 			shift(plugin->N, plugin->hopa, plugin->Hops, plugin->frames, plugin->frames2, &plugin->w, &plugin->XaPrevious, &plugin->Xa_arg, &plugin->Xa_abs, &plugin->XaPrevious_arg, &plugin->PhiPrevious, plugin->yshift, &plugin->Xa, &plugin->Xs, plugin->q, &plugin->Phi, plugin->ysaida, plugin->ysaida2,  plugin->Qcolumn, &plugin->d_phi, &plugin->d_phi_prime, &plugin->d_phi_wrapped, &plugin->omega_true_sobre_fs, &plugin->I, &plugin->AUX, plugin->p, plugin->p2, plugin->fXa, plugin->fXs);
 			
