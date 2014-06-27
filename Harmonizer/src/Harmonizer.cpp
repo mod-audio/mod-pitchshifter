@@ -284,9 +284,13 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		plugin->b = (double**)realloc(plugin->b,plugin->hopa*sizeof(double*));
 		
 		fftwf_free(plugin->frames2); plugin->frames2 = fftwf_alloc_real(plugin->N);
+		fftwf_free(plugin->frames3); plugin->frames3 = fftwf_alloc_real(2*plugin->N); memset(plugin->frames3, 0, 2*plugin->N );
 		fftwf_free(plugin->q);       plugin->q = fftwf_alloc_real(plugin->N);
+		fftwf_free(plugin->q2);      plugin->q2 = fftwf_alloc_real(2*plugin->N);
 		fftwf_free(plugin->fXa);     plugin->fXa = fftwf_alloc_complex(plugin->N/2 + 1);
 		fftwf_free(plugin->fXs);     plugin->fXs = fftwf_alloc_complex(plugin->N/2 + 1);
+		fftwf_free(plugin->fXa2);    plugin->fXa2 = fftwf_alloc_complex(plugin->N + 1);
+		fftwf_free(plugin->fXs2);    plugin->fXs2 = fftwf_alloc_complex(plugin->N + 1);		
 		
 		plugin->Xa.zeros(plugin->N/2 + 1); 
 		plugin->Xs.zeros(plugin->N/2 + 1); 
@@ -302,7 +306,12 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		plugin->AUX.zeros(plugin->N/2 + 1);
 		plugin->Xa_abs.zeros(plugin->N/2 + 1);
 		plugin->w.zeros(plugin->N); hann(plugin->N,&plugin->w);
-		plugin->I.zeros(plugin->N/2 + 1); plugin->I = linspace(0, plugin->N/2,plugin->N/2 + 1);		
+		plugin->I.zeros(plugin->N/2 + 1); plugin->I = linspace(0, plugin->N/2,plugin->N/2 + 1);	
+		
+		plugin->R.zeros(plugin->N);
+		plugin->NORM.zeros(plugin->N);
+		plugin->F.zeros(plugin->N);
+		plugin->AUTO.zeros(plugin->N);	
 		
 		for (int i=1 ; i<= plugin->nBuffers; i++)
 		{
@@ -311,6 +320,8 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		
 		fftwf_destroy_plan(plugin->p);  plugin->p = fftwf_plan_dft_r2c_1d(plugin->N, plugin->frames2, plugin->fXa, FFTW_ESTIMATE);
 		fftwf_destroy_plan(plugin->p2); plugin->p2 = fftwf_plan_dft_c2r_1d(plugin->N, plugin->fXs, plugin->q, FFTW_ESTIMATE);
+		fftwf_destroy_plan(plugin->p3); plugin->p3 = fftwf_plan_dft_r2c_1d(2*plugin->N, plugin->frames3, plugin->fXa2, FFTW_ESTIMATE);
+		fftwf_destroy_plan(plugin->p4); plugin->p4 = fftwf_plan_dft_c2r_1d(2*plugin->N, plugin->fXs2, plugin->q2, FFTW_ESTIMATE);
 		
 		return;
 	}
