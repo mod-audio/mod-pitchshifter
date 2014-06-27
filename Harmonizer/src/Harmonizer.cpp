@@ -41,9 +41,11 @@ public:
     float *gain_2;
     
     int nBuffers;
+    int nBuffers2;
     int Qcolumn;
     int hopa;
     int N;
+    int N2;
     int cont;
     
     double s;
@@ -132,9 +134,11 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
     plugin->SampleRate = samplerate;
         
     plugin->nBuffers = 32;
+    plugin->nBuffers2 = 16;
     plugin->Qcolumn = 1*plugin->nBuffers;
     plugin->hopa = TAMANHO_DO_BUFFER;
     plugin->N = plugin->nBuffers*plugin->hopa;
+    plugin->N2 = plugin->nBuffers2*plugin->hopa;
     plugin->cont = 0;
     
     plugin->s = 0;
@@ -173,15 +177,15 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 	plugin->w.zeros(plugin->N); hann(plugin->N,&plugin->w);
 	plugin->I.zeros(plugin->N/2 + 1); plugin->I = linspace(0, plugin->N/2,plugin->N/2 + 1);
 	
-	plugin->frames3 = fftwf_alloc_real(2*plugin->N); memset(plugin->frames3, 0, 2*plugin->N );
-	plugin->q2 = fftwf_alloc_real(2*plugin->N);	
-	plugin->fXa2 = fftwf_alloc_complex(plugin->N + 1);
-	plugin->fXs2 = fftwf_alloc_complex(plugin->N + 1);
+	plugin->frames3 = fftwf_alloc_real(2*plugin->N2); memset(plugin->frames3, 0, 2*plugin->N2 );
+	plugin->q2 = fftwf_alloc_real(2*plugin->N2);	
+	plugin->fXa2 = fftwf_alloc_complex(plugin->N2 + 1);
+	plugin->fXs2 = fftwf_alloc_complex(plugin->N2 + 1);
 	
-	plugin->R.zeros(plugin->N);
-	plugin->NORM.zeros(plugin->N);
-	plugin->F.zeros(plugin->N);
-	plugin->AUTO.zeros(plugin->N);
+	plugin->R.zeros(plugin->N2);
+	plugin->NORM.zeros(plugin->N2);
+	plugin->F.zeros(plugin->N2);
+	plugin->AUTO.zeros(plugin->N2);
     
     for (int i=1 ; i<= (plugin->nBuffers); i++)
     {
@@ -190,8 +194,8 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 	
 	plugin->p = fftwf_plan_dft_r2c_1d(plugin->N, plugin->frames2, plugin->fXa, FFTW_ESTIMATE);
 	plugin->p2 = fftwf_plan_dft_c2r_1d(plugin->N, plugin->fXs, plugin->q, FFTW_ESTIMATE);
-	plugin->p3 = fftwf_plan_dft_r2c_1d(2*plugin->N, plugin->frames3, plugin->fXa2, FFTW_ESTIMATE);
-	plugin->p4 = fftwf_plan_dft_c2r_1d(2*plugin->N, plugin->fXs2, plugin->q2, FFTW_ESTIMATE);
+	plugin->p3 = fftwf_plan_dft_r2c_1d(2*plugin->N2, plugin->frames3, plugin->fXa2, FFTW_ESTIMATE);
+	plugin->p4 = fftwf_plan_dft_c2r_1d(2*plugin->N2, plugin->fXs2, plugin->q2, FFTW_ESTIMATE);
 	
     return (LV2_Handle)plugin;
 }
@@ -260,15 +264,19 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		{
 			case 64:
 				plugin->nBuffers = 32;
+				plugin->nBuffers2 = 16;
 				break;
 			case 128:
 				plugin->nBuffers = 16;
+				plugin->nBuffers2 = 8;
 				break;
 			case 256:
 				plugin->nBuffers = 8;
+				plugin->nBuffers2 = 4;
 				break;
 			case 512:
 				plugin->nBuffers = 4;
+				plugin->nBuffers2 = 2;
 				break;
 		}
 		
@@ -276,6 +284,7 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		
 		plugin->hopa = n_samples;
 		plugin->N = plugin->nBuffers*plugin->hopa;
+		plugin->N2 = plugin->nBuffers2*plugin->hopa;
 		
 		plugin->Hops = (int*)realloc(plugin->Hops,plugin->Qcolumn*sizeof(int));
 		for (int i=1;i<=plugin->Qcolumn;i++) plugin->Hops[i-1] = plugin->hopa;
@@ -306,15 +315,15 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		plugin->w.zeros(plugin->N); hann(plugin->N,&plugin->w);
 		plugin->I.zeros(plugin->N/2 + 1); plugin->I = linspace(0, plugin->N/2,plugin->N/2 + 1);
 		
-		fftwf_free(plugin->frames3); plugin->frames3 = fftwf_alloc_real(2*plugin->N); memset(plugin->frames3, 0, 2*plugin->N );
-		fftwf_free(plugin->q2);      plugin->q2 = fftwf_alloc_real(2*plugin->N);
-		fftwf_free(plugin->fXa2);    plugin->fXa2 = fftwf_alloc_complex(plugin->N + 1);
-		fftwf_free(plugin->fXs2);    plugin->fXs2 = fftwf_alloc_complex(plugin->N + 1);		
+		fftwf_free(plugin->frames3); plugin->frames3 = fftwf_alloc_real(2*plugin->N2); memset(plugin->frames3, 0, 2*plugin->N2 );
+		fftwf_free(plugin->q2);      plugin->q2 = fftwf_alloc_real(2*plugin->N2);
+		fftwf_free(plugin->fXa2);    plugin->fXa2 = fftwf_alloc_complex(plugin->N2 + 1);
+		fftwf_free(plugin->fXs2);    plugin->fXs2 = fftwf_alloc_complex(plugin->N2 + 1);		
 		
-		plugin->R.zeros(plugin->N);
-		plugin->NORM.zeros(plugin->N);
-		plugin->F.zeros(plugin->N);
-		plugin->AUTO.zeros(plugin->N);	
+		plugin->R.zeros(plugin->N2);
+		plugin->NORM.zeros(plugin->N2);
+		plugin->F.zeros(plugin->N2);
+		plugin->AUTO.zeros(plugin->N2);	
 		
 		for (int i=1 ; i<= plugin->nBuffers; i++)
 		{
@@ -323,8 +332,8 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		
 		fftwf_destroy_plan(plugin->p);  plugin->p = fftwf_plan_dft_r2c_1d(plugin->N, plugin->frames2, plugin->fXa, FFTW_ESTIMATE);
 		fftwf_destroy_plan(plugin->p2); plugin->p2 = fftwf_plan_dft_c2r_1d(plugin->N, plugin->fXs, plugin->q, FFTW_ESTIMATE);
-		fftwf_destroy_plan(plugin->p3); plugin->p3 = fftwf_plan_dft_r2c_1d(2*plugin->N, plugin->frames3, plugin->fXa2, FFTW_ESTIMATE);
-		fftwf_destroy_plan(plugin->p4); plugin->p4 = fftwf_plan_dft_c2r_1d(2*plugin->N, plugin->fXs2, plugin->q2, FFTW_ESTIMATE);
+		fftwf_destroy_plan(plugin->p3); plugin->p3 = fftwf_plan_dft_r2c_1d(2*plugin->N2, plugin->frames3, plugin->fXa2, FFTW_ESTIMATE);
+		fftwf_destroy_plan(plugin->p4); plugin->p4 = fftwf_plan_dft_c2r_1d(2*plugin->N2, plugin->fXs2, plugin->q2, FFTW_ESTIMATE);
 		
 		return;
 	}
@@ -376,7 +385,7 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		}
 		else
 		{
-			FindNote(plugin->N, plugin->frames, plugin->frames3, &plugin->Xa2, &plugin->Xs2, plugin->q2, plugin->Qcolumn, plugin->p3, plugin->p4, plugin->fXa2, plugin->fXs2, &plugin->R, &plugin->NORM, &plugin->F, &plugin->AUTO, plugin->SampleRate, &plugin->note, &plugin->oitava );
+			FindNote(plugin->N2, plugin->frames, plugin->frames3, &plugin->Xa2, &plugin->Xs2, plugin->q2, plugin->Qcolumn, plugin->p3, plugin->p4, plugin->fXa2, plugin->fXs2, &plugin->R, &plugin->NORM, &plugin->F, &plugin->AUTO, plugin->SampleRate, &plugin->note, &plugin->oitava );
 			FindStep(plugin->note, plugin->oitava, Tone, Scale, Interval, plugin->hopa, plugin->Qcolumn, &plugin->s, plugin->Hops);
 			shift(plugin->N, plugin->hopa, plugin->Hops, plugin->frames, plugin->frames2, &plugin->w, &plugin->XaPrevious, &plugin->Xa_arg, &plugin->Xa_abs, &plugin->XaPrevious_arg, &plugin->PhiPrevious, plugin->yshift, &plugin->Xa, &plugin->Xs, plugin->q, &plugin->Phi, plugin->ysaida, plugin->ysaida2,  plugin->Qcolumn, &plugin->d_phi, &plugin->d_phi_prime, &plugin->d_phi_wrapped, &plugin->omega_true_sobre_fs, &plugin->I, &plugin->AUX, plugin->p, plugin->p2, plugin->fXa, plugin->fXs);
 			
