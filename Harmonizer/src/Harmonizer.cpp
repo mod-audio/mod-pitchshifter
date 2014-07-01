@@ -14,7 +14,7 @@
 
 #define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/Harmonizer"
 #define TAMANHO_DO_BUFFER 64
-enum {IN, OUT_1, OUT_2, TONE, SCALE, INTERVAL, MODE, GAIN_1, GAIN_2, PLUGIN_PORT_COUNT};
+enum {IN, OUT_1, OUT_2, TONE, SCALE, INTERVAL, MODE, LOWNOTE, GAIN_1, GAIN_2, PLUGIN_PORT_COUNT};
 
 /**********************************************************************************************************************************************************/
 
@@ -38,6 +38,7 @@ public:
     float *scale;
     float *interval;
     float *mode;
+    float *lownote;
     float *gain_1;
     float *gain_2;
     
@@ -245,6 +246,9 @@ void PitchShifter::connect_port(LV2_Handle instance, uint32_t port, void *data)
         case MODE:
             plugin->mode = (float*) data;
             break;
+        case LOWNOTE:
+            plugin->lownote = (float*) data;
+            break;
         case GAIN_1:
             plugin->gain_1 = (float*) data;
             break;
@@ -363,6 +367,7 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 	int Scale = (int)(*(plugin->scale));
 	int Interval = (int)(*(plugin->interval));
 	int Mode = (int)(*(plugin->mode));
+	int LowNote = (int)(*(plugin->lownote));
 		    
     double g1_before = plugin->g1;
     double g2_before = plugin->g2;
@@ -391,7 +396,7 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		else
 		{
 			FindNote(plugin->N2, plugin->frames, plugin->frames3, &plugin->Xa2, &plugin->Xs2, plugin->q2, plugin->Qcolumn, plugin->p3, plugin->p4, plugin->fXa2, plugin->fXs2, &plugin->R, &plugin->NORM, &plugin->F, &plugin->AUTO, plugin->SampleRate, &plugin->note, &plugin->oitava );
-			FindStep(plugin->note, plugin->oitava, Tone, Scale, Interval, Mode, plugin->hopa, plugin->Qcolumn, &plugin->s, plugin->Hops);
+			FindStep(plugin->note, plugin->oitava, Tone, Scale, Interval, Mode, LowNote, plugin->hopa, plugin->Qcolumn, &plugin->s, plugin->Hops);
 			shift(plugin->N, plugin->hopa, plugin->Hops, plugin->frames, plugin->frames2, &plugin->w, &plugin->XaPrevious, &plugin->Xa_arg, &plugin->Xa_abs, &plugin->XaPrevious_arg, &plugin->PhiPrevious, plugin->yshift, &plugin->Xa, &plugin->Xs, plugin->q, &plugin->Phi, plugin->ysaida, plugin->ysaida2,  plugin->Qcolumn, &plugin->d_phi, &plugin->d_phi_prime, &plugin->d_phi_wrapped, &plugin->omega_true_sobre_fs, &plugin->I, &plugin->AUX, plugin->p, plugin->p2, plugin->fXa, plugin->fXs);
 			
 				for (int i=1; i<=plugin->hopa; i++)

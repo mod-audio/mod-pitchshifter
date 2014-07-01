@@ -98,7 +98,7 @@ void FindNote(int N, double *frames, float *frames3, cx_vec *Xa2, cx_vec *Xs2, f
 	
 }
 
-void FindStep(int note, int oitava, int Tone, int Scale, int Interval, int Mode, int hopa, int Qcolumn, double *s, int *hops)
+void FindStep(int note, int oitava, int Tone, int Scale, int Interval, int Mode, int LowNote, int hopa, int Qcolumn, double *s, int *hops)
 {
 	
 		float scale[3][4][3][12];
@@ -616,6 +616,8 @@ void FindStep(int note, int oitava, int Tone, int Scale, int Interval, int Mode,
 	if (Scale > 2) Scale = 2;
 	if (Interval < 0) Interval = 0;
 	if (Interval > 3) Interval = 3;
+	if (LowNote < 0) LowNote = 0;
+	if (LowNote > 14) LowNote = 14;
 	
 	switch (note)
 	{
@@ -654,6 +656,57 @@ void FindStep(int note, int oitava, int Tone, int Scale, int Interval, int Mode,
 			break;
 		case 11:
 			s[0] = scale[Mode][Interval][Scale][11];
+			break;
+	}
+	
+	//cout << "LowNote = " << LowNote << " note = " << note << " oitava = " << oitava;
+	
+	switch (LowNote)
+	{
+		case 0:
+			if ( (oitava == 0) || ( (oitava == 1)&&(note <= 10) )  ) s[0] = 0;
+			break;
+		case 1:
+			if ( oitava <=1 ) s[0] = 0;
+			break;
+		case 2:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note <= 1) )  ) s[0] = 0;
+			break;
+		case 3:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note <= 2) )  ) s[0] = 0;
+			break;
+		case 4:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note <= 3) )  ) s[0] = 0;
+			break;
+		case 5:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note <= 4) )  ) s[0] = 0;
+			break;
+		case 6:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note <= 5) )  ) s[0] = 0;
+			break;
+		case 7:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note <= 6) )  ) s[0] = 0;
+			break;
+		case 8:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note <= 7) )  ) s[0] = 0;
+			break;
+		case 9:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note <= 8) )  ) s[0] = 0;
+			break;
+		case 10:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note <= 9) )  ) s[0] = 0;
+			break;
+		case 11:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note <= 10) )  ) s[0] = 0;
+			break;
+		case 12:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note <= 11) )  ) s[0] = 0;
+			break;
+		case 13:
+			if ( (oitava <=2) ) s[0] = 0;
+			break;
+		case 14:
+			if ( (oitava <=2) || ( (oitava == 3)&&(note <= 1) )  ) s[0] = 0;
 			break;
 	}
 				
