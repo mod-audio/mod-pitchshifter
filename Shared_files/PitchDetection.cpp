@@ -98,178 +98,520 @@ void FindNote(int N, double *frames, float *frames3, cx_vec *Xa2, cx_vec *Xs2, f
 	
 }
 
-void FindStep(int note, int oitava, int Tone, int Scale, int Interval, int hopa, int Qcolumn, double *s, int *hops)
+void FindStep(int note, int oitava, int Tone, int Scale, int Interval, int Mode, int hopa, int Qcolumn, double *s, int *hops)
 {
 	
-		int scale[4][3][12];
+		float scale[3][4][3][12];
+		
+/**********Don't change the pitch on notes out of the scale***************/
 	
 	//Terça acima
 
-	scale[0][0][(0+Tone)%12] = 4;
-	scale[0][0][(1+Tone)%12] = 0;
-	scale[0][0][(2+Tone)%12] = 3;
-	scale[0][0][(3+Tone)%12] = 0;
-	scale[0][0][(4+Tone)%12] = 3;
-	scale[0][0][(5+Tone)%12] = 4;
-	scale[0][0][(6+Tone)%12] = 0;
-	scale[0][0][(7+Tone)%12] = 4;
-	scale[0][0][(8+Tone)%12] = 0;
-	scale[0][0][(9+Tone)%12] = 3;
-	scale[0][0][(10+Tone)%12] = 0;
-	scale[0][0][(11+Tone)%12] = 3;
+	scale[0][0][0][(0+Tone)%12] = 4;
+	scale[0][0][0][(1+Tone)%12] = 0;
+	scale[0][0][0][(2+Tone)%12] = 3;
+	scale[0][0][0][(3+Tone)%12] = 0;
+	scale[0][0][0][(4+Tone)%12] = 3;
+	scale[0][0][0][(5+Tone)%12] = 4;
+	scale[0][0][0][(6+Tone)%12] = 0;
+	scale[0][0][0][(7+Tone)%12] = 4;
+	scale[0][0][0][(8+Tone)%12] = 0;
+	scale[0][0][0][(9+Tone)%12] = 3;
+	scale[0][0][0][(10+Tone)%12] = 0;
+	scale[0][0][0][(11+Tone)%12] = 3;
 	
 	
-	scale[0][1][(0+Tone)%12] = 3;
-	scale[0][1][(1+Tone)%12] = 0;
-	scale[0][1][(2+Tone)%12] = 3;
-	scale[0][1][(3+Tone)%12] = 4;
-	scale[0][1][(4+Tone)%12] = 0;
-	scale[0][1][(5+Tone)%12] = 3;
-	scale[0][1][(6+Tone)%12] = 0;
-	scale[0][1][(7+Tone)%12] = 3;
-	scale[0][1][(8+Tone)%12] = 4;
-	scale[0][1][(9+Tone)%12] = 0;
-	scale[0][1][(10+Tone)%12] = 4;
-	scale[0][1][(11+Tone)%12] = 0;
+	scale[0][0][1][(0+Tone)%12] = 3;
+	scale[0][0][1][(1+Tone)%12] = 0;
+	scale[0][0][1][(2+Tone)%12] = 3;
+	scale[0][0][1][(3+Tone)%12] = 4;
+	scale[0][0][1][(4+Tone)%12] = 0;
+	scale[0][0][1][(5+Tone)%12] = 3;
+	scale[0][0][1][(6+Tone)%12] = 0;
+	scale[0][0][1][(7+Tone)%12] = 3;
+	scale[0][0][1][(8+Tone)%12] = 4;
+	scale[0][0][1][(9+Tone)%12] = 0;
+	scale[0][0][1][(10+Tone)%12] = 4;
+	scale[0][0][1][(11+Tone)%12] = 0;
 	
-	scale[0][2][(0+Tone)%12] = 3;
-	scale[0][2][(1+Tone)%12] = 0;
-	scale[0][2][(2+Tone)%12] = 3;
-	scale[0][2][(3+Tone)%12] = 4;
-	scale[0][2][(4+Tone)%12] = 0;
-	scale[0][2][(5+Tone)%12] = 3;
-	scale[0][2][(6+Tone)%12] = 0;
-	scale[0][2][(7+Tone)%12] = 4;
-	scale[0][2][(8+Tone)%12] = 4;
-	scale[0][2][(9+Tone)%12] = 0;
-	scale[0][2][(10+Tone)%12] = 0;
-	scale[0][2][(11+Tone)%12] = 3;
+	scale[0][0][2][(0+Tone)%12] = 3;
+	scale[0][0][2][(1+Tone)%12] = 0;
+	scale[0][0][2][(2+Tone)%12] = 3;
+	scale[0][0][2][(3+Tone)%12] = 4;
+	scale[0][0][2][(4+Tone)%12] = 0;
+	scale[0][0][2][(5+Tone)%12] = 3;
+	scale[0][0][2][(6+Tone)%12] = 0;
+	scale[0][0][2][(7+Tone)%12] = 4;
+	scale[0][0][2][(8+Tone)%12] = 4;
+	scale[0][0][2][(9+Tone)%12] = 0;
+	scale[0][0][2][(10+Tone)%12] = 0;
+	scale[0][0][2][(11+Tone)%12] = 3;
 	
 	//Sexta acima
 
-	scale[1][0][(0+Tone)%12] = 9;
-	scale[1][0][(1+Tone)%12] = 0;
-	scale[1][0][(2+Tone)%12] = 9;
-	scale[1][0][(3+Tone)%12] = 0;
-	scale[1][0][(4+Tone)%12] = 8;
-	scale[1][0][(5+Tone)%12] = 9;
-	scale[1][0][(6+Tone)%12] = 0;
-	scale[1][0][(7+Tone)%12] = 9;
-	scale[1][0][(8+Tone)%12] = 0;
-	scale[1][0][(9+Tone)%12] = 8;
-	scale[1][0][(10+Tone)%12] = 0;
-	scale[1][0][(11+Tone)%12] = 8;
+	scale[0][1][0][(0+Tone)%12] = 9;
+	scale[0][1][0][(1+Tone)%12] = 0;
+	scale[0][1][0][(2+Tone)%12] = 9;
+	scale[0][1][0][(3+Tone)%12] = 0;
+	scale[0][1][0][(4+Tone)%12] = 8;
+	scale[0][1][0][(5+Tone)%12] = 9;
+	scale[0][1][0][(6+Tone)%12] = 0;
+	scale[0][1][0][(7+Tone)%12] = 9;
+	scale[0][1][0][(8+Tone)%12] = 0;
+	scale[0][1][0][(9+Tone)%12] = 8;
+	scale[0][1][0][(10+Tone)%12] = 0;
+	scale[0][1][0][(11+Tone)%12] = 8;
 	
 	
-	scale[1][1][(0+Tone)%12] = 8;
-	scale[1][1][(1+Tone)%12] = 0;
-	scale[1][1][(2+Tone)%12] = 8;
-	scale[1][1][(3+Tone)%12] = 9;
-	scale[1][1][(4+Tone)%12] = 0;
-	scale[1][1][(5+Tone)%12] = 9;
-	scale[1][1][(6+Tone)%12] = 0;
-	scale[1][1][(7+Tone)%12] = 8;
-	scale[1][1][(8+Tone)%12] = 9;
-	scale[1][1][(9+Tone)%12] = 0;
-	scale[1][1][(10+Tone)%12] = 9;
-	scale[1][1][(11+Tone)%12] = 0;
+	scale[0][1][1][(0+Tone)%12] = 8;
+	scale[0][1][1][(1+Tone)%12] = 0;
+	scale[0][1][1][(2+Tone)%12] = 8;
+	scale[0][1][1][(3+Tone)%12] = 9;
+	scale[0][1][1][(4+Tone)%12] = 0;
+	scale[0][1][1][(5+Tone)%12] = 9;
+	scale[0][1][1][(6+Tone)%12] = 0;
+	scale[0][1][1][(7+Tone)%12] = 8;
+	scale[0][1][1][(8+Tone)%12] = 9;
+	scale[0][1][1][(9+Tone)%12] = 0;
+	scale[0][1][1][(10+Tone)%12] = 9;
+	scale[0][1][1][(11+Tone)%12] = 0;
 	
-	scale[1][2][(0+Tone)%12] = 8;
-	scale[1][2][(1+Tone)%12] = 0;
-	scale[1][2][(2+Tone)%12] = 9;
-	scale[1][2][(3+Tone)%12] = 9;
-	scale[1][2][(4+Tone)%12] = 0;
-	scale[1][2][(5+Tone)%12] = 9;
-	scale[1][2][(6+Tone)%12] = 0;
-	scale[1][2][(7+Tone)%12] = 8;
-	scale[1][2][(8+Tone)%12] = 9;
-	scale[1][2][(9+Tone)%12] = 0;
-	scale[1][2][(10+Tone)%12] = 0;
-	scale[1][2][(11+Tone)%12] = 8;
+	scale[0][1][2][(0+Tone)%12] = 8;
+	scale[0][1][2][(1+Tone)%12] = 0;
+	scale[0][1][2][(2+Tone)%12] = 9;
+	scale[0][1][2][(3+Tone)%12] = 9;
+	scale[0][1][2][(4+Tone)%12] = 0;
+	scale[0][1][2][(5+Tone)%12] = 9;
+	scale[0][1][2][(6+Tone)%12] = 0;
+	scale[0][1][2][(7+Tone)%12] = 8;
+	scale[0][1][2][(8+Tone)%12] = 9;
+	scale[0][1][2][(9+Tone)%12] = 0;
+	scale[0][1][2][(10+Tone)%12] = 0;
+	scale[0][1][2][(11+Tone)%12] = 8;
 	
 	//Terça abaixo
 
-	scale[2][0][(0+Tone)%12] = -3;
-	scale[2][0][(1+Tone)%12] = 0;
-	scale[2][0][(2+Tone)%12] = -3;
-	scale[2][0][(3+Tone)%12] = 0;
-	scale[2][0][(4+Tone)%12] = -4;
-	scale[2][0][(5+Tone)%12] = -3;
-	scale[2][0][(6+Tone)%12] = 0;
-	scale[2][0][(7+Tone)%12] = -3;
-	scale[2][0][(8+Tone)%12] = 0;
-	scale[2][0][(9+Tone)%12] = -4;
-	scale[2][0][(10+Tone)%12] = 0;
-	scale[2][0][(11+Tone)%12] = -4;
+	scale[0][2][0][(0+Tone)%12] = -3;
+	scale[0][2][0][(1+Tone)%12] = 0;
+	scale[0][2][0][(2+Tone)%12] = -3;
+	scale[0][2][0][(3+Tone)%12] = 0;
+	scale[0][2][0][(4+Tone)%12] = -4;
+	scale[0][2][0][(5+Tone)%12] = -3;
+	scale[0][2][0][(6+Tone)%12] = 0;
+	scale[0][2][0][(7+Tone)%12] = -3;
+	scale[0][2][0][(8+Tone)%12] = 0;
+	scale[0][2][0][(9+Tone)%12] = -4;
+	scale[0][2][0][(10+Tone)%12] = 0;
+	scale[0][2][0][(11+Tone)%12] = -4;
 	
 	
-	scale[2][1][(0+Tone)%12] = -4;
-	scale[2][1][(1+Tone)%12] = 0;
-	scale[2][1][(2+Tone)%12] = -4;
-	scale[2][1][(3+Tone)%12] = -3;
-	scale[2][1][(4+Tone)%12] = 0;
-	scale[2][1][(5+Tone)%12] = -3;
-	scale[2][1][(6+Tone)%12] = 0;
-	scale[2][1][(7+Tone)%12] = -4;
-	scale[2][1][(8+Tone)%12] = -3;
-	scale[2][1][(9+Tone)%12] = 0;
-	scale[2][1][(10+Tone)%12] = -3;
-	scale[2][1][(11+Tone)%12] = 0;
+	scale[0][2][1][(0+Tone)%12] = -4;
+	scale[0][2][1][(1+Tone)%12] = 0;
+	scale[0][2][1][(2+Tone)%12] = -4;
+	scale[0][2][1][(3+Tone)%12] = -3;
+	scale[0][2][1][(4+Tone)%12] = 0;
+	scale[0][2][1][(5+Tone)%12] = -3;
+	scale[0][2][1][(6+Tone)%12] = 0;
+	scale[0][2][1][(7+Tone)%12] = -4;
+	scale[0][2][1][(8+Tone)%12] = -3;
+	scale[0][2][1][(9+Tone)%12] = 0;
+	scale[0][2][1][(10+Tone)%12] = -3;
+	scale[0][2][1][(11+Tone)%12] = 0;
 	
-	scale[2][2][(0+Tone)%12] = -4;
-	scale[2][2][(1+Tone)%12] = 0;
-	scale[2][2][(2+Tone)%12] = -3;
-	scale[2][2][(3+Tone)%12] = -3;
-	scale[2][2][(4+Tone)%12] = 0;
-	scale[2][2][(5+Tone)%12] = -3;
-	scale[2][2][(6+Tone)%12] = 0;
-	scale[2][2][(7+Tone)%12] = -4;
-	scale[2][2][(8+Tone)%12] = -3;
-	scale[2][2][(9+Tone)%12] = 0;
-	scale[2][2][(10+Tone)%12] = 0;
-	scale[2][2][(11+Tone)%12] = -4;
+	scale[0][2][2][(0+Tone)%12] = -4;
+	scale[0][2][2][(1+Tone)%12] = 0;
+	scale[0][2][2][(2+Tone)%12] = -3;
+	scale[0][2][2][(3+Tone)%12] = -3;
+	scale[0][2][2][(4+Tone)%12] = 0;
+	scale[0][2][2][(5+Tone)%12] = -3;
+	scale[0][2][2][(6+Tone)%12] = 0;
+	scale[0][2][2][(7+Tone)%12] = -4;
+	scale[0][2][2][(8+Tone)%12] = -3;
+	scale[0][2][2][(9+Tone)%12] = 0;
+	scale[0][2][2][(10+Tone)%12] = 0;
+	scale[0][2][2][(11+Tone)%12] = -4;
 	
 	//Sexta abaixo
 
-	scale[3][0][(0+Tone)%12] = -8;
-	scale[3][0][(1+Tone)%12] = 0;
-	scale[3][0][(2+Tone)%12] = -9;
-	scale[3][0][(3+Tone)%12] = 0;
-	scale[3][0][(4+Tone)%12] = -9;
-	scale[3][0][(5+Tone)%12] = -8;
-	scale[3][0][(6+Tone)%12] = 0;
-	scale[3][0][(7+Tone)%12] = -8;
-	scale[3][0][(8+Tone)%12] = 0;
-	scale[3][0][(9+Tone)%12] = -9;
-	scale[3][0][(10+Tone)%12] = 0;
-	scale[3][0][(11+Tone)%12] = -9;	
+	scale[0][3][0][(0+Tone)%12] = -8;
+	scale[0][3][0][(1+Tone)%12] = 0;
+	scale[0][3][0][(2+Tone)%12] = -9;
+	scale[0][3][0][(3+Tone)%12] = 0;
+	scale[0][3][0][(4+Tone)%12] = -9;
+	scale[0][3][0][(5+Tone)%12] = -8;
+	scale[0][3][0][(6+Tone)%12] = 0;
+	scale[0][3][0][(7+Tone)%12] = -8;
+	scale[0][3][0][(8+Tone)%12] = 0;
+	scale[0][3][0][(9+Tone)%12] = -9;
+	scale[0][3][0][(10+Tone)%12] = 0;
+	scale[0][3][0][(11+Tone)%12] = -9;	
 	
-	scale[3][1][(0+Tone)%12] = -9;
-	scale[3][1][(1+Tone)%12] = 0;
-	scale[3][1][(2+Tone)%12] = -9;
-	scale[3][1][(3+Tone)%12] = -8;
-	scale[3][1][(4+Tone)%12] = 0;
-	scale[3][1][(5+Tone)%12] = -9;
-	scale[3][1][(6+Tone)%12] = 0;
-	scale[3][1][(7+Tone)%12] = -9;
-	scale[3][1][(8+Tone)%12] = -8;
-	scale[3][1][(9+Tone)%12] = 0;
-	scale[3][1][(10+Tone)%12] = -8;
-	scale[3][1][(11+Tone)%12] = 0;
+	scale[0][3][1][(0+Tone)%12] = -9;
+	scale[0][3][1][(1+Tone)%12] = 0;
+	scale[0][3][1][(2+Tone)%12] = -9;
+	scale[0][3][1][(3+Tone)%12] = -8;
+	scale[0][3][1][(4+Tone)%12] = 0;
+	scale[0][3][1][(5+Tone)%12] = -9;
+	scale[0][3][1][(6+Tone)%12] = 0;
+	scale[0][3][1][(7+Tone)%12] = -9;
+	scale[0][3][1][(8+Tone)%12] = -8;
+	scale[0][3][1][(9+Tone)%12] = 0;
+	scale[0][3][1][(10+Tone)%12] = -8;
+	scale[0][3][1][(11+Tone)%12] = 0;
 
-	scale[3][2][(0+Tone)%12] = -9;
-	scale[3][2][(1+Tone)%12] = 0;
-	scale[3][2][(2+Tone)%12] = -9;
-	scale[3][2][(3+Tone)%12] = -8;
-	scale[3][2][(4+Tone)%12] = 0;
-	scale[3][2][(5+Tone)%12] = -9;
-	scale[3][2][(6+Tone)%12] = 0;
-	scale[3][2][(7+Tone)%12] = -9;
-	scale[3][2][(8+Tone)%12] = -8;
-	scale[3][2][(9+Tone)%12] = 0;
-	scale[3][2][(10+Tone)%12] = 0;
-	scale[3][2][(11+Tone)%12] = -9;
+	scale[0][3][2][(0+Tone)%12] = -9;
+	scale[0][3][2][(1+Tone)%12] = 0;
+	scale[0][3][2][(2+Tone)%12] = -9;
+	scale[0][3][2][(3+Tone)%12] = -8;
+	scale[0][3][2][(4+Tone)%12] = 0;
+	scale[0][3][2][(5+Tone)%12] = -9;
+	scale[0][3][2][(6+Tone)%12] = 0;
+	scale[0][3][2][(7+Tone)%12] = -9;
+	scale[0][3][2][(8+Tone)%12] = -8;
+	scale[0][3][2][(9+Tone)%12] = 0;
+	scale[0][3][2][(10+Tone)%12] = 0;
+	scale[0][3][2][(11+Tone)%12] = -9;
 	
+	/**********Change the pitch on notes out of the scale to notes on the scale***************/
+	
+	//Terça acima
+
+	scale[1][0][0][(0+Tone)%12] = 4;
+	scale[1][0][0][(1+Tone)%12] = 3;
+	scale[1][0][0][(2+Tone)%12] = 3;
+	scale[1][0][0][(3+Tone)%12] = 4;
+	scale[1][0][0][(4+Tone)%12] = 3;
+	scale[1][0][0][(5+Tone)%12] = 4;
+	scale[1][0][0][(6+Tone)%12] = 3;
+	scale[1][0][0][(7+Tone)%12] = 4;
+	scale[1][0][0][(8+Tone)%12] = 3;
+	scale[1][0][0][(9+Tone)%12] = 3;
+	scale[1][0][0][(10+Tone)%12] = 4;
+	scale[1][0][0][(11+Tone)%12] = 3;
+	
+	
+	scale[1][0][1][(0+Tone)%12] = 3;
+	scale[1][0][1][(1+Tone)%12] = 4;
+	scale[1][0][1][(2+Tone)%12] = 3;
+	scale[1][0][1][(3+Tone)%12] = 4;
+	scale[1][0][1][(4+Tone)%12] = 3;
+	scale[1][0][1][(5+Tone)%12] = 3;
+	scale[1][0][1][(6+Tone)%12] = 4;
+	scale[1][0][1][(7+Tone)%12] = 3;
+	scale[1][0][1][(8+Tone)%12] = 4;
+	scale[1][0][1][(9+Tone)%12] = 3;
+	scale[1][0][1][(10+Tone)%12] = 4;
+	scale[1][0][1][(11+Tone)%12] = 3;
+	
+	scale[1][0][2][(0+Tone)%12] = 3;
+	scale[1][0][2][(1+Tone)%12] = 4;
+	scale[1][0][2][(2+Tone)%12] = 3;
+	scale[1][0][2][(3+Tone)%12] = 4;
+	scale[1][0][2][(4+Tone)%12] = 3;
+	scale[1][0][2][(5+Tone)%12] = 3;
+	scale[1][0][2][(6+Tone)%12] = 5;
+	scale[1][0][2][(7+Tone)%12] = 4;
+	scale[1][0][2][(8+Tone)%12] = 4;
+	scale[1][0][2][(9+Tone)%12] = 3;
+	scale[1][0][2][(10+Tone)%12] = 4;
+	scale[1][0][2][(11+Tone)%12] = 3;
+	
+	//Sexta acima
+
+	scale[1][1][0][(0+Tone)%12] = 9;
+	scale[1][1][0][(1+Tone)%12] = 8;
+	scale[1][1][0][(2+Tone)%12] = 9;
+	scale[1][1][0][(3+Tone)%12] = 8;
+	scale[1][1][0][(4+Tone)%12] = 8;
+	scale[1][1][0][(5+Tone)%12] = 9;
+	scale[1][1][0][(6+Tone)%12] = 8;
+	scale[1][1][0][(7+Tone)%12] = 9;
+	scale[1][1][0][(8+Tone)%12] = 8;
+	scale[1][1][0][(9+Tone)%12] = 8;
+	scale[1][1][0][(10+Tone)%12] = 9;
+	scale[1][1][0][(11+Tone)%12] = 8;
+	
+	
+	scale[1][1][1][(0+Tone)%12] = 8;
+	scale[1][1][1][(1+Tone)%12] = 9;
+	scale[1][1][1][(2+Tone)%12] = 8;
+	scale[1][1][1][(3+Tone)%12] = 9;
+	scale[1][1][1][(4+Tone)%12] = 8;
+	scale[1][1][1][(5+Tone)%12] = 9;
+	scale[1][1][1][(6+Tone)%12] = 8;
+	scale[1][1][1][(7+Tone)%12] = 8;
+	scale[1][1][1][(8+Tone)%12] = 9;
+	scale[1][1][1][(9+Tone)%12] = 8;
+	scale[1][1][1][(10+Tone)%12] = 9;
+	scale[1][1][1][(11+Tone)%12] = 8;
+	
+	scale[1][1][2][(0+Tone)%12] = 8;
+	scale[1][1][2][(1+Tone)%12] = 10;
+	scale[1][1][2][(2+Tone)%12] = 9;
+	scale[1][1][2][(3+Tone)%12] = 9;
+	scale[1][1][2][(4+Tone)%12] = 8;
+	scale[1][1][2][(5+Tone)%12] = 9;
+	scale[1][1][2][(6+Tone)%12] = 8;
+	scale[1][1][2][(7+Tone)%12] = 8;
+	scale[1][1][2][(8+Tone)%12] = 9;
+	scale[1][1][2][(9+Tone)%12] = 8;
+	scale[1][1][2][(10+Tone)%12] = 9;
+	scale[1][1][2][(11+Tone)%12] = 8;
+	
+	//Terça abaixo
+
+	scale[1][2][0][(0+Tone)%12] = -3;
+	scale[1][2][0][(1+Tone)%12] = -4;
+	scale[1][2][0][(2+Tone)%12] = -3;
+	scale[1][2][0][(3+Tone)%12] = -4;
+	scale[1][2][0][(4+Tone)%12] = -4;
+	scale[1][2][0][(5+Tone)%12] = -3;
+	scale[1][2][0][(6+Tone)%12] = -4;
+	scale[1][2][0][(7+Tone)%12] = -3;
+	scale[1][2][0][(8+Tone)%12] = -4;
+	scale[1][2][0][(9+Tone)%12] = -4;
+	scale[1][2][0][(10+Tone)%12] = -3;
+	scale[1][2][0][(11+Tone)%12] = -4;
+	
+	
+	scale[1][2][1][(0+Tone)%12] = -4;
+	scale[1][2][1][(1+Tone)%12] = -3;
+	scale[1][2][1][(2+Tone)%12] = -4;
+	scale[1][2][1][(3+Tone)%12] = -3;
+	scale[1][2][1][(4+Tone)%12] = -4;
+	scale[1][2][1][(5+Tone)%12] = -3;
+	scale[1][2][1][(6+Tone)%12] = -4;
+	scale[1][2][1][(7+Tone)%12] = -4;
+	scale[1][2][1][(8+Tone)%12] = -3;
+	scale[1][2][1][(9+Tone)%12] = -4;
+	scale[1][2][1][(10+Tone)%12] = -3;
+	scale[1][2][1][(11+Tone)%12] = -4;
+	
+	scale[1][2][2][(0+Tone)%12] = -4;
+	scale[1][2][2][(1+Tone)%12] = -5;
+	scale[1][2][2][(2+Tone)%12] = -3;
+	scale[1][2][2][(3+Tone)%12] = -3;
+	scale[1][2][2][(4+Tone)%12] = -4;
+	scale[1][2][2][(5+Tone)%12] = -3;
+	scale[1][2][2][(6+Tone)%12] = -4;
+	scale[1][2][2][(7+Tone)%12] = -4;
+	scale[1][2][2][(8+Tone)%12] = -3;
+	scale[1][2][2][(9+Tone)%12] = -4;
+	scale[1][2][2][(10+Tone)%12] = -3;
+	scale[1][2][2][(11+Tone)%12] = -4;
+	
+	//Sexta abaixo
+
+	scale[1][3][0][(0+Tone)%12] = -8;
+	scale[1][3][0][(1+Tone)%12] = -9;
+	scale[1][3][0][(2+Tone)%12] = -9;
+	scale[1][3][0][(3+Tone)%12] = -8;
+	scale[1][3][0][(4+Tone)%12] = -9;
+	scale[1][3][0][(5+Tone)%12] = -8;
+	scale[1][3][0][(6+Tone)%12] = -9;
+	scale[1][3][0][(7+Tone)%12] = -8;
+	scale[1][3][0][(8+Tone)%12] = -9;
+	scale[1][3][0][(9+Tone)%12] = -9;
+	scale[1][3][0][(10+Tone)%12] = -8;
+	scale[1][3][0][(11+Tone)%12] = -9;	
+	
+	scale[1][3][1][(0+Tone)%12] = -9;
+	scale[1][3][1][(1+Tone)%12] = -8;
+	scale[1][3][1][(2+Tone)%12] = -9;
+	scale[1][3][1][(3+Tone)%12] = -8;
+	scale[1][3][1][(4+Tone)%12] = -9;
+	scale[1][3][1][(5+Tone)%12] = -9;
+	scale[1][3][1][(6+Tone)%12] = -8;
+	scale[1][3][1][(7+Tone)%12] = -9;
+	scale[1][3][1][(8+Tone)%12] = -8;
+	scale[1][3][1][(9+Tone)%12] = -9;
+	scale[1][3][1][(10+Tone)%12] = -8;
+	scale[1][3][1][(11+Tone)%12] = -9;
+
+	scale[1][3][2][(0+Tone)%12] = -9;
+	scale[1][3][2][(1+Tone)%12] = -8;
+	scale[1][3][2][(2+Tone)%12] = -9;
+	scale[1][3][2][(3+Tone)%12] = -8;
+	scale[1][3][2][(4+Tone)%12] = -9;
+	scale[1][3][2][(5+Tone)%12] = -9;
+	scale[1][3][2][(6+Tone)%12] = -7;
+	scale[1][3][2][(7+Tone)%12] = -8;
+	scale[1][3][2][(8+Tone)%12] = -8;
+	scale[1][3][2][(9+Tone)%12] = -9;
+	scale[1][3][2][(10+Tone)%12] = -8;
+	scale[1][3][2][(11+Tone)%12] = -9;
+	
+	/**********Bend Mode***************/
+	
+	//Terça acima
+
+	scale[2][0][0][(0+Tone)%12] = 4;
+	scale[2][0][0][(1+Tone)%12] = 3.5;
+	scale[2][0][0][(2+Tone)%12] = 3;
+	scale[2][0][0][(3+Tone)%12] = 3;
+	scale[2][0][0][(4+Tone)%12] = 3;
+	scale[2][0][0][(5+Tone)%12] = 4;
+	scale[2][0][0][(6+Tone)%12] = 4;
+	scale[2][0][0][(7+Tone)%12] = 4;
+	scale[2][0][0][(8+Tone)%12] = 3.5;
+	scale[2][0][0][(9+Tone)%12] = 3;
+	scale[2][0][0][(10+Tone)%12] = 3;
+	scale[2][0][0][(11+Tone)%12] = 3;
+	
+	
+	scale[2][0][1][(0+Tone)%12] = 3;
+	scale[2][0][1][(1+Tone)%12] = 3;
+	scale[2][0][1][(2+Tone)%12] = 3;
+	scale[2][0][1][(3+Tone)%12] = 4;
+	scale[2][0][1][(4+Tone)%12] = 3.5;
+	scale[2][0][1][(5+Tone)%12] = 3;
+	scale[2][0][1][(6+Tone)%12] = 3;
+	scale[2][0][1][(7+Tone)%12] = 3;
+	scale[2][0][1][(8+Tone)%12] = 4;
+	scale[2][0][1][(9+Tone)%12] = 4;
+	scale[2][0][1][(10+Tone)%12] = 4;
+	scale[2][0][1][(11+Tone)%12] = 3.5;
+	
+	scale[2][0][2][(0+Tone)%12] = 3;
+	scale[2][0][2][(1+Tone)%12] = 3;
+	scale[2][0][2][(2+Tone)%12] = 3;
+	scale[2][0][2][(3+Tone)%12] = 4;
+	scale[2][0][2][(4+Tone)%12] = 3.5;
+	scale[2][0][2][(5+Tone)%12] = 3;
+	scale[2][0][2][(6+Tone)%12] = 3.5;
+	scale[2][0][2][(7+Tone)%12] = 4;
+	scale[2][0][2][(8+Tone)%12] = 4;
+	scale[2][0][2][(9+Tone)%12] = 3.66;
+	scale[2][0][2][(10+Tone)%12] = 3.33;
+	scale[2][0][2][(11+Tone)%12] = 3;
+	
+	//Sexta acima
+
+	scale[2][1][0][(0+Tone)%12] = 9;
+	scale[2][1][0][(1+Tone)%12] = 9;
+	scale[2][1][0][(2+Tone)%12] = 9;
+	scale[2][1][0][(3+Tone)%12] = 8.5;
+	scale[2][1][0][(4+Tone)%12] = 8;
+	scale[2][1][0][(5+Tone)%12] = 9;
+	scale[2][1][0][(6+Tone)%12] = 9;
+	scale[2][1][0][(7+Tone)%12] = 9;
+	scale[2][1][0][(8+Tone)%12] = 8.5;
+	scale[2][1][0][(9+Tone)%12] = 8;
+	scale[2][1][0][(10+Tone)%12] = 8;
+	scale[2][1][0][(11+Tone)%12] = 8;
+	
+	
+	scale[2][1][1][(0+Tone)%12] = 8;
+	scale[2][1][1][(1+Tone)%12] = 8;
+	scale[2][1][1][(2+Tone)%12] = 8;
+	scale[2][1][1][(3+Tone)%12] = 9;
+	scale[2][1][1][(4+Tone)%12] = 9;
+	scale[2][1][1][(5+Tone)%12] = 9;
+	scale[2][1][1][(6+Tone)%12] = 8.5;
+	scale[2][1][1][(7+Tone)%12] = 8;
+	scale[2][1][1][(8+Tone)%12] = 9;
+	scale[2][1][1][(9+Tone)%12] = 9;
+	scale[2][1][1][(10+Tone)%12] = 9;
+	scale[2][1][1][(11+Tone)%12] = 8.5;
+	
+	scale[2][1][2][(0+Tone)%12] = 8;
+	scale[2][1][2][(1+Tone)%12] = 8.5;
+	scale[2][1][2][(2+Tone)%12] = 9;
+	scale[2][1][2][(3+Tone)%12] = 9;
+	scale[2][1][2][(4+Tone)%12] = 9;
+	scale[2][1][2][(5+Tone)%12] = 9;
+	scale[2][1][2][(6+Tone)%12] = 8.5;
+	scale[2][1][2][(7+Tone)%12] = 8;
+	scale[2][1][2][(8+Tone)%12] = 9;
+	scale[2][1][2][(9+Tone)%12] = 8.66;
+	scale[2][1][2][(10+Tone)%12] = 8.33;
+	scale[2][1][2][(11+Tone)%12] = 8;
+	
+	//Terça abaixo
+
+	scale[2][2][0][(0+Tone)%12] = -3;
+	scale[2][2][0][(1+Tone)%12] = -3;
+	scale[2][2][0][(2+Tone)%12] = -3;
+	scale[2][2][0][(3+Tone)%12] = -3.5;
+	scale[2][2][0][(4+Tone)%12] = -4;
+	scale[2][2][0][(5+Tone)%12] = -3;
+	scale[2][2][0][(6+Tone)%12] = -3;
+	scale[2][2][0][(7+Tone)%12] = -3;
+	scale[2][2][0][(8+Tone)%12] = -3.5;
+	scale[2][2][0][(9+Tone)%12] = -4;
+	scale[2][2][0][(10+Tone)%12] = -4;
+	scale[2][2][0][(11+Tone)%12] = -4;
+	
+	
+	scale[2][2][1][(0+Tone)%12] = -4;
+	scale[2][2][1][(1+Tone)%12] = -4;
+	scale[2][2][1][(2+Tone)%12] = -4;
+	scale[2][2][1][(3+Tone)%12] = -3;
+	scale[2][2][1][(4+Tone)%12] = -3;
+	scale[2][2][1][(5+Tone)%12] = -3;
+	scale[2][2][1][(6+Tone)%12] = -3.5;
+	scale[2][2][1][(7+Tone)%12] = -4;
+	scale[2][2][1][(8+Tone)%12] = -3;
+	scale[2][2][1][(9+Tone)%12] = -3;
+	scale[2][2][1][(10+Tone)%12] = -3;
+	scale[2][2][1][(11+Tone)%12] = -3.5;
+	
+	scale[2][2][2][(0+Tone)%12] = -4;
+	scale[2][2][2][(1+Tone)%12] = -3.5;
+	scale[2][2][2][(2+Tone)%12] = -3;
+	scale[2][2][2][(3+Tone)%12] = -3;
+	scale[2][2][2][(4+Tone)%12] = -3;
+	scale[2][2][2][(5+Tone)%12] = -3;
+	scale[2][2][2][(6+Tone)%12] = -3.5;
+	scale[2][2][2][(7+Tone)%12] = -4;
+	scale[2][2][2][(8+Tone)%12] = -3;
+	scale[2][2][2][(9+Tone)%12] = -3.33;
+	scale[2][2][2][(10+Tone)%12] = -3.66;
+	scale[2][2][2][(11+Tone)%12] = -4;
+	
+	//Sexta abaixo
+
+	scale[2][3][0][(0+Tone)%12] = -8;
+	scale[2][3][0][(1+Tone)%12] = -8.5;
+	scale[2][3][0][(2+Tone)%12] = -9;
+	scale[2][3][0][(3+Tone)%12] = -9;
+	scale[2][3][0][(4+Tone)%12] = -9;
+	scale[2][3][0][(5+Tone)%12] = -8;
+	scale[2][3][0][(6+Tone)%12] = -8;
+	scale[2][3][0][(7+Tone)%12] = -8;
+	scale[2][3][0][(8+Tone)%12] = -8.5;
+	scale[2][3][0][(9+Tone)%12] = -9;
+	scale[2][3][0][(10+Tone)%12] = -9;
+	scale[2][3][0][(11+Tone)%12] = -9;	
+	
+	scale[2][3][1][(0+Tone)%12] = -9;
+	scale[2][3][1][(1+Tone)%12] = -9;
+	scale[2][3][1][(2+Tone)%12] = -9;
+	scale[2][3][1][(3+Tone)%12] = -8;
+	scale[2][3][1][(4+Tone)%12] = -8.5;
+	scale[2][3][1][(5+Tone)%12] = -9;
+	scale[2][3][1][(6+Tone)%12] = -9;
+	scale[2][3][1][(7+Tone)%12] = -9;
+	scale[2][3][1][(8+Tone)%12] = -8;
+	scale[2][3][1][(9+Tone)%12] = -8;
+	scale[2][3][1][(10+Tone)%12] = -8;
+	scale[2][3][1][(11+Tone)%12] = -8.5;
+
+	scale[2][3][2][(0+Tone)%12] = -9;
+	scale[2][3][2][(1+Tone)%12] = -9;
+	scale[2][3][2][(2+Tone)%12] = -9;
+	scale[2][3][2][(3+Tone)%12] = -8;
+	scale[2][3][2][(4+Tone)%12] = -8.5;
+	scale[2][3][2][(5+Tone)%12] = -9;
+	scale[2][3][2][(6+Tone)%12] = -9;
+	scale[2][3][2][(7+Tone)%12] = -9;
+	scale[2][3][2][(8+Tone)%12] = -8;
+	scale[2][3][2][(9+Tone)%12] = -8.33;
+	scale[2][3][2][(10+Tone)%12] = -8.66;
+	scale[2][3][2][(11+Tone)%12] = -9;
+	
+	if (Mode < 0) Mode = 0;
+	if (Mode > 2) Mode = 2;
 	if (Scale < 0) Scale = 0;
 	if (Scale > 2) Scale = 2;
 	if (Interval < 0) Interval = 0;
@@ -278,40 +620,40 @@ void FindStep(int note, int oitava, int Tone, int Scale, int Interval, int hopa,
 	switch (note)
 	{
 		case 0:
-			s[0] = scale[Interval][Scale][0];
+			s[0] = scale[Mode][Interval][Scale][0];
 			break;
 		case 1:
-			s[0] = scale[Interval][Scale][1];
+			s[0] = scale[Mode][Interval][Scale][1];
 			break;
 		case 2:
-			s[0] = scale[Interval][Scale][2];
+			s[0] = scale[Mode][Interval][Scale][2];
 			break;
 		case 3:
-			s[0] = scale[Interval][Scale][3];
+			s[0] = scale[Mode][Interval][Scale][3];
 			break;
 		case 4:
-			s[0] = scale[Interval][Scale][4];
+			s[0] = scale[Mode][Interval][Scale][4];
 			break;
 		case 5:
-			s[0] = scale[Interval][Scale][5];
+			s[0] = scale[Mode][Interval][Scale][5];
 			break;
 		case 6:
-			s[0] = scale[Interval][Scale][6];
+			s[0] = scale[Mode][Interval][Scale][6];
 			break;
 		case 7:
-			s[0] = scale[Interval][Scale][7];
+			s[0] = scale[Mode][Interval][Scale][7];
 			break;
 		case 8:
-			s[0] = scale[Interval][Scale][8];
+			s[0] = scale[Mode][Interval][Scale][8];
 			break;
 		case 9:
-			s[0] = scale[Interval][Scale][9];
+			s[0] = scale[Mode][Interval][Scale][9];
 			break;
 		case 10:
-			s[0] = scale[Interval][Scale][10];
+			s[0] = scale[Mode][Interval][Scale][10];
 			break;
 		case 11:
-			s[0] = scale[Interval][Scale][11];
+			s[0] = scale[Mode][Interval][Scale][11];
 			break;
 	}
 				
