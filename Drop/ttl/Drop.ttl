@@ -69,7 +69,7 @@ lv2:port
     lv2:minimum -20;
     lv2:maximum 20;
 ];
-    mod:gui [
+mod:gui [
         a mod:Gui;
         mod:resourcesDirectory <modgui>;
         mod:iconTemplate <modgui/icon-drop.html>;

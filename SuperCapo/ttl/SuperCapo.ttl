@@ -66,10 +66,10 @@ lv2:port
     lv2:maximum 20;
 ];
 mod:gui [
-    a mod:Gui;
-    mod:resourcesDirectory <modgui>;
-    mod:iconTemplate <modgui/icon-supercapo.html>;
-    mod:templateData <modgui/data-supercapo.json>;
-    mod:screenshot <modgui/screenshot-supercapo.png>;
-    mod:thumbnail <modgui/thumb-supercapo.png>;
-].
+        a mod:Gui;
+        mod:resourcesDirectory <modgui>;
+        mod:iconTemplate <modgui/icon-supercapo.html>;
+        mod:templateData <modgui/data-supercapo.json>;
+        mod:screenshot <modgui/screenshot-supercapo.png>;
+        mod:thumbnail <modgui/thumb-supercapo.png>;
+    ] .

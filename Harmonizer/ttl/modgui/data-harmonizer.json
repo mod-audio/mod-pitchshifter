@@ -1,0 +1,35 @@
+{
+    "author": "MOD", 
+    "color": "darkblue", 
+    "controls": [
+        {
+            "name": "Tone", 
+            "symbol": "Tone"
+        }, 
+        {
+            "name": "Scale", 
+            "symbol": "Scale"
+        }, 
+        {
+            "name": "Interval", 
+            "symbol": "Interval"
+        }, 
+        {
+            "name": "Mode", 
+            "symbol": "Mode"
+        }, 
+        {
+            "name": "Lowest note to change the pitch", 
+            "symbol": "LowestNoteToChangeThePitch"
+        }, 
+        {
+            "name": "Gain 1", 
+            "symbol": "Gain1"
+        }, 
+        {
+            "name": "Gain 2", 
+            "symbol": "Gain2"
+        }
+    ], 
+    "label": "Harmonizer"
+}

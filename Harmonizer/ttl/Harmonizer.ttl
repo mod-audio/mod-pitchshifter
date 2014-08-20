@@ -164,10 +164,10 @@ lv2:port
     lv2:maximum 20;
 ];
 mod:gui [
-    a mod:Gui;
-    mod:resourcesDirectory <modgui>;
-    mod:iconTemplate <modgui/icon-super-whammy.html>;
-    mod:templateData <modgui/data-super-whammy.json>;
-    mod:screenshot <modgui/screenshot-super-whammy.png>;
-    mod:thumbnail <modgui/thumb-super-whammy.png>;
-] .
+        a mod:Gui;
+        mod:resourcesDirectory <modgui>;
+        mod:iconTemplate <modgui/icon-harmonizer.html>;
+        mod:templateData <modgui/data-harmonizer.json>;
+        mod:screenshot <modgui/screenshot-harmonizer.png>;
+        mod:thumbnail <modgui/thumb-harmonizer.png>;
+    ] .
