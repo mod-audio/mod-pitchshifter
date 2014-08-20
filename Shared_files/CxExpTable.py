@@ -2,39 +2,38 @@
 
 import sys
 
-from math import *
-from decimal import *
-getcontext().prec = 50
+from mpmath import mp
+mp.dps = 50
+    
+N = long(sys.argv[1]) if len(sys.argv) > 1 else 20000
 
-if len(sys.argv) > 1:
-    N = int(sys.argv[1])
-else:
-    N = Decimal(20000)
-
-inicio = Decimal(-pi)
-fim = Decimal(pi)
+inicio = -1*mp.pi
+fim = 1*mp.pi
 dx = (fim-inicio)/(N-1)
 
-Idx = Decimal(1/dx)
+Idx = mp.mpf(1/dx)
 
-f = open('Exponencial.h', 'w')
+with open('Exponencial.h', 'w') as f:
 
-f.write('#include <complex> \n \n')
+    f.write("\n".join([
+        '#include <complex>',
+        '',
+        'using namespace std;',
+        '',
+        '#define EXP_N {N}',
+        '#define EXP_inicio {inicio}',
+        '#define EXP_fim {fim}',
+        '',
+        '',
+    ]).format(**locals()))
 
-f.write('using namespace std; \n \n')
+    f.write('const complex<double> Exponencial[] = {')
 
-f.write('#define EXP_N ' + str(N) + '\n')
-f.write('#define EXP_inicio ' + str(inicio) + '\n')
-f.write('#define EXP_fim ' + str(fim) + '\n\n')
+    for i in range(N):
+        value = mp.cos(i*dx + inicio)
+        value2 = mp.sin(i*dx + inicio)
+        v = "%.50e" % value
+        v2 = "%.50e" % value2
+        f.write('complex<double>(' + v + ',' + v2 + '),\n')
 
-f.write('const complex<double> Exponencial[] = {')
-
-for i in range(N):
-    value = Decimal ( cos( Decimal ( i*dx + inicio ) ) )
-    value2 = Decimal ( sin( Decimal ( i*dx + inicio ) ) )
-    v = "%.40e" % value
-    v2 = "%.40e" % value2
-    f.write('complex<double>(' + v + ',' + v2 + '),\n')
-
-f.write('\n};')
-f.close()
+    f.write('\n};')
