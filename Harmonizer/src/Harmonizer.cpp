@@ -358,6 +358,7 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		for (uint32_t i=1; i<=n_samples; i++)
 		{
 			plugin->out_1[i-1] = 0;
+			plugin->out_2[i-1] = 0;
 		}
 	}
 	else
