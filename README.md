@@ -14,6 +14,7 @@ You need a PC with at least 2Gb of ram to compile the source code.
 Installation:
 
 	Dependencies:
+	-python-mpmath
 	-FFTW (configure fftw with the flags --enable-shared and --enable-float)
 	-Armadillo
 
