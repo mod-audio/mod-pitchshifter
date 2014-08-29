@@ -1,0 +1,180 @@
+
+    .mod-harmonizer {
+        background-image:url(/resources/bg-harmonizer.png{{{ns}}});
+        background-position:center center;
+        background-repeat:no-repeat;
+        background-size:298px 484px;
+        height:484px;
+        position:relative;
+        width:298px;
+    }
+    .mod-harmonizer .mod-drag-handle {
+        bottom:0;
+        left:0;
+        position:absolute;
+        right:0;
+        top:0;
+    }
+    .mod-harmonizer-2 .mod-pedal-input {
+        top:124px;
+        left: -24px;
+    }
+    .mod-harmonizer-2 .mod-pedal-output {
+        top:50px;
+        right: -14px;
+    }
+    .mod-harmonizer-2 .mod-pedal-output .mod-output {
+        margin-bottom: 109px;
+    }
+    .mod-harmonizer .mod-control-group{
+        margin: 94px 0 -9px 26px !important;
+        height: 100px;
+        width: 248px;
+    }
+    .mod-harmonizer .mod-control-group .mod-control {
+        display: block;
+        width: 49px;
+        height: 96px;
+        margin: 0 auto 26px auto;
+    }
+    .mod-harmonizer .mod-knob {
+        width: 60px;
+        height: 60px;
+    }
+    .mod-harmonizer .mod-knob-image {
+        background-image:url(/resources/harm_knob.png{{{ns}}});
+        z-index: 20000;
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        cursor: pointer;
+    }
+
+    .mod-harmonizer .mod-control-image {
+        position: absolute;
+        z-index: 2000000;
+    }
+    .mod-harmonizer .mod-knob , .mod-harmonizer .mod-control {
+        position: relative;
+        float: left;
+        cursor: pointer;
+    }
+    .mod-harmonizer .mod-control.tone {
+            margin: 15px 44px 26px 2px;
+        }
+
+    .mod-harmonizer .mod-control.tone .mod-control-image {
+        background-image:url(/resources/slider-serial.png{{{ns}}}) !important;
+        background-size: auto 32px;
+        width: 71px;
+        height: 32px;
+    }
+    .mod-harmonizer .mod-knob.int .mod-knob-image {
+        background-image:url(/resources/harm_knob2.png{{{ns}}});
+        width: 59px
+    }
+    .mod-harmonizer .mod-control.type {
+        margin: 32px 0 0 22px;
+    }
+
+    .mod-harmonizer .mod-control.type .mod-control-image {
+        background-image:url(/resources/switch3.png{{{ns}}});
+        background-size: 186px 31px;
+        width: 62px;
+        height: 31px
+    }
+
+    .mod-harmonizer .mod-footswitch {
+        background-image:url(/resources/footswitch.png{{{ns}}});
+        background-position:top center;
+        background-repeat:no-repeat;
+        background-size:auto 132px;
+        bottom: 28px;
+        cursor:pointer;
+        height:66px;
+        width: 66px;
+        margin: auto;
+        margin-top:30px;
+        position:relative !important;
+    }
+
+
+    .mod-harmonizer .mod-control.low {
+        width: 86px;
+        height: 33px;
+            margin: 13px 0px 26px -1px;
+        }
+
+    .mod-harmonizer .mod-control.low .mod-control-image {
+        background-image:url(/resources/slider-serial-nmb.png{{{ns}}}) !important;
+        background-size: auto 33px;
+        width: 86px;
+        height: 33px;
+    }
+    .mod-harmonizer .mod-knob.gain {
+        margin-left: 21px;
+    }
+    .mod-harmonizer .mod-footswitch.off{
+        background-position-y: bottom;
+    }
+    .mod-harmonizer .mod-control-image.on {
+        background-position-y: bottom !important
+    }
+    .mod-harmonizer .mod-control.scale{
+        width: 200px;
+        height: 30px;
+        margin: -26px 0 0 73px;
+    }
+    .mod-harmonizer  .mod-enumerated {
+        position: absolute;
+        z-index: 2000000
+    }
+    .mod-harmonizer  .mod-enumerated-list {
+        background-color: rgba(0,0,0,.8) !important;
+        display: none;
+        height: 120px;
+        width: 187px;
+        font-size: 12px;
+        padding: 0 10px;
+        margin-top: 10px;
+        z-index: 2000000;
+        color: white !important;
+        overflow-y: auto;
+        overflow-x: hidden;
+        position: absolute;
+    }
+    .mod-harmonizer  .mod-enumerated-list div:hover{
+        background: white;
+        color: black;
+        }
+    .mod-harmonizer .mode .mod-enumerated-selected:before {
+        content: '\25BE \a0';
+    }
+    .mod-harmonizer  .mod-enumerated-selected {
+        background: transparent;
+        border: none;
+        color: orange;
+        display: block;
+        font-size: 12px;
+        padding: 0;
+        position: relative;
+        left: 4px;
+        margin: 0 0 0 5px;
+        top: 7px;
+        width: 200px; 
+    }
+ .mod-harmonizer  .mod-enumerated-list:hover, .mod-harmonizer  .mod-enumerated-list:active {
+    background: black;
+}
+.mod-harmonizer .mod-light {
+height: 32px;
+width: 32px;
+margin: auto;
+position: relative !important
+  }
+.mod-harmonizer .mod-light.off { 
+  background-image:url(/resources/red-light-off.png{{{ns}}}); 
+}
+.mod-harmonizer .mod-light.on  { 
+  background-image:url(/resources/red-light-on.png{{{ns}}}); 
+}

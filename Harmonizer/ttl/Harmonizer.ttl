@@ -166,6 +166,7 @@ lv2:port
 mod:gui [
         a mod:Gui;
         mod:resourcesDirectory <modgui>;
+        mod:stylesheet <modgui/icon-harmonizer.css>;
         mod:iconTemplate <modgui/icon-harmonizer.html>;
         mod:templateData <modgui/data-harmonizer.json>;
         mod:screenshot <modgui/screenshot-harmonizer.png>;
