@@ -56,6 +56,9 @@ void shift(int N, int hopa, int *hops, double *frames, float *frames2, vec *w, c
 	AUX[0] = floor((d_phi_prime[0] + M_PI) / (2*M_PI));
 	d_phi_wrapped[0] = d_phi_prime[0] - AUX[0] * (2*M_PI);
 	omega_true_sobre_fs[0] = (2*M_PI/N) * I[0] + d_phi_wrapped[0] / hopa;
+
+	// We can divide the code in two here
+
 	Phi[0] = PhiPrevious[0] + (hops[Qcolumn-1])*omega_true_sobre_fs[0] ;
 	Xa_abs[0] = abs(Xa[0]);
 	for (int i=1; i<=(N/2 + 1); i++)

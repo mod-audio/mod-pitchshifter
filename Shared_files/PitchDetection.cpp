@@ -715,3 +715,122 @@ void FindStep(int note, int oitava, int Tone, int Scale, int Interval, int Mode,
 	//cout << "nota = " << note << " oitava = " << oitava << " s = " << s[0] << "\n";	
 	
 }
+
+void FindStepCS(int note, int oitava, int Tone, int s_0, int s_1, int s_2, int s_3, int s_4, int s_5, int s_6, int s_7, int s_8, int s_9, int s_10, int s_11,  int LowNote, int hopa, int Qcolumn, double *s, int *hops)
+{
+	
+		float scale[12];
+		
+
+	scale[(0+Tone)%12] = s_0;
+	scale[(1+Tone)%12] = s_1;
+	scale[(2+Tone)%12] = s_2;
+	scale[(3+Tone)%12] = s_3;
+	scale[(4+Tone)%12] = s_4;
+	scale[(5+Tone)%12] = s_5;
+	scale[(6+Tone)%12] = s_6;
+	scale[(7+Tone)%12] = s_7;
+	scale[(8+Tone)%12] = s_8;
+	scale[(9+Tone)%12] = s_9;
+	scale[(10+Tone)%12] = s_10;
+	scale[(11+Tone)%12] = s_11;
+	
+	if (LowNote < 0) LowNote = 0;
+	if (LowNote > 14) LowNote = 14;
+	
+	switch (note)
+	{
+		case 0:
+			s[0] = scale[0];
+			break;
+		case 1:
+			s[0] = scale[1];
+			break;
+		case 2:
+			s[0] = scale[2];
+			break;
+		case 3:
+			s[0] = scale[3];
+			break;
+		case 4:
+			s[0] = scale[4];
+			break;
+		case 5:
+			s[0] = scale[5];
+			break;
+		case 6:
+			s[0] = scale[6];
+			break;
+		case 7:
+			s[0] = scale[7];
+			break;
+		case 8:
+			s[0] = scale[8];
+			break;
+		case 9:
+			s[0] = scale[9];
+			break;
+		case 10:
+			s[0] = scale[10];
+			break;
+		case 11:
+			s[0] = scale[11];
+			break;
+	}
+	
+	//cout << "LowNote = " << LowNote << " note = " << note << " oitava = " << oitava;
+	
+	switch (LowNote)
+	{
+		case 0:
+			if ( (oitava == 0) || ( (oitava == 1)&&(note < 10) )  ) s[0] = 0;
+			break;
+		case 1:
+			if ( oitava <=1 ) s[0] = 0;
+			break;
+		case 2:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note < 1) )  ) s[0] = 0;
+			break;
+		case 3:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note < 2) )  ) s[0] = 0;
+			break;
+		case 4:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note < 3) )  ) s[0] = 0;
+			break;
+		case 5:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note < 4) )  ) s[0] = 0;
+			break;
+		case 6:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note < 5) )  ) s[0] = 0;
+			break;
+		case 7:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note < 6) )  ) s[0] = 0;
+			break;
+		case 8:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note < 7) )  ) s[0] = 0;
+			break;
+		case 9:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note < 8) )  ) s[0] = 0;
+			break;
+		case 10:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note < 9) )  ) s[0] = 0;
+			break;
+		case 11:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note < 10) )  ) s[0] = 0;
+			break;
+		case 12:
+			if ( (oitava <=1) || ( (oitava == 2)&&(note < 11) )  ) s[0] = 0;
+			break;
+		case 13:
+			if ( (oitava <=2) ) s[0] = 0;
+			break;
+		case 14:
+			if ( (oitava <=2) || ( (oitava == 3)&&(note < 1) )  ) s[0] = 0;
+			break;
+	}
+				
+	hops[Qcolumn-1] = round(hopa*(pow(2,(s[0]/12))));
+	
+	//cout << "nota = " << note << " oitava = " << oitava << " s = " << s[0] << "\n";	
+	
+}
