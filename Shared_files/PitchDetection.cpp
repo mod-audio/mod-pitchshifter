@@ -88,7 +88,7 @@ void FindNote(int N, double *frames, float *frames3, cx_vec *Xa2, cx_vec *Xs2, f
 		double real_index = max_index + 0.5*(a-c)/(a-2*b+c);
 	
 		double f = fs/real_index;
-		int nota = (int)round( (12/log(2))*log(f/16.35) );
+		int nota = (int)round( (12/log(2))*log(f/16.351597831287414) );
 		oitava[0] = floor(nota/12.0);
 		note[0] = nota % 12;
 	
