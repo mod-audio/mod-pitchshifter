@@ -1,0 +1,198 @@
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#>.
+@prefix doap: <http://usefulinc.com/ns/doap#>.
+@prefix epp: <http://lv2plug.in/ns/ext/port-props/#>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
+@prefix mod: <http://portalmod.com/ns/modgui#>.
+@prefix host: <http://portalmod.com/ns/modhost#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://portalmod.com/plugins/mod-devel/Harmonizer2>
+a lv2:Plugin, lv2:SpectralPlugin;
+
+doap:name "Harmonizer2";
+
+doap:developer [
+    foaf:name "Andre";
+    foaf:homepage <>;
+    foaf:mbox <mailto:andre_coutinho@rocketmail.com>;
+    ];
+
+doap:maintainer [
+    foaf:name "MOD Team";
+    foaf:homepage <http://portalmod.com>;
+    foaf:mbox <mailto:devel@portalmod.com>;
+    ];
+
+doap:license <GPL>;
+
+rdfs:comment """
+A pitch shifter that can shift an input pitch from 12 semitones down to 24 semitones up. "First" and "Last" determine the range of variation where the "Step" parameter will work. "First" doesn't need to be necessarily smaller than "Last". "Clean" parameter allows you to hear the bypass sound summed with the pitch shifted signal and "Gain" it's the effect gain, does not affect the clean signal.
+
+""";
+
+lv2:port
+[
+    a lv2:AudioPort, lv2:InputPort;
+    lv2:index 0;
+    lv2:symbol "In";
+    lv2:name "In";
+],
+[
+    a lv2:AudioPort, lv2:OutputPort;
+    lv2:index 1;
+    lv2:symbol "Out_clean";
+    lv2:name "Clean Output";
+],
+[
+    a lv2:AudioPort, lv2:OutputPort;
+    lv2:index 2;
+    lv2:symbol "Out1";
+    lv2:name "Out 1";
+],
+[
+    a lv2:AudioPort, lv2:OutputPort;
+    lv2:index 3;
+    lv2:symbol "Out2";
+    lv2:name "Out 2";
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 4;
+    lv2:symbol "Tone";
+    lv2:name "Tone";
+	lv2:default 0.00000 ;
+	lv2:minimum 0.00000 ;
+	lv2:maximum 11.00000 ;
+	lv2:portProperty lv2:integer;
+    lv2:portProperty lv2:enumeration ;
+    lv2:scalePoint [rdfs:label "C"; rdf:value 0];
+    lv2:scalePoint [rdfs:label "C#"; rdf:value 1];
+    lv2:scalePoint [rdfs:label "D"; rdf:value 2];
+    lv2:scalePoint [rdfs:label "D#"; rdf:value 3];
+    lv2:scalePoint [rdfs:label "E"; rdf:value 4];
+    lv2:scalePoint [rdfs:label "F"; rdf:value 5];
+    lv2:scalePoint [rdfs:label "F#"; rdf:value 6];
+    lv2:scalePoint [rdfs:label "G"; rdf:value 7];
+    lv2:scalePoint [rdfs:label "G#"; rdf:value 8];
+    lv2:scalePoint [rdfs:label "A"; rdf:value 9];
+    lv2:scalePoint [rdfs:label "A#"; rdf:value 10];
+    lv2:scalePoint [rdfs:label "B"; rdf:value 11];
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 5;
+    lv2:symbol "Scale";
+    lv2:name "Scale";
+	lv2:default 0.00000 ;
+	lv2:minimum 0.00000 ;
+	lv2:maximum 2.00000 ;
+	lv2:portProperty lv2:integer;
+    lv2:portProperty lv2:enumeration ;
+    lv2:scalePoint [rdfs:label "Major"; rdf:value 0];
+    lv2:scalePoint [rdfs:label "Minor"; rdf:value 1];
+    lv2:scalePoint [rdfs:label "Harmonic Minor"; rdf:value 2];
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 6;
+    lv2:symbol "Interval_1";
+    lv2:name "Interval 1";
+	lv2:default 0.00000 ;
+	lv2:minimum 0.00000 ;
+	lv2:maximum 4.00000 ;
+	lv2:portProperty lv2:integer;
+    lv2:portProperty lv2:enumeration ;
+    lv2:scalePoint [rdfs:label "+3th"; rdf:value 0];
+    lv2:scalePoint [rdfs:label "+6th"; rdf:value 1];
+    lv2:scalePoint [rdfs:label "-3th"; rdf:value 2];
+    lv2:scalePoint [rdfs:label "-6th"; rdf:value 3];
+    lv2:scalePoint [rdfs:label "+5th"; rdf:value 4];
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 7;
+    lv2:symbol "Interval_2";
+    lv2:name "Interval 2";
+    lv2:default 4.00000 ;
+    lv2:minimum 0.00000 ;
+    lv2:maximum 4.00000 ;
+    lv2:portProperty lv2:integer;
+    lv2:portProperty lv2:enumeration ;
+    lv2:scalePoint [rdfs:label "+3th"; rdf:value 0];
+    lv2:scalePoint [rdfs:label "+6th"; rdf:value 1];
+    lv2:scalePoint [rdfs:label "-3th"; rdf:value 2];
+    lv2:scalePoint [rdfs:label "-6th"; rdf:value 3];
+    lv2:scalePoint [rdfs:label "+5th"; rdf:value 4];
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 8;
+    lv2:symbol "Mode";
+    lv2:name "Mode";
+	lv2:default 0.00000 ;
+	lv2:minimum 0.00000 ;
+	lv2:maximum 2.00000 ;
+	lv2:portProperty lv2:integer;
+    lv2:portProperty lv2:enumeration ;
+    lv2:scalePoint [rdfs:label "I"; rdf:value 0];
+    lv2:scalePoint [rdfs:label "II"; rdf:value 1];
+    lv2:scalePoint [rdfs:label "Bend"; rdf:value 2];
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 9;
+    lv2:symbol "LowestNoteToChangeThePitch";
+    lv2:name "Lowest note to change the pitch";
+	lv2:default 0.00000 ;
+	lv2:minimum 0.00000 ;
+	lv2:maximum 14.00000 ;
+	lv2:portProperty lv2:integer;
+    lv2:portProperty lv2:enumeration ;
+    lv2:scalePoint [rdfs:label "B1"; rdf:value 0];
+    lv2:scalePoint [rdfs:label "C2"; rdf:value 1];
+    lv2:scalePoint [rdfs:label "C#2"; rdf:value 2];
+    lv2:scalePoint [rdfs:label "D2"; rdf:value 3];
+    lv2:scalePoint [rdfs:label "D#2"; rdf:value 4];
+    lv2:scalePoint [rdfs:label "E2"; rdf:value 5];
+    lv2:scalePoint [rdfs:label "F2"; rdf:value 6];
+    lv2:scalePoint [rdfs:label "F#2"; rdf:value 7];
+    lv2:scalePoint [rdfs:label "G2"; rdf:value 8];
+    lv2:scalePoint [rdfs:label "G#2"; rdf:value 9];
+    lv2:scalePoint [rdfs:label "A2"; rdf:value 10];
+    lv2:scalePoint [rdfs:label "A#2"; rdf:value 11];
+    lv2:scalePoint [rdfs:label "B2"; rdf:value 12];
+    lv2:scalePoint [rdfs:label "C3"; rdf:value 13];
+    lv2:scalePoint [rdfs:label "C#3"; rdf:value 14];
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 10;
+    lv2:symbol "Gain_clean";
+    lv2:name "Clean Gain";
+    units:unit units:db ;
+    lv2:default 0;
+    lv2:minimum -20;
+    lv2:maximum 20;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 11;
+    lv2:symbol "Gain1";
+    lv2:name "Gain 1";
+    units:unit units:db ;
+    lv2:default 3;
+    lv2:minimum -20;
+    lv2:maximum 20;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 12;
+    lv2:symbol "Gain2";
+    lv2:name "Gain 2";
+    units:unit units:db ;
+    lv2:default 3;
+    lv2:minimum -20;
+    lv2:maximum 20;
+].

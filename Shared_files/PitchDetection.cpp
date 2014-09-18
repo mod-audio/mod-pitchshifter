@@ -101,7 +101,7 @@ void FindNote(int N, double *frames, float *frames3, cx_vec *Xa2, cx_vec *Xs2, f
 void FindStep(int note, int oitava, int Tone, int Scale, int Interval, int Mode, int LowNote, int hopa, int Qcolumn, double *s, int *hops)
 {
 	
-		float scale[3][4][3][12];
+		float scale[3][5][3][12];
 		
 /**********Don't change the pitch on notes out of the scale***************/
 	
@@ -271,6 +271,47 @@ void FindStep(int note, int oitava, int Tone, int Scale, int Interval, int Mode,
 	scale[0][3][2][(9+Tone)%12] = 0;
 	scale[0][3][2][(10+Tone)%12] = 0;
 	scale[0][3][2][(11+Tone)%12] = -9;
+
+	//Quinta acima
+
+	scale[0][4][0][(0+Tone)%12] = 7;
+	scale[0][4][0][(1+Tone)%12] = 0;
+	scale[0][4][0][(2+Tone)%12] = 7;
+	scale[0][4][0][(3+Tone)%12] = 0;
+	scale[0][4][0][(4+Tone)%12] = 7;
+	scale[0][4][0][(5+Tone)%12] = 7;
+	scale[0][4][0][(6+Tone)%12] = 0;
+	scale[0][4][0][(7+Tone)%12] = 7;
+	scale[0][4][0][(8+Tone)%12] = 0;
+	scale[0][4][0][(9+Tone)%12] = 7;
+	scale[0][4][0][(10+Tone)%12] = 0;
+	scale[0][4][0][(11+Tone)%12] = 6;
+
+	scale[0][4][1][(0+Tone)%12] = 7;
+	scale[0][4][1][(1+Tone)%12] = 0;
+	scale[0][4][1][(2+Tone)%12] = 6;
+	scale[0][4][1][(3+Tone)%12] = 7;
+	scale[0][4][1][(4+Tone)%12] = 0;
+	scale[0][4][1][(5+Tone)%12] = 7;
+	scale[0][4][1][(6+Tone)%12] = 0;
+	scale[0][4][1][(7+Tone)%12] = 7;
+	scale[0][4][1][(8+Tone)%12] = 7;
+	scale[0][4][1][(9+Tone)%12] = 0;
+	scale[0][4][1][(10+Tone)%12] = 7;
+	scale[0][4][1][(11+Tone)%12] = 0;
+
+	scale[0][4][2][(0+Tone)%12] = 7;
+	scale[0][4][2][(1+Tone)%12] = 0;
+	scale[0][4][2][(2+Tone)%12] = 6;
+	scale[0][4][2][(3+Tone)%12] = 8;
+	scale[0][4][2][(4+Tone)%12] = 0;
+	scale[0][4][2][(5+Tone)%12] = 7;
+	scale[0][4][2][(6+Tone)%12] = 0;
+	scale[0][4][2][(7+Tone)%12] = 7;
+	scale[0][4][2][(8+Tone)%12] = 7;
+	scale[0][4][2][(9+Tone)%12] = 0;
+	scale[0][4][2][(10+Tone)%12] = 0;
+	scale[0][4][2][(11+Tone)%12] = 6;
 	
 	/**********Change the pitch on notes out of the scale to notes on the scale***************/
 	
@@ -440,6 +481,48 @@ void FindStep(int note, int oitava, int Tone, int Scale, int Interval, int Mode,
 	scale[1][3][2][(9+Tone)%12] = -9;
 	scale[1][3][2][(10+Tone)%12] = -8;
 	scale[1][3][2][(11+Tone)%12] = -9;
+
+	//Quinta acima
+
+	scale[1][4][0][(0+Tone)%12] = 7;
+	scale[1][4][0][(1+Tone)%12] = 6;
+	scale[1][4][0][(2+Tone)%12] = 7;
+	scale[1][4][0][(3+Tone)%12] = 6;
+	scale[1][4][0][(4+Tone)%12] = 7;
+	scale[1][4][0][(5+Tone)%12] = 7;
+	scale[1][4][0][(6+Tone)%12] = 6;
+	scale[1][4][0][(7+Tone)%12] = 7;
+	scale[1][4][0][(8+Tone)%12] = 6;
+	scale[1][4][0][(9+Tone)%12] = 7;
+	scale[1][4][0][(10+Tone)%12] = 6;
+	scale[1][4][0][(11+Tone)%12] = 6;
+
+	scale[1][4][1][(0+Tone)%12] = 7;
+	scale[1][4][1][(1+Tone)%12] = 6;
+	scale[1][4][1][(2+Tone)%12] = 6;
+	scale[1][4][1][(3+Tone)%12] = 7;
+	scale[1][4][1][(4+Tone)%12] = 6;
+	scale[1][4][1][(5+Tone)%12] = 7;
+	scale[1][4][0][(0+Tone)%12] = 7;
+	scale[1][4][1][(6+Tone)%12] = 6;
+	scale[1][4][1][(7+Tone)%12] = 7;
+	scale[1][4][1][(8+Tone)%12] = 7;
+	scale[1][4][1][(9+Tone)%12] = 6;
+	scale[1][4][1][(10+Tone)%12] = 7;
+	scale[1][4][1][(11+Tone)%12] = 6;
+
+	scale[1][4][2][(0+Tone)%12] = 7;
+	scale[1][4][2][(1+Tone)%12] = 6;
+	scale[1][4][2][(2+Tone)%12] = 6;
+	scale[1][4][2][(3+Tone)%12] = 8;
+	scale[1][4][2][(4+Tone)%12] = 7;
+	scale[1][4][2][(5+Tone)%12] = 7;
+	scale[1][4][2][(6+Tone)%12] = 6;
+	scale[1][4][2][(7+Tone)%12] = 7;
+	scale[1][4][2][(8+Tone)%12] = 7;
+	scale[1][4][2][(9+Tone)%12] = 6;
+	scale[1][4][2][(10+Tone)%12] = 5;
+	scale[1][4][2][(11+Tone)%12] = 6;
 	
 	/**********Bend Mode***************/
 	
@@ -609,13 +692,54 @@ void FindStep(int note, int oitava, int Tone, int Scale, int Interval, int Mode,
 	scale[2][3][2][(9+Tone)%12] = -8.33;
 	scale[2][3][2][(10+Tone)%12] = -8.66;
 	scale[2][3][2][(11+Tone)%12] = -9;
+
+	//Quinta acima
+
+	scale[2][4][0][(0+Tone)%12] = 7;
+	scale[2][4][0][(1+Tone)%12] = 7;
+	scale[2][4][0][(2+Tone)%12] = 7;
+	scale[2][4][0][(3+Tone)%12] = 7;
+	scale[2][4][0][(4+Tone)%12] = 7;
+	scale[2][4][0][(5+Tone)%12] = 7;
+	scale[2][4][0][(6+Tone)%12] = 7;
+	scale[2][4][0][(7+Tone)%12] = 7;
+	scale[2][4][0][(8+Tone)%12] = 7;
+	scale[2][4][0][(9+Tone)%12] = 7;
+	scale[2][4][0][(10+Tone)%12] = 6.5;
+	scale[2][4][0][(11+Tone)%12] = 6;
+
+	scale[2][4][1][(0+Tone)%12] = 7;
+	scale[2][4][1][(1+Tone)%12] = 6.5;
+	scale[2][4][1][(2+Tone)%12] = 6;
+	scale[2][4][1][(3+Tone)%12] = 7;
+	scale[2][4][1][(4+Tone)%12] = 7;
+	scale[2][4][1][(5+Tone)%12] = 7;
+	scale[2][4][1][(6+Tone)%12] = 7;
+	scale[2][4][1][(7+Tone)%12] = 7;
+	scale[2][4][1][(8+Tone)%12] = 7;
+	scale[2][4][1][(9+Tone)%12] = 7;
+	scale[2][4][1][(10+Tone)%12] = 7;
+	scale[2][4][1][(11+Tone)%12] = 7;
+
+	scale[2][4][2][(0+Tone)%12] = 7;
+	scale[2][4][2][(1+Tone)%12] = 6.5;
+	scale[2][4][2][(2+Tone)%12] = 6;
+	scale[2][4][2][(3+Tone)%12] = 8;
+	scale[2][4][2][(4+Tone)%12] = 7.5;
+	scale[2][4][2][(5+Tone)%12] = 7;
+	scale[2][4][2][(6+Tone)%12] = 7;
+	scale[2][4][2][(7+Tone)%12] = 7;
+	scale[2][4][2][(8+Tone)%12] = 7;
+	scale[2][4][2][(9+Tone)%12] = 6.66;
+	scale[2][4][2][(10+Tone)%12] = 6.33;
+	scale[2][4][2][(11+Tone)%12] = 6;
 	
 	if (Mode < 0) Mode = 0;
 	if (Mode > 2) Mode = 2;
 	if (Scale < 0) Scale = 0;
 	if (Scale > 2) Scale = 2;
 	if (Interval < 0) Interval = 0;
-	if (Interval > 3) Interval = 3;
+	if (Interval > 4) Interval = 4;
 	if (LowNote < 0) LowNote = 0;
 	if (LowNote > 14) LowNote = 14;
 	
