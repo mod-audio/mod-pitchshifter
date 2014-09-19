@@ -183,15 +183,15 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 	plugin->w.zeros(plugin->N); hann(plugin->N,&plugin->w);
 	plugin->I.zeros(plugin->N/2 + 1); plugin->I = linspace(0, plugin->N/2,plugin->N/2 + 1);
 
-	for (int i=1 ; i<= (plugin->nBuffers); i++)
-    {
-		plugin->b[i-1] = &plugin->frames[(i-1)*plugin->hopa];
-	}
+	for (int i=0; i<(plugin->nBuffers); i++)
+		plugin->b[i] = &plugin->frames[i*plugin->hopa];
 
 	plugin->p = fftwf_plan_dft_r2c_1d(plugin->N, plugin->frames2, plugin->fXa, FFTW_ESTIMATE);
     
     plugin->Hops_1 = (int*)calloc(plugin->Qcolumn,sizeof(int));
-    for (int i=1;i<=plugin->Qcolumn;i++) plugin->Hops_1[i-1] = plugin->hopa;
+    for (int i=0; i<plugin->Qcolumn;i++)
+		plugin->Hops_1[i] = plugin->hopa;
+
     plugin->ysaida_1 = (double*)calloc(2*(plugin->N + 2*(plugin->Qcolumn-1)*plugin->hopa),sizeof(double));
     plugin->yshift_1 = (double*)calloc(plugin->hopa,sizeof(double));
     plugin->q_1 = fftwf_alloc_real(plugin->N);
@@ -202,7 +202,9 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
 	plugin->p2_1 = fftwf_plan_dft_c2r_1d(plugin->N, plugin->fXs_1, plugin->q_1, FFTW_ESTIMATE);
 
 	plugin->Hops_2 = (int*)calloc(plugin->Qcolumn,sizeof(int));
-    for (int i=1;i<=plugin->Qcolumn;i++) plugin->Hops_2[i-1] = plugin->hopa;
+    for (int i=0; i<plugin->Qcolumn; i++)
+		plugin->Hops_2[i] = plugin->hopa;
+
     plugin->ysaida_2 = (double*)calloc(2*(plugin->N + 2*(plugin->Qcolumn-1)*plugin->hopa),sizeof(double));
     plugin->yshift_2 = (double*)calloc(plugin->hopa,sizeof(double));
     plugin->q_2 = fftwf_alloc_real(plugin->N);
@@ -354,10 +356,8 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		plugin->w.zeros(plugin->N); hann(plugin->N,&plugin->w);
 		plugin->I.zeros(plugin->N/2 + 1); plugin->I = linspace(0, plugin->N/2,plugin->N/2 + 1);
 
-		for (int i=1 ; i<= plugin->nBuffers; i++)
-		{
-			plugin->b[i-1] = &plugin->frames[(i-1)*plugin->hopa];
-		}
+		for (int i=0; i<plugin->nBuffers; i++)
+			plugin->b[i] = &plugin->frames[i*plugin->hopa];
 
 		fftwf_destroy_plan(plugin->p);  plugin->p = fftwf_plan_dft_r2c_1d(plugin->N, plugin->frames2, plugin->fXa, FFTW_ESTIMATE);
 
@@ -401,73 +401,73 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 
     float media = 0;
     
-    for (uint32_t i=1; i<=n_samples; i++)
-    {
-		media = media + abs(plugin->in[i-1]);
-	}
+    for (uint32_t i=0; i<n_samples; i++)
+		media += abs(plugin->in[i]);
 	
 	if (media == 0)
 	{
-		for (uint32_t i=1; i<=n_samples; i++)
+		for (uint32_t i=0; i<n_samples; i++)
 		{
-			plugin->out_1[i-1] = 0;
-			plugin->out_2[i-1] = 0;
+			plugin->out_1[i] = 0;
+			plugin->out_2[i] = 0;
 		}
 	}
 	else
 	{
 		
-	int Tone = (int)(*(plugin->tone));
-	int Scale = (int)(*(plugin->scale));
-	int Interval_1 = (int)(*(plugin->interval_1));
-	int Interval_2 = (int)(*(plugin->interval_2));
-	int Mode = (int)(*(plugin->mode));
-	int LowNote = (int)(*(plugin->lownote));
+		int Tone = (int)(*(plugin->tone));
+		int Scale = (int)(*(plugin->scale));
+		int Interval_1 = (int)(*(plugin->interval_1));
+		int Interval_2 = (int)(*(plugin->interval_2));
+		int Mode = (int)(*(plugin->mode));
+		int LowNote = (int)(*(plugin->lownote));
 	
-	double g0_before = plugin->g_clean;	    
-    double g1_before = plugin->g_1;
-    double g2_before = plugin->g_2;
-    plugin->g_clean = pow(10, (float)(*(plugin->gain_clean))/20.0);
-    plugin->g_1 = pow(10, (float)(*(plugin->gain_1))/20.0);
-    plugin->g_2 = pow(10, (float)(*(plugin->gain_2))/20.0);
-    
-	for (int k=1; k<= plugin->Qcolumn-1; k++) plugin->Hops_1[k-1] = plugin->Hops_1[k];
-	for (int k=1; k<= plugin->Qcolumn-1; k++) plugin->Hops_2[k-1] = plugin->Hops_2[k];
+		double g0_before = plugin->g_clean;	    
+		double g1_before = plugin->g_1;
+		double g2_before = plugin->g_2;
+		plugin->g_clean = pow(10, (float)(*(plugin->gain_clean))/20.0);
+		plugin->g_1 = pow(10, (float)(*(plugin->gain_1))/20.0);
+		plugin->g_2 = pow(10, (float)(*(plugin->gain_2))/20.0);
+		
+		for (int k=0; k<plugin->Qcolumn-1; k++)
+			plugin->Hops_1[k] = plugin->Hops_1[k+1];
+		for (int k=0; k<plugin->Qcolumn-1; k++)
+			plugin->Hops_2[k] = plugin->Hops_2[k+1];
 
-		for (int i=1; i<=plugin->hopa; i++)
+		for (int i=0; i<plugin->hopa; i++)
 		{
-			for (int j=1; j<=(plugin->nBuffers-1); j++)
-			{
-				plugin->b[j-1][i-1] = plugin->b[j][i-1];
-			}
-			plugin->b[plugin->nBuffers-1][i-1] = plugin->in[i-1];
+			for (int j=0; j<(plugin->nBuffers-1); j++)
+				plugin->b[j][i] = plugin->b[j+1][i];
+
+			plugin->b[plugin->nBuffers-1][i] = plugin->in[i];
 		}
 		
 		if ( plugin->cont < plugin->nBuffers-1)
 		{
-			plugin->cont = plugin->cont + 1;
+			plugin->cont++;
 		}
 		else
 		{
 			FindNote(plugin->N2, plugin->frames, plugin->frames3, &plugin->Xa2, &plugin->Xs2, plugin->q2, plugin->Qcolumn, plugin->p3, plugin->p4, plugin->fXa2, plugin->fXs2, &plugin->R, &plugin->NORM, &plugin->F, &plugin->AUTO, plugin->SampleRate, &plugin->note, &plugin->oitava );
+
 			FindStep(plugin->note, plugin->oitava, Tone, Scale, Interval_1, Mode, LowNote, plugin->hopa, plugin->Qcolumn, &plugin->s_1, plugin->Hops_1);
+
 			FindStep(plugin->note, plugin->oitava, Tone, Scale, Interval_2, Mode, LowNote, plugin->hopa, plugin->Qcolumn, &plugin->s_2, plugin->Hops_2);
 
 			shift1(plugin->N, plugin->hopa, plugin->frames, plugin->frames2, &plugin->w, &plugin->XaPrevious, &plugin->Xa_arg, &plugin->Xa_abs, &plugin->XaPrevious_arg, &plugin->Xa, &plugin->d_phi, &plugin->d_phi_prime, &plugin->d_phi_wrapped, &plugin->omega_true_sobre_fs, &plugin->I, &plugin->AUX, plugin->p, plugin->fXa);
+
 			shift2(plugin->Hops_1, &plugin->PhiPrevious_1, plugin->yshift_1, &plugin->Xs_1, plugin->q_1, &plugin->Phi_1, plugin->ysaida_1, plugin->ysaida2_1, plugin->Qcolumn, plugin->p2_1, plugin->fXs_1,plugin->N, plugin->hopa, plugin->frames, plugin->frames2, &plugin->w, &plugin->XaPrevious, &plugin->Xa_arg, &plugin->Xa_abs, &plugin->XaPrevious_arg, &plugin->Xa, &plugin->d_phi, &plugin->d_phi_prime, &plugin->d_phi_wrapped, &plugin->omega_true_sobre_fs, &plugin->I, &plugin->AUX, plugin->p, plugin->fXa);
+
 			shift2(plugin->Hops_2, &plugin->PhiPrevious_2, plugin->yshift_2, &plugin->Xs_2, plugin->q_2, &plugin->Phi_2, plugin->ysaida_2, plugin->ysaida2_2, plugin->Qcolumn, plugin->p2_2, plugin->fXs_2,plugin->N, plugin->hopa, plugin->frames, plugin->frames2, &plugin->w, &plugin->XaPrevious, &plugin->Xa_arg, &plugin->Xa_abs, &plugin->XaPrevious_arg, &plugin->Xa, &plugin->d_phi, &plugin->d_phi_prime, &plugin->d_phi_wrapped, &plugin->omega_true_sobre_fs, &plugin->I, &plugin->AUX, plugin->p, plugin->fXa);
 			
-				for (int i=1; i<=plugin->hopa; i++)
-				{
-					plugin->out_clean[i-1] = (g0_before + ((plugin->g_clean - g0_before)/(plugin->hopa - 1))*(i-1) )*(float)plugin->frames[i-1];
-					plugin->out_1[i-1] = (g1_before + ((plugin->g_1 - g1_before)/(plugin->hopa - 1))*(i-1) )*(float)plugin->yshift_1[i-1];
-					plugin->out_2[i-1] = (g2_before + ((plugin->g_2 - g2_before)/(plugin->hopa - 1))*(i-1) )*(float)plugin->yshift_2[i-1];
-				}
-			
+			for (int i=0; i<plugin->hopa; i++)
+			{
+				plugin->out_clean[i] = (g0_before + i*((plugin->g_clean - g0_before)/(plugin->hopa - 1))) * (float)plugin->frames[i];
+				plugin->out_1[i] = (g1_before + i*((plugin->g_1 - g1_before)/(plugin->hopa - 1))) * (float)plugin->yshift_1[i];
+				plugin->out_2[i] = (g2_before + i*((plugin->g_2 - g2_before)/(plugin->hopa - 1))) * (float)plugin->yshift_2[i];
+			}
 		}
-		
 	}
-
 }
 
 /**********************************************************************************************************************************************************/
