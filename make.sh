@@ -14,3 +14,6 @@ cd ..
 cd Harmonizer
 make
 cd ..
+cd Harmonizer2
+make
+cd ..
