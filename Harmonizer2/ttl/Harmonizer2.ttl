@@ -101,7 +101,7 @@ lv2:port
     lv2:name "Interval 1";
 	lv2:default 0.00000 ;
 	lv2:minimum 0.00000 ;
-	lv2:maximum 10.00000 ;
+	lv2:maximum 11.00000 ;
 	lv2:portProperty lv2:integer;
     lv2:portProperty lv2:enumeration ;
     lv2:scalePoint [rdfs:label "+3rd"; rdf:value 0];
@@ -114,7 +114,8 @@ lv2:port
     lv2:scalePoint [rdfs:label "-4th"; rdf:value 7];
     lv2:scalePoint [rdfs:label "-5th"; rdf:value 8];
     lv2:scalePoint [rdfs:label "-6th"; rdf:value 9];
-    lv2:scalePoint [rdfs:label "-8th"; rdf:value 10];
+    lv2:scalePoint [rdfs:label "-7th"; rdf:value 10];
+    lv2:scalePoint [rdfs:label "-8th"; rdf:value 11];
 ],
 [
     a lv2:ControlPort, lv2:InputPort;
@@ -123,7 +124,7 @@ lv2:port
     lv2:name "Interval 2";
     lv2:default 2.00000 ;
     lv2:minimum 0.00000 ;
-    lv2:maximum 10.00000 ;
+    lv2:maximum 11.00000 ;
     lv2:portProperty lv2:integer;
     lv2:portProperty lv2:enumeration ;
     lv2:scalePoint [rdfs:label "+3rd"; rdf:value 0];
@@ -136,7 +137,8 @@ lv2:port
     lv2:scalePoint [rdfs:label "-4th"; rdf:value 7];
     lv2:scalePoint [rdfs:label "-5th"; rdf:value 8];
     lv2:scalePoint [rdfs:label "-6th"; rdf:value 9];
-    lv2:scalePoint [rdfs:label "-8th"; rdf:value 10];
+    lv2:scalePoint [rdfs:label "-7th"; rdf:value 10];
+    lv2:scalePoint [rdfs:label "-8th"; rdf:value 11];
 ],
 [
     a lv2:ControlPort, lv2:InputPort;
