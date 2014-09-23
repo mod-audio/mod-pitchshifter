@@ -12,7 +12,7 @@
 /**********************************************************************************************************************************************************/
 
 #define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/Drop"
-#define TAMANHO_DO_BUFFER 64
+#define BUFFER_SIZE 64
 enum {IN, OUT_1, STEP, GAIN, PLUGIN_PORT_COUNT};
 
 /**********************************************************************************************************************************************************/
@@ -106,7 +106,7 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
     
     plugin->nBuffers = 16;
     plugin->Qcolumn = 2*plugin->nBuffers;
-    plugin->hopa = TAMANHO_DO_BUFFER;
+    plugin->hopa = BUFFER_SIZE;
     plugin->N = plugin->nBuffers*plugin->hopa;
     plugin->cont = 0;
     

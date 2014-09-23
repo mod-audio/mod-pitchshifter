@@ -13,7 +13,7 @@
 /**********************************************************************************************************************************************************/
 
 #define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/Harmonizer"
-#define TAMANHO_DO_BUFFER 64
+#define BUFFER_SIZE 64
 enum {IN, OUT_1, OUT_2, TONE, SCALE, INTERVAL, MODE, LOWNOTE, GAIN_1, GAIN_2, PLUGIN_PORT_COUNT};
 
 /**********************************************************************************************************************************************************/
@@ -138,7 +138,7 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
     plugin->nBuffers = 32;
     plugin->nBuffers2 = 16;
     plugin->Qcolumn = 1*plugin->nBuffers;
-    plugin->hopa = TAMANHO_DO_BUFFER;
+    plugin->hopa = BUFFER_SIZE;
     plugin->N = plugin->nBuffers*plugin->hopa;
     plugin->N2 = plugin->nBuffers2*plugin->hopa;
     plugin->cont = 0;

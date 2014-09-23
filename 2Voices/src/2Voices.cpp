@@ -12,7 +12,7 @@
 /**********************************************************************************************************************************************************/
 
 #define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/2Voices"
-#define TAMANHO_DO_BUFFER 64
+#define BUFFER_SIZE 64
 enum {IN, OUT_1, OUT_2, STEP_1, STEP_2, GAIN, PLUGIN_PORT_COUNT};
 
 /**********************************************************************************************************************************************************/
@@ -117,7 +117,7 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
     
     plugin->nBuffers = 32;
     plugin->Qcolumn = plugin->nBuffers;
-    plugin->hopa = TAMANHO_DO_BUFFER;
+    plugin->hopa = BUFFER_SIZE;
     plugin->N = plugin->nBuffers*plugin->hopa;
     plugin->cont = 0;
     
