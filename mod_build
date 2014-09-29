@@ -7,6 +7,8 @@ list_bundles() {
     echo "mod-supercapo.lv2"
     echo "mod-superwhammy.lv2"
     echo "mod-harmonizer.lv2"
+    echo "mod-harmonizer2.lv2"
+    echo "mod-harmonizercs.lv2"
 }
 
 if [ "x${1}x" == "x-lx" ]; then
@@ -18,7 +20,7 @@ if [ "x${LV2_PATH}x" == "xx" ]; then
     LV2_PATH=~/.lv2/
 fi
 
-for i in Drop Capo SuperCapo SuperWhammy Harmonizer; do
+for i in Drop Capo SuperCapo SuperWhammy Harmonizer Harmonizer2 HarmonizerCS; do
     cd $i
     make
     make INSTALL_PATH=$LV2_PATH install
