@@ -1,0 +1,15 @@
+{
+    "author": "MOD", 
+    "color": "darkblue", 
+    "controls": [
+        {
+            "name": "Step 1", 
+            "symbol": "Step1"
+        }, 
+        {
+            "name": "Step 2", 
+            "symbol": "Step2"
+        }
+    ], 
+    "label": "2Voices"
+}

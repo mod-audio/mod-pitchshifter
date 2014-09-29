@@ -84,4 +84,12 @@ lv2:port
     lv2:default 3;
     lv2:minimum -20;
     lv2:maximum 20;
-].
+];
+mod:gui [
+        a mod:Gui;
+        mod:resourcesDirectory <modgui>;
+        mod:iconTemplate <modgui/icon-2voices.html>;
+        mod:templateData <modgui/data-2voices.json>;
+        mod:screenshot <modgui/screenshot-2voices.png>;
+        mod:thumbnail <modgui/thumb-2voices.png>;
+    ] .
