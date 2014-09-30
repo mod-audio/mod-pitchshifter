@@ -108,7 +108,7 @@
     .mod-harmonizer .mod-control.low .mod-control-image {
         background-image:url(/resources/slider-serial-nmb.png{{{ns}}}) !important;
         background-size: auto 33px;
-        width: 86px;
+        width: 87px;
         height: 33px;
     }
     .mod-harmonizer .mod-knob.gain {
