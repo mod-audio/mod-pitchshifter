@@ -72,6 +72,7 @@ lv2:port
 mod:gui [
         a mod:Gui;
         mod:resourcesDirectory <modgui>;
+        mod:stylesheet <modgui/drop-stylesheet.css>;
         mod:iconTemplate <modgui/icon-drop.html>;
         mod:templateData <modgui/data-drop.json>;
         mod:screenshot <modgui/Drop.png>;

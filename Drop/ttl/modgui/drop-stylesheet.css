@@ -1,0 +1,57 @@
+    .mod-drop {
+        background: url(/resources/drop-bg.png{{{ns}}}) no-repeat;
+        width: 158px;
+        height: 352px;
+
+    }
+    .mod-drop .mod-drag-handle {
+        bottom:0;
+        left:0;
+        position:absolute;
+        right:0;
+        top:0;
+    }
+    .mod-drop .mod-knob {
+        position: absolute;
+        margin: 6em 0.6em;
+        z-index: 100
+    }
+    .mod-drop .mod-knob .mod-knob-image {
+        background: url(/resources/slider-serial-drop.png{{{ns}}}) no-repeat;
+        width: 108px;
+        height:90px;
+        position: absolute;
+        cursor: pointer;
+    }
+
+    .mod-drop .mod-footswitch {
+        background-image:url(/resources/footswitch.png{{{ns}}});
+        background-position:bottom center;
+        background-repeat:no-repeat;
+        background-size:auto 132px;
+        bottom: 24px;
+        right: 62px;
+        cursor:pointer;
+        height:66px;
+        width: 66px;
+        margin: auto;
+        position:absolute !important;
+    }
+    .mod-drop .mod-footswitch.on {
+        background-position-y: top !important
+    }
+    .mod-drop .mod-light {
+        height: 32px;
+        width: 32px;
+        margin: auto;
+        bottom: 110px;
+        right: 0;
+        left: 0;
+        position: absolute !important
+      }
+    .mod-drop .mod-light.off { 
+      background-image:url(/resources/red-light-off.png{{{ns}}}); 
+    }
+    .mod-drop .mod-light.on  { 
+      background-image:url(/resources/red-light-on.png{{{ns}}}); 
+    }
