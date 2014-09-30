@@ -1,0 +1,57 @@
+    .mod-supercapo {
+        background: url(/resources/supercapo-bg.png{{{ns}}}) no-repeat;
+        width: 158px;
+        height: 352px;
+
+    }
+    .mod-supercapo .mod-drag-handle {
+        bottom:0;
+        left:0;
+        position:absolute;
+        right:0;
+        top:0;
+    }
+    .mod-supercapo .mod-knob {
+        position: absolute;
+        margin: 6em 0.6em;
+        z-index: 100
+    }
+    .mod-supercapo .mod-knob .mod-knob-image {
+        background: url(/resources/slider-serial-supercapo.png{{{ns}}}) no-repeat;
+        width: 108px;
+        height:90px;
+        position: absolute;
+        cursor: pointer;
+    }
+
+    .mod-supercapo .mod-footswitch {
+        background-image:url(/resources/footswitch.png{{{ns}}});
+        background-position:bottom center;
+        background-repeat:no-repeat;
+        background-size:auto 132px;
+        bottom: 24px;
+        right: 62px;
+        cursor:pointer;
+        height:66px;
+        width: 66px;
+        margin: auto;
+        position:absolute !important;
+    }
+    .mod-supercapo .mod-footswitch.on {
+        background-position-y: top !important
+    }
+    .mod-supercapo .mod-light {
+        height: 32px;
+        width: 32px;
+        margin: auto;
+        bottom: 110px;
+        right: 0;
+        left: 0;
+        position: absolute !important
+      }
+    .mod-supercapo .mod-light.off { 
+      background-image:url(/resources/red-light-off.png{{{ns}}}); 
+    }
+    .mod-supercapo .mod-light.on  { 
+      background-image:url(/resources/red-light-on.png{{{ns}}}); 
+    }

@@ -68,6 +68,7 @@ lv2:port
 mod:gui [
         a mod:Gui;
         mod:resourcesDirectory <modgui>;
+        mod:stylesheet <modgui/supercapo-stylesheet.css>;
         mod:iconTemplate <modgui/icon-supercapo.html>;
         mod:templateData <modgui/data-supercapo.json>;
         mod:screenshot <modgui/screenshot-supercapo.png>;
