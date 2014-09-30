@@ -72,8 +72,9 @@ lv2:port
 mod:gui [
         a mod:Gui;
         mod:resourcesDirectory <modgui>;
+        mod:stylesheet <modgui/capo-stylesheet.css>;
         mod:iconTemplate <modgui/icon-capo.html>;
         mod:templateData <modgui/data-capo.json>;
-        mod:screenshot <modgui/Capo.png>;
-        mod:thumbnail <modgui/Capo-thumb.png>;
+        mod:screenshot <modgui/capo-screenshot.png>;
+        mod:thumbnail <modgui/capo-thumb.png>;
     ] .
