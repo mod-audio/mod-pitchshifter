@@ -98,6 +98,7 @@ lv2:port
 mod:gui [
     a mod:Gui;
     mod:resourcesDirectory <modgui>;
+    mod:stylesheet <modgui/css-super-whammy.css>;
     mod:iconTemplate <modgui/icon-super-whammy.html>;
     mod:templateData <modgui/data-super-whammy.json>;
     mod:screenshot <modgui/screenshot-super-whammy.png>;
