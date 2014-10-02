@@ -1,17 +1,26 @@
-<div class="mod-pedal mod-pedal-boxy mod-four-knobs mod-boxy75 mod-{{color}}">
+<div class="mod-pedal mod-swhammy">
     <div mod-role="drag-handle" class="mod-drag-handle"></div>
-    <div class="mod-plugin-author"><h1>{{author}}</h1></div>
-    <div class="mod-plugin-name"><h1>{{label}}</h1></div>
-    <div class="mod-light on" mod-role="bypass-light"></div>
-    <div class="mod-control-group clearfix">
-        {{#controls}}
-        <div class="mod-knob">
-            <div class="mod-knob-image" mod-role="input-control-port" mod-port-symbol="{{symbol}}"></div>
-            <span class="mod-knob-title">{{name}}</span>
+    <div class="mod-control-group-1">
+        <div class="mod-slider">
+            <div id="slider" class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="Step"></div>
         </div>
-        {{/controls}}
     </div>
-    <div class="mod-footswitch" mod-role="bypass"></div>  
+    <div class="mod-control-group-2">
+        <div class="mod-slider digi">
+            <div class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="First"></div>
+        </div>
+        <div class="mod-slider digi">
+            <div class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="Last"></div>
+        </div>
+        <div class="toggle active" mod-role="input-control-port" mod-port-symbol="Clean" mod-widget="switch">
+    </div>
+    <div class="mod-knob">
+        <div class="mod-knob-image" mod-role="input-control-port" mod-port-symbol="Gain"></div>
+    </div>
+    <div class="on-off">
+        <div class="mod-light on" mod-role="bypass-light"></div>
+        <div class="mod-footswitch" mod-role="bypass"></div>  
+    </div>
     <div class="mod-pedal-input">
         {{#effect.ports.audio.input}}
         <div class="mod-input mod-input-disconnected" title="{{name}}" mod-role="input-audio-port" mod-port-symbol="{{symbol}}">
@@ -37,3 +46,98 @@
         {{/effect.ports.midi.output}}
     </div>
 </div>
+<style>
+    .mod-swhammy {
+        background: url(/resources/superwhammy-bg.png{{{ns}}}) no-repeat;
+        width: 337px;
+        height: 428px
+    }
+    .mod-swhammy .mod-control-group-1 {
+        margin: 3em 0 0 1em;
+        width: 90px;
+        height: 300px;
+        float: left;
+    }
+    .mod-swhammy .mod-control-group-2 {
+        margin: 9.6em 0 0 109px;
+    }
+    .mod-swhammy .mod-control-group-1 .mod-slider {
+        position: absolute;
+        z-index: 100;
+        width: 70px;
+        height: 315px;       
+    }
+    .mod-swhammy .mod-knob {
+        position: absolute;
+        bottom: 50px;
+        margin-left: 20px;
+        z-index: 100;
+        cursor: pointer;
+    }
+    .mod-swhammy .mod-knob-image {
+        background: url(/resources/superwhammy_knob.png{{{ns}}}) no-repeat;
+        width: 60px;
+        height: 60px
+    }
+    .mod-swhammy .mod-control-group-2 .mod-slider {
+        z-index: 100;
+        width: 87px;
+        margin-right: 10px;
+    }
+    .mod-swhammy .mod-control-group-1 .mod-slider .mod-slider-image {
+        background: url(/resources/slider-whammy.png{{{ns}}}) no-repeat;
+        width: 70px;
+        height: 315px;        
+    }
+    .mod-swhammy .mod-control-group-2 .mod-slider .mod-slider-image {
+        background: url(/resources/slider-serial-whammy.png{{{ns}}}) no-repeat;
+        background-size: auto 33px;
+        width: 87px;
+        height: 33px;        
+    }
+    .mod-swhammy .toggle {
+        background: url(/resources/switch-key.png{{{ns}}}) no-repeat;
+        width: 30px;
+        height: 73px;
+        position: absolute;
+        margin: 45px 85px;
+        z-index: 1000;
+        cursor: pointer;
+    }
+    .mod-swhammy .toggle.off {
+        background-position: center bottom
+    }
+    .on-off {
+        position: absolute;
+        bottom: 45px;
+        right: 40px;
+        z-index: 100
+    }
+    .mod-swhammy .mod-footswitch {
+        background-image:url(/resources/footswitch.png{{{ns}}});
+        background-position:bottom center;
+        background-repeat:no-repeat;
+        background-size:auto 132px;
+        cursor:pointer;
+        height:66px;
+        width: 66px;
+        margin: auto;
+        z-index: 100;
+    }
+    .mod-swhammy .mod-footswitch.on {
+        background-position-y: top !important
+    }
+    .mod-swhammy .mod-light {
+        height: 32px;
+        width: 32px;
+        margin: auto;
+        right: 0;
+        left: 0;
+      }
+    .mod-swhammy .mod-light.off { 
+      background-image:url(/resources/red-light-off.png{{{ns}}}); 
+    }
+    .mod-swhammy .mod-light.on  { 
+      background-image:url(/resources/red-light-on.png{{{ns}}}); 
+    }
+</style>
