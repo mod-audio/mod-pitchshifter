@@ -76,5 +76,5 @@ mod:gui [
         mod:iconTemplate <modgui/icon-drop.html>;
         mod:templateData <modgui/data-drop.json>;
         mod:screenshot <modgui/drop-screenshot.png>;
-        mod:thumbnail <modgui/drop-thumb.png>;
+        mod:thumbnail <modgui/Drop-thumb.png>;
     ] .
