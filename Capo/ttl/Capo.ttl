@@ -76,5 +76,5 @@ mod:gui [
         mod:iconTemplate <modgui/icon-capo.html>;
         mod:templateData <modgui/data-capo.json>;
         mod:screenshot <modgui/capo-screenshot.png>;
-        mod:thumbnail <modgui/capo-thumb.png>;
+        mod:thumbnail <modgui/Capo-thumb.png>;
     ] .
