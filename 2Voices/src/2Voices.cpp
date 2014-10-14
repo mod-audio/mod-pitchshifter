@@ -302,17 +302,17 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 
     float media = 0;
     
-    for (uint32_t i=1; i<=n_samples; i++)
+    for (uint32_t i=0; i<n_samples; i++)
     {
-		media = media + abs(plugin->in[i-1]);
+		media += abs(plugin->in[i]);
 	}
 	
 	if (media == 0)
 	{
-		for (uint32_t i=1; i<=n_samples; i++)
+		for (uint32_t i=0; i<n_samples; i++)
 		{
-			plugin->out_1[i-1] = 0;
-			plugin->out_2[i-1] = 0;
+			plugin->out_1[i] = 0;
+			plugin->out_2[i] = 0;
 		}
 	}
 	else
@@ -337,13 +337,13 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		plugin->Hops_2[plugin->Qcolumn-1] = hops_2;
     
     
-		for (int i=1; i<=plugin->hopa; i++)
+		for (int i=0; i<plugin->hopa; i++)
 		{
-			for (int j=1; j<=(plugin->nBuffers-1); j++)
+			for (int j=0; j<(plugin->nBuffers-1); j++)
 			{
-				plugin->b[j-1][i-1] = plugin->b[j][i-1];
+				plugin->b[j][i] = plugin->b[j+1][i];
 			}
-			plugin->b[plugin->nBuffers-1][i-1] = plugin->in[i-1];
+			plugin->b[plugin->nBuffers-1][i] = plugin->in[i];
 		}
 		
 		if ( plugin->cont < plugin->nBuffers-1)
@@ -353,19 +353,18 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		else
 		{
 			shift1(plugin->N, plugin->hopa, plugin->frames, plugin->frames2, &plugin->w, &plugin->XaPrevious, &plugin->Xa_arg, &plugin->Xa_abs, &plugin->XaPrevious_arg, &plugin->Xa, &plugin->d_phi, &plugin->d_phi_prime, &plugin->d_phi_wrapped, &plugin->omega_true_sobre_fs, &plugin->I, &plugin->AUX, plugin->p, plugin->fXa);
+
 			shift2(plugin->Hops_1, &plugin->PhiPrevious_1, plugin->yshift_1, &plugin->Xs_1, plugin->q_1, &plugin->Phi_1, plugin->ysaida_1, plugin->ysaida2_1, plugin->Qcolumn, plugin->p2_1, plugin->fXs_1,plugin->N, plugin->hopa, plugin->frames, plugin->frames2, &plugin->w, &plugin->XaPrevious, &plugin->Xa_arg, &plugin->Xa_abs, &plugin->XaPrevious_arg, &plugin->Xa, &plugin->d_phi, &plugin->d_phi_prime, &plugin->d_phi_wrapped, &plugin->omega_true_sobre_fs, &plugin->I, &plugin->AUX, plugin->p, plugin->fXa);
+
 			shift2(plugin->Hops_2, &plugin->PhiPrevious_2, plugin->yshift_2, &plugin->Xs_2, plugin->q_2, &plugin->Phi_2, plugin->ysaida_2, plugin->ysaida2_2, plugin->Qcolumn, plugin->p2_2, plugin->fXs_2,plugin->N, plugin->hopa, plugin->frames, plugin->frames2, &plugin->w, &plugin->XaPrevious, &plugin->Xa_arg, &plugin->Xa_abs, &plugin->XaPrevious_arg, &plugin->Xa, &plugin->d_phi, &plugin->d_phi_prime, &plugin->d_phi_wrapped, &plugin->omega_true_sobre_fs, &plugin->I, &plugin->AUX, plugin->p, plugin->fXa);
 			
-				for (int i=1; i<=plugin->hopa; i++)
-				{
-				plugin->out_1[i-1] = (g_before + ((plugin->g - g_before)/(plugin->hopa - 1))*(i-1) )*(float)plugin->yshift_1[i-1];
-				plugin->out_2[i-1] = (g_before + ((plugin->g - g_before)/(plugin->hopa - 1))*(i-1) )*(float)plugin->yshift_2[i-1];
-				}
-			
+			for (int i=0; i<plugin->hopa; i++)
+			{
+				plugin->out_1[i] = (g_before + i*((plugin->g - g_before)/(plugin->hopa - 1))) * (float)plugin->yshift_1[i];
+				plugin->out_2[i] = (g_before + i*((plugin->g - g_before)/(plugin->hopa - 1))) * (float)plugin->yshift_2[i];
+			}
 		}
-		
 	}
-
 }
 
 /**********************************************************************************************************************************************************/
