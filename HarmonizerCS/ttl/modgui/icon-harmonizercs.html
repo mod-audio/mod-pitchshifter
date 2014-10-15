@@ -1,0 +1,96 @@
+<div class="mod-pedal mod-harmonizercs">
+    <div mod-role="drag-handle" class="mod-drag-handle"></div>
+    <div class="mod-control-group-left">
+        <div class="mod-slider tone">
+            <div class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="Tone"></div>
+        </div>
+        <div class="mod-slider wet">
+            <div class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="LowestNoteToChangeThePitch"></div>
+        </div>
+        <div class="mod-slider tonic">
+            <div class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="Step_0"></div>
+        </div>
+    </div>
+    <div class="mod-control-group-right">
+        <div class="mod-slider">
+            <div class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="Step_1"></div>
+            <div class="mod-slider-value" mod-role="input-control-value" mod-port-symbol="Step_1"></div>
+        </div>
+        <div class="mod-slider">
+            <div class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="Step_2"></div>
+            <div class="mod-slider-value" mod-role="input-control-value" mod-port-symbol="Step_2"></div>
+        </div>
+        <div class="mod-slider">
+            <div class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="Step_3"></div>
+            <div class="mod-slider-value" mod-role="input-control-value" mod-port-symbol="Step_3"></div>
+        </div>
+        <div class="mod-slider">
+            <div class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="Step_4"></div>
+            <div class="mod-slider-value" mod-role="input-control-value" mod-port-symbol="Step_4"></div>
+        </div>
+        <div class="mod-slider">
+            <div class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="Step_5"></div>
+            <div class="mod-slider-value" mod-role="input-control-value" mod-port-symbol="Step_5"></div>
+        </div>
+        <div class="mod-slider">
+            <div class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="Step_6"></div>
+            <div class="mod-slider-value" mod-role="input-control-value" mod-port-symbol="Step_6"></div>
+        </div>
+        <div class="mod-slider">
+            <div class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="Step_7"></div>
+            <div class="mod-slider-value" mod-role="input-control-value" mod-port-symbol="Step_7"></div>
+        </div>
+        <div class="mod-slider">
+            <div class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="Step_8"></div>
+            <div class="mod-slider-value" mod-role="input-control-value" mod-port-symbol="Step_8"></div>
+        </div>
+        <div class="mod-slider">
+            <div class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="Step_9"></div>
+            <div class="mod-slider-value" mod-role="input-control-value" mod-port-symbol="Step_9"></div>
+        </div>
+        <div class="mod-slider">
+            <div class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="Step_10"></div>
+            <div class="mod-slider-value" mod-role="input-control-value" mod-port-symbol="Step_10"></div>
+        </div>
+        <div class="mod-slider">
+            <div class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="Step_11"></div>
+            <div class="mod-slider-value" mod-role="input-control-value" mod-port-symbol="Step_11"></div>
+        </div>
+
+    </div>
+    <div class="mod-control-group-bottom">
+        <div class="mod-knob gain">
+            <div class="mod-knob-image" mod-role="input-control-port" mod-port-symbol="Gain1"></div>
+        </div>
+        <div class="mod-knob gain">
+            <div class="mod-knob-image" mod-role="input-control-port" mod-port-symbol="Gain2"></div>
+        </div>
+    </div>
+    <br />
+    <div class="mod-light on" mod-role="bypass-light"></div>
+    <div class="mod-footswitch" mod-role="bypass"></div>
+    <div class="mod-pedal-input">
+        {{#effect.ports.audio.input}}
+        <div class="mod-input mod-input-disconnected" title="{{name}}" mod-role="input-audio-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-input-image"></div>
+        </div>
+        {{/effect.ports.audio.input}}
+        {{#effect.ports.midi.input}}
+        <div class="mod-input mod-input-disconnected" title="{{name}}" mod-role="input-midi-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-input-image"></div>
+        </div>
+        {{/effect.ports.midi.input}}
+    </div>
+    <div class="mod-pedal-output">
+        {{#effect.ports.audio.output}}
+        <div class="mod-output mod-output-disconnected" title="{{name}}" mod-role="output-audio-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-output-image"></div>
+        </div>
+        {{/effect.ports.audio.output}}
+        {{#effect.ports.midi.output}}
+        <div class="mod-output mod-output-disconnected" title="{{name}}" mod-role="output-midi-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-input-image"></div>
+        </div>
+        {{/effect.ports.midi.output}}
+    </div>
+</div>

@@ -1,0 +1,68 @@
+<div class="mod-pedal mod-harmonizer2">
+    <div mod-role="drag-handle" class="mod-drag-handle"></div>
+    <div class="mod-control-group top">
+        <div class="mod-slider int">
+            <div class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="Interval_1"></div>
+        </div>
+        <div class="mod-slider tone">
+            <div class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="Tone"></div>
+        </div>
+        <div class="mod-slider int">
+            <div class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="Interval_2"></div>
+        </div>
+
+        <div class="mod-control type">
+            <div class="mod-control-image" mod-role="input-control-port" mod-port-symbol="Mode"></div>
+        </div>
+        {{#controls.1}}
+        <div class="mod-control scale">
+        <div class="mod-enumerated" mod-role="input-control-port" mod-port-symbol="Scale" mod-widget="custom-select">
+        <div mod-role="input-control-value" mod-port-symbol="Scale" class="mod-enumerated-selected" contenteditable="false">{{label}}</div>
+          <div class="mod-enumerated-list" mod-widget-property="hidden" style="display: none">
+            <div mod-role="enumeration-option" mod-port-value="0">Major</div>
+            <div mod-role="enumeration-option" mod-port-value="1">Minor</div>
+            <div mod-role="enumeration-option" mod-port-value="2">Harmonic Minor</div> 
+          </div>
+        </div>
+        </div>
+        {{/controls.1}}
+    </div>
+    <div class="mod-control-group bottom">
+        <div class="mod-control low">
+            <div class="mod-control-image" mod-role="input-control-port" mod-port-symbol="LowestNoteToChangeThePitch"></div>
+        </div>
+        <div class="mod-knob gain">
+            <div class="mod-knob-image" mod-role="input-control-port" mod-port-symbol="Gain1"></div>
+        </div>
+        <div class="mod-knob gain">
+            <div class="mod-knob-image" mod-role="input-control-port" mod-port-symbol="Gain2"></div>
+        </div>
+    </div>
+    <br />
+    <div class="mod-light on" mod-role="bypass-light"></div>
+    <div class="mod-footswitch" mod-role="bypass"></div>
+    <div class="mod-pedal-input">
+        {{#effect.ports.audio.input}}
+        <div class="mod-input mod-input-disconnected" title="{{name}}" mod-role="input-audio-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-input-image"></div>
+        </div>
+        {{/effect.ports.audio.input}}
+        {{#effect.ports.midi.input}}
+        <div class="mod-input mod-input-disconnected" title="{{name}}" mod-role="input-midi-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-input-image"></div>
+        </div>
+        {{/effect.ports.midi.input}}
+    </div>
+    <div class="mod-pedal-output">
+        {{#effect.ports.audio.output}}
+        <div class="mod-output mod-output-disconnected" title="{{name}}" mod-role="output-audio-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-output-image"></div>
+        </div>
+        {{/effect.ports.audio.output}}
+        {{#effect.ports.midi.output}}
+        <div class="mod-output mod-output-disconnected" title="{{name}}" mod-role="output-midi-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-input-image"></div>
+        </div>
+        {{/effect.ports.midi.output}}
+    </div>
+</div>

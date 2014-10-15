@@ -1,0 +1,59 @@
+{
+    "author": "brand", 
+    "color": "white", 
+    "controls": [
+        {
+            "name": "Tone", 
+            "symbol": "Tone"
+        }, 
+        {
+            "name": "Tonic", 
+            "symbol": "Step_0"
+        }, 
+        {
+            "name": "Minor 2nd", 
+            "symbol": "Step_1"
+        }, 
+        {
+            "name": "Major 2nd", 
+            "symbol": "Step_2"
+        }, 
+        {
+            "name": "Minor 3rd", 
+            "symbol": "Step_3"
+        }, 
+        {
+            "name": "Major 3rd", 
+            "symbol": "Step_4"
+        }, 
+        {
+            "name": "Perfect 4th", 
+            "symbol": "Step_5"
+        }, 
+        {
+            "name": "Diminished 5th", 
+            "symbol": "Step_6"
+        }, 
+        {
+            "name": "Perfect 5th", 
+            "symbol": "Step_7"
+        }, 
+        {
+            "name": "Minor 6th", 
+            "symbol": "Step_8"
+        }, 
+        {
+            "name": "Major 6th", 
+            "symbol": "Step_9"
+        }, 
+        {
+            "name": "Minor 7th", 
+            "symbol": "Step_10"
+        }, 
+        {
+            "name": "Major 7th", 
+            "symbol": "Step_10"
+        }
+    ], 
+    "label": "HarmonizerCS"
+}

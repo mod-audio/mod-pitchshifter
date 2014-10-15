@@ -1,0 +1,39 @@
+{
+    "author": "MOD", 
+    "color": "darkblue", 
+    "controls": [
+        {
+            "name": "Tone", 
+            "symbol": "Tone"
+        }, 
+        {
+            "name": "Scale", 
+            "symbol": "Scale"
+        }, 
+        {
+            "name": "Interval 1", 
+            "symbol": "Interval_1"
+        }, 
+        {
+            "name": "Interval 2", 
+            "symbol": "Interval_2"
+        }, 
+        {
+            "name": "Mode", 
+            "symbol": "Mode"
+        }, 
+        {
+            "name": "Clean Gain", 
+            "symbol": "Gain_clean"
+        }, 
+        {
+            "name": "Gain 1", 
+            "symbol": "Gain1"
+        }, 
+        {
+            "name": "Gain 2", 
+            "symbol": "Gain2"
+        }
+    ], 
+    "label": "Harmonizer2"
+}

@@ -1,0 +1,186 @@
+
+    .mod-harmonizer2 {
+        background-image:url(/resources/bg-harmonizer2.png{{{ns}}});
+        background-position:center center;
+        background-repeat:no-repeat;
+        background-size:298px 484px;
+        height:484px;
+        position:relative;
+        width:298px;
+    }
+    .mod-harmonizer2 .mod-drag-handle {
+        bottom:0;
+        left:0;
+        position:absolute;
+        right:0;
+        top:0;
+    }
+    .mod-harmonizer2-2 .mod-pedal-input {
+        top:124px;
+        left: -24px;
+    }
+    .mod-harmonizer2-2 .mod-pedal-output {
+        top:50px;
+        right: -14px;
+    }
+    .mod-harmonizer2-2 .mod-pedal-output .mod-output {
+        margin-bottom: 109px;
+    }
+    .mod-harmonizer2 .mod-control-group{
+        margin: 105px 0 -32px 11px !important;
+        height: 100px;
+        width: 300px;
+    }
+    .mod-harmonizer2 .mod-knob {
+        width: 60px;
+        height: 60px;
+    }
+    .mod-harmonizer2 .mod-knob-image {
+        background-image:url(/resources/harm_knob.png{{{ns}}});
+        z-index: 20000;
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        cursor: pointer;
+    }
+
+    .mod-harmonizer2 .mod-control-image {
+        position: absolute;
+        z-index: 2000000;
+    }
+    .mod-harmonizer2 .mod-knob , .mod-harmonizer2 .mod-control {
+        position: relative;
+        float: left;
+        cursor: pointer;
+    }
+    .mod-harmonizer2 .mod-slider.tone {
+        margin: 0 -2px 0 10px;
+        width: 71px;
+        height: 32px;
+        z-index: 100;
+    }
+
+    .mod-harmonizer2 .mod-slider.tone .mod-slider-image {
+        background-image:url(/resources/slider-serial.png{{{ns}}}) !important;
+        background-size: auto 32px;
+        width: 71px;
+        height: 32px;
+    }
+    .mod-harmonizer2 .mod-slider.int {
+        width: 87px;
+        height: 33px;
+        z-index: 100
+
+    }
+    .mod-harmonizer2 .mod-slider.int .mod-slider-image {
+        background-image:url(/resources/slider-serial-int.png{{{ns}}}) !important;
+        background-size: auto 33px;
+        width: 87px;
+        height: 33px;
+    }
+    .mod-harmonizer2 .mod-control.type {
+        margin: 38px 107px 12px 107px;
+        clear: both;
+    }
+
+    .mod-harmonizer2 .mod-control.type .mod-control-image {
+        background-image:url(/resources/switch3.png{{{ns}}});
+        background-size: 186px 31px;
+        width: 62px;
+        height: 31px
+    }
+
+    .mod-harmonizer2 .mod-footswitch {
+        background-image:url(/resources/footswitch.png{{{ns}}});
+        background-position:top center;
+        background-repeat:no-repeat;
+        background-size:auto 132px;
+        bottom: 28px;
+        cursor:pointer;
+        height:66px;
+        width: 66px;
+        margin: auto;
+        margin-top:30px;
+        position:relative !important;
+    }
+
+
+    .mod-harmonizer2 .mod-control.low {
+        width: 86px;
+        height: 33px;
+            margin: 13px 0px 26px 13px;
+        }
+
+    .mod-harmonizer2 .mod-control.low .mod-control-image {
+        background-image:url(/resources/slider-serial-nmb.png{{{ns}}}) !important;
+        background-size: auto 33px;
+        width: 87px;
+        height: 33px;
+    }
+    .mod-harmonizer2 .mod-knob.gain {
+        margin-left: 21px;
+    }
+    .mod-harmonizer2 .mod-footswitch.off{
+        background-position-y: bottom;
+    }
+    .mod-harmonizer2 .mod-control-image.on {
+        background-position-y: bottom !important
+    }
+    .mod-harmonizer2 .mod-control.scale{
+        width: 200px;
+        height: 30px;
+        margin: 25px 0 0 89px;
+    }
+    .mod-harmonizer2  .mod-enumerated {
+        position: absolute;
+        z-index: 2000000
+    }
+    .mod-harmonizer2  .mod-enumerated-list {
+        background-color: rgba(0,0,0,.8) !important;
+        display: none;
+        height: 120px;
+        width: 187px;
+        font-size: 12px;
+        padding: 0 10px;
+        margin-top: 10px;
+        z-index: 2000000;
+        color: white !important;
+        overflow-y: auto;
+        overflow-x: hidden;
+        position: absolute;
+    }
+    .mod-harmonizer2  .mod-enumerated-list div:hover{
+        background: white;
+        color: black;
+        }
+    .mod-harmonizer2 .mode .mod-enumerated-selected:before {
+        content: '\25BE \a0';
+    }
+    .mod-harmonizer2  .mod-enumerated-selected {
+        background: transparent;
+        border: none;
+        color: orange;
+        display: block;
+        font-size: 12px;
+        padding: 0;
+        position: relative;
+        left: 4px;
+        margin: 0 0 0 5px;
+        top: 7px;
+        width: 200px; 
+    }
+ .mod-harmonizer2  .mod-enumerated-list:hover, .mod-harmonizer2  .mod-enumerated-list:active {
+    background: black;
+}
+.mod-harmonizer2 .mod-light {
+height: 32px;
+width: 32px;
+margin: auto;
+position: relative !important
+  }
+.mod-harmonizer2 .mod-light.off { 
+  background-image:url(/resources/red-light-off.png{{{ns}}}); 
+}
+.mod-harmonizer2 .mod-light.on  { 
+  background-image:url(/resources/red-light-on.png{{{ns}}}); 
+}
