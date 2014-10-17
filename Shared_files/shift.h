@@ -2,6 +2,7 @@
 #include <cmath>
 #include <fftw3.h>
 #include <armadillo>
+#include <stdint.h>
 
 using namespace arma;
 using namespace std;
@@ -9,7 +10,7 @@ using namespace std;
 class PSAnalysis
 {
 public:
-    PSAnalysis();
+    PSAnalysis(uint32_t n_samples, int nBuffers);
     ~PSAnalysis();
     void Analysis();
 
@@ -39,11 +40,17 @@ public:
 class PSSinthesis
 {
 public:
-    PSSinthesis();
+    PSSinthesis(PSAnalysis *obj);
     ~PSSinthesis();
     void Sinthesis();
 
-    PSAnalysis *obj;
+    int N; //Size of the frame
+    int hopa; //Analysis hop
+    int Qcolumn; //Number of frames that may be used in the overlap-add
+    vec *omega_true_sobre_fs; //?
+    vec *Xa_abs; //Modulus of Xa
+    vec *w; //A hanning window vector
+
 
     int *hops; //The last Qcolumn's hop's used in the overlap-add
     vec *Phi; //The synthesized phase

@@ -46,56 +46,18 @@ public:
     float *gain_2;
 
     int nBuffers;
-    int Qcolumn;
-    int hopa;
-    int N;
     int cont;
 
     double *frames;
-    float *frames2;
     double **b;
-    fftwf_complex *fXa;
-    cx_vec Xa;
-    cx_vec XaPrevious;
-    vec Xa_arg;
-    vec XaPrevious_arg;
-     vec d_phi;
-    vec d_phi_prime;
-    vec d_phi_wrapped;
-    vec omega_true_sobre_fs;
-    vec AUX;
-    vec Xa_abs;
-    vec I;
-    vec w;
-    fftwf_plan p;
 
     float g_clean;
 
 	float g_1;    
     double s_1;
-    int *Hops_1;
-    double *ysaida_1;
-    double *ysaida2_1;
-    double *yshift_1;
-    float *q_1;
-    fftwf_complex *fXs_1;
-    cx_vec Xs_1;
-    vec Phi_1;
-    vec PhiPrevious_1;
-    fftwf_plan p2_1;
 
     float g_2;
     double s_2;
-    int *Hops_2;
-    double *ysaida_2;
-    double *ysaida2_2;
-    double *yshift_2;
-    float *q_2;
-    fftwf_complex *fXs_2;
-    cx_vec Xs_2;
-    vec Phi_2;
-    vec PhiPrevious_2;
-    fftwf_plan p2_2;
 
     /*************/
 
@@ -167,50 +129,10 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
     plugin->frames = (double*)calloc(plugin->N,sizeof(double));
     plugin->b = (double**)calloc(plugin->hopa,sizeof(double*));
 
-    plugin->frames2 = fftwf_alloc_real(plugin->N);
-    plugin->fXa = fftwf_alloc_complex(plugin->N/2 + 1);
-
-    plugin->Xa.zeros(plugin->N/2 + 1);
-    plugin->XaPrevious.zeros(plugin->N/2 + 1);
-    plugin->Xa_arg.zeros(plugin->N/2 + 1);
-	plugin->XaPrevious_arg.zeros(plugin->N/2 + 1);
-	plugin->d_phi.zeros(plugin->N/2 + 1);
-	plugin->d_phi_prime.zeros(plugin->N/2 + 1);
-	plugin->d_phi_wrapped.zeros(plugin->N/2 + 1);
-	plugin->omega_true_sobre_fs.zeros(plugin->N/2 + 1);
-	plugin->AUX.zeros(plugin->N/2 + 1);
-	plugin->Xa_abs.zeros(plugin->N/2 + 1);
-	plugin->w.zeros(plugin->N); hann(plugin->N,&plugin->w);
-	plugin->I.zeros(plugin->N/2 + 1); plugin->I = linspace(0, plugin->N/2,plugin->N/2 + 1);
-
 	for (int i=1 ; i<= (plugin->nBuffers); i++)
     {
 		plugin->b[i-1] = &plugin->frames[(i-1)*plugin->hopa];
 	}
-
-	plugin->p = fftwf_plan_dft_r2c_1d(plugin->N, plugin->frames2, plugin->fXa, FFTW_ESTIMATE);
-    
-    plugin->Hops_1 = (int*)calloc(plugin->Qcolumn,sizeof(int));
-    for (int i=1;i<=plugin->Qcolumn;i++) plugin->Hops_1[i-1] = plugin->hopa;
-    plugin->ysaida_1 = (double*)calloc(2*(plugin->N + 2*(plugin->Qcolumn-1)*plugin->hopa),sizeof(double));
-    plugin->yshift_1 = (double*)calloc(plugin->hopa,sizeof(double));
-    plugin->q_1 = fftwf_alloc_real(plugin->N);
-	plugin->fXs_1 = fftwf_alloc_complex(plugin->N/2 + 1);
-	plugin->Xs_1.zeros(plugin->N/2 + 1);
-	plugin->Phi_1.zeros(plugin->N/2 + 1);
-	plugin->PhiPrevious_1.zeros(plugin->N/2 + 1);
-	plugin->p2_1 = fftwf_plan_dft_c2r_1d(plugin->N, plugin->fXs_1, plugin->q_1, FFTW_ESTIMATE);
-
-	plugin->Hops_2 = (int*)calloc(plugin->Qcolumn,sizeof(int));
-    for (int i=1;i<=plugin->Qcolumn;i++) plugin->Hops_2[i-1] = plugin->hopa;
-    plugin->ysaida_2 = (double*)calloc(2*(plugin->N + 2*(plugin->Qcolumn-1)*plugin->hopa),sizeof(double));
-    plugin->yshift_2 = (double*)calloc(plugin->hopa,sizeof(double));
-    plugin->q_2 = fftwf_alloc_real(plugin->N);
-	plugin->fXs_2 = fftwf_alloc_complex(plugin->N/2 + 1);
-	plugin->Xs_2.zeros(plugin->N/2 + 1);
-	plugin->Phi_2.zeros(plugin->N/2 + 1);
-	plugin->PhiPrevious_2.zeros(plugin->N/2 + 1);
-	plugin->p2_2 = fftwf_plan_dft_c2r_1d(plugin->N, plugin->fXs_2, plugin->q_2, FFTW_ESTIMATE);
 
 	plugin->nBuffers2 = 16;
     plugin->N2 = plugin->nBuffers2*plugin->hopa;   
@@ -328,58 +250,14 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 				plugin->nBuffers2 = 2;
 				break;
 		}
-		
-		plugin->Qcolumn = plugin->nBuffers;
-		
-		plugin->hopa = n_samples;
-		plugin->N = plugin->nBuffers*plugin->hopa;
-		plugin->N2 = plugin->nBuffers2*plugin->hopa;
 
 		free(plugin->frames); plugin->frames = (double*)calloc(plugin->N,sizeof(double));
     	free(plugin->b);      plugin->b = (double**)calloc(plugin->hopa,sizeof(double*));
-
-    	fftwf_free(plugin->frames2); plugin->frames2 = fftwf_alloc_real(plugin->N);
-    	fftwf_free(plugin->fXa);     plugin->fXa = fftwf_alloc_complex(plugin->N/2 + 1);
-
-    	plugin->Xa.zeros(plugin->N/2 + 1);
-    	plugin->XaPrevious.zeros(plugin->N/2 + 1);
-    	plugin->Xa_arg.zeros(plugin->N/2 + 1);
-		plugin->XaPrevious_arg.zeros(plugin->N/2 + 1);
-		plugin->d_phi.zeros(plugin->N/2 + 1);
-		plugin->d_phi_prime.zeros(plugin->N/2 + 1);
-		plugin->d_phi_wrapped.zeros(plugin->N/2 + 1);
-		plugin->omega_true_sobre_fs.zeros(plugin->N/2 + 1);
-		plugin->AUX.zeros(plugin->N/2 + 1);
-		plugin->Xa_abs.zeros(plugin->N/2 + 1);
-		plugin->w.zeros(plugin->N); hann(plugin->N,&plugin->w);
-		plugin->I.zeros(plugin->N/2 + 1); plugin->I = linspace(0, plugin->N/2,plugin->N/2 + 1);
 
 		for (int i=1 ; i<= plugin->nBuffers; i++)
 		{
 			plugin->b[i-1] = &plugin->frames[(i-1)*plugin->hopa];
 		}
-
-		fftwf_destroy_plan(plugin->p);  plugin->p = fftwf_plan_dft_r2c_1d(plugin->N, plugin->frames2, plugin->fXa, FFTW_ESTIMATE);
-
-		free(plugin->Hops_1);      plugin->Hops_1 = (int*)calloc(plugin->Qcolumn,sizeof(int)); for (int i=1;i<=plugin->Qcolumn;i++) plugin->Hops_1[i-1] = plugin->hopa;
-		free(plugin->ysaida_1);    plugin->ysaida_1 = (double*)calloc(2*(plugin->N + 2*(plugin->Qcolumn-1)*plugin->hopa),sizeof(double));
-	    free(plugin->yshift_1);    plugin->yshift_1 = (double*)calloc(plugin->hopa,sizeof(double));
-	    fftwf_free(plugin->q_1);   plugin->q_1 = fftwf_alloc_real(plugin->N);
-	    fftwf_free(plugin->fXs_1); plugin->fXs_1 = fftwf_alloc_complex(plugin->N/2 + 1);
-	    plugin->Xs_1.zeros(plugin->N/2 + 1);
-	    plugin->Phi_1.zeros(plugin->N/2 + 1);
-		plugin->PhiPrevious_1.zeros(plugin->N/2 + 1);
-		fftwf_destroy_plan(plugin->p2_1); plugin->p2_1 = fftwf_plan_dft_c2r_1d(plugin->N, plugin->fXs_1, plugin->q_1, FFTW_ESTIMATE);
-
-		free(plugin->Hops_2);   plugin->Hops_2 = (int*)calloc(plugin->Qcolumn,sizeof(int)); for (int i=1;i<=plugin->Qcolumn;i++) plugin->Hops_2[i-1] = plugin->hopa;
-		free(plugin->ysaida_2); plugin->ysaida_2 = (double*)calloc(2*(plugin->N + 2*(plugin->Qcolumn-1)*plugin->hopa),sizeof(double));
-	    free(plugin->yshift_2); plugin->yshift_2 = (double*)calloc(plugin->hopa,sizeof(double));
-	    free(plugin->q_2);      plugin->q_2 = fftwf_alloc_real(plugin->N);
-	    free(plugin->fXs_2);    plugin->fXs_2 = fftwf_alloc_complex(plugin->N/2 + 1);
-	    plugin->Xs_2.zeros(plugin->N/2 + 1);
-	    plugin->Phi_2.zeros(plugin->N/2 + 1);
-		plugin->PhiPrevious_2.zeros(plugin->N/2 + 1);
-		fftwf_destroy_plan(plugin->p2_2); plugin->p2_2 = fftwf_plan_dft_c2r_1d(plugin->N, plugin->fXs_2, plugin->q_2, FFTW_ESTIMATE);
 
 		/*************/
 		
@@ -479,44 +357,6 @@ void PitchShifter::cleanup(LV2_Handle instance)
 	
 	free(plugin->frames);
 	free(plugin->b);
-	
-	fftwf_free(plugin->frames2);
-	fftwf_free(plugin->fXa);
-	
-	plugin->Xa.clear();
-	plugin->XaPrevious.clear();
-	plugin->Xa_arg.clear();
-	plugin->XaPrevious_arg.clear();
-    plugin->d_phi.clear();
-	plugin->d_phi_prime.clear();
-	plugin->d_phi_wrapped.clear();
-	plugin->omega_true_sobre_fs.clear();
-	plugin->AUX.clear();
-	plugin->Xa_abs.clear();
-	plugin->w.clear();
-	plugin->I.clear();
-	
-	fftwf_destroy_plan(plugin->p);
-
-	free(plugin->Hops_1);
-	free(plugin->ysaida_1);
-	free(plugin->yshift_1);
-	fftwf_free(plugin->q_1);
-	fftwf_free(plugin->fXs_1);
-	plugin->Xs_1.clear();
-	plugin->Phi_1.clear();
-	plugin->PhiPrevious_1.clear();
-	fftwf_destroy_plan(plugin->p2_1);
-
-	free(plugin->Hops_2);
-	free(plugin->ysaida_2);
-	free(plugin->yshift_2);
-	fftwf_free(plugin->q_2);
-	fftwf_free(plugin->fXs_2);
-	plugin->Xs_2.clear();
-	plugin->Phi_2.clear();
-	plugin->PhiPrevious_2.clear();
-	fftwf_destroy_plan(plugin->p2_2);
 
 	fftwf_free(plugin->frames3);
 	fftwf_free(plugin->q2);
