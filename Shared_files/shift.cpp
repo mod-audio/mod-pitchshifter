@@ -10,6 +10,35 @@
 
 using namespace arma;
 
+PSAnalysis::PSAnalysis( uint32_t n_samples, int nBuffers) //Construtor
+{
+	Qcolumn = nBuffers;
+	hopa = n_samples;
+	N = nBuffers*n_samples;
+
+	frames = new double[N]; for (int i = 0; i < N; i++) frames[i] = 0;
+	w.zeros(N); hann(plugin->N,&w);
+	frames2 = fftwf_alloc_real(N); for (int i = 0; i < N; i++) frames2[i] = 0;
+	p = fftwf_plan_dft_r2c_1d(N, frames2, fXa, FFTW_ESTIMATE);
+	fXa = fftwf_alloc_complex(N/2 + 1);
+	Xa.zeros(N/2 + 1);
+	Xa_arg.zeros(N/2 + 1);
+	Xa_abs.zeros(N/2 + 1);
+	XaPrevious.zeros(N/2 + 1);
+	d_phi.zeros(N/2 + 1);
+	d_phi_prime.zeros(N/2 + 1);
+	I.zeros(N/2 + 1); I = linspace(0, N/2, N/2 + 1);
+	AUX.zeros(N/2 + 1);
+	d_phi_wrapped.zeros(N/2 + 1);
+	omega_true_sobre_fs.zeros(N/2 + 1);
+}
+
+PSSinthesis::PSSinthesis( PSAnalysis *obj) //Construtor
+{
+	(this->obj)->obj;
+
+	hops = new int[obj->Qcolumn]; for (int i = 0; i < obj->Qcolumn;i++) hops[i] = obj->hopa;
+}
 
 void shift(int N, int hopa, int *hops, double *frames, float *frames2, vec *w, cx_vec *XaPrevious, vec *Xa_arg, vec *Xa_abs, vec *XaPrevious_arg, vec *PhiPrevious, double *yshift, cx_vec *Xa, cx_vec *Xs, float *q, vec *Phi, double *ysaida, double *ysaida2, int Qcolumn, vec *d_phi, vec *d_phi_prime, vec *d_phi_wrapped, vec *omega_true_sobre_fs, vec *I, vec *AUX, fftwf_plan p, fftwf_plan p2, fftwf_complex *fXa, fftwf_complex *fXs)
 {
