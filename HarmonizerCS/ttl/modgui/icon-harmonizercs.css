@@ -3,9 +3,9 @@
         background-image:url(/resources/bg-harmonizercs.png{{{ns}}});
         background-position:center center;
         background-repeat:no-repeat;
-        background-size:662px 406px;
+        background-size:701px 406px;
         position:relative;
-        width:662px;
+        width:701px;
         height:406px;
 
     }
@@ -56,7 +56,7 @@
         z-index: 100;
     }
     .mod-harmonizercs .mod-control-group-left {
-        margin: 2.7em 0 0 1.9em;
+        margin: 4.8em 0 0 1.9em;
         width: 100px;
         float: left;
     }
@@ -72,7 +72,7 @@
         height: 33px;
         z-index: 100;
         float: none;
-        margin-bottom: 4.9em;
+        margin-bottom: 6.6em;
 
     }
     .mod-harmonizercs .mod-slider.wet .mod-slider-image , .mod-harmonizercs .mod-slider.tonic .mod-slider-image {
@@ -94,7 +94,7 @@
         height: 31px
     }
     .mod-harmonizercs .mod-control-group-right {
-        width: 505px;
+        width: 550px;
         margin-top: 36px;
         height: 263px;
         float: right;
@@ -161,7 +161,7 @@
         height: 33px;
     }
     .mod-harmonizercs .mod-knob.gain {
-        margin-right: 15px
+        margin-right: 22px
     }
     .mod-harmonizercs .mod-footswitch.off{
         background-position-y: bottom;
@@ -220,7 +220,7 @@
     width: 32px;
     bottom: 44px;
     position: absolute !important;
-    right: 125px;
+    right: 140px;
     }
   }
 .mod-harmonizercs .mod-light.off { 
