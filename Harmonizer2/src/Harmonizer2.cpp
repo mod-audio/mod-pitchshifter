@@ -8,16 +8,43 @@
 /**********************************************************************************************************************************************************/
 
 #define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/Harmonizer2"
-#define TAMANHO_DO_BUFFER 64
+#define N_SAMPLES_DEFAULT 64
 enum {IN, OUT_CLEAN, OUT_1, OUT_2, TONE, SCALE, INTERVAL_1, INTERVAL_2, MODE, LOWNOTE, GAIN_CLEAN, GAIN_1, GAIN_2, PLUGIN_PORT_COUNT};
 
 /**********************************************************************************************************************************************************/
 
-class PitchShifter
+class Harmonizer2
 {
 public:
-    PitchShifter() {}
-    ~PitchShifter() {}
+    Harmonizer2(uint32_t n_samples, int nBuffers, int nBuffers2, double samplerate) 
+    {
+        this->nBuffers = nBuffers;
+        this->nBuffers2 = nBuffers2;
+        SampleRate = samplerate;
+
+        obja = new PSAnalysis(n_samples, nBuffers);
+        objs_1 = new PSSinthesis(obja);
+        objs_2 = new PSSinthesis(obja);
+        objpd = new PitchDetection(n_samples, nBuffers2);
+        objgc = new GainClass(n_samples);
+        objg1 = new GainClass(n_samples);
+        objg2 = new GainClass(n_samples);
+
+        cont = 0;
+        s_1 = 0;
+        s_2 = 0;
+    }
+    ~Harmonizer2()
+    {
+        delete obja;
+        delete objs_1;
+        delete objs_2;
+        delete objpd;
+        delete objgc;
+        delete objg1;
+        delete objg2;   
+    }
+
     static LV2_Handle instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features);
     static void activate(LV2_Handle instance);
     static void deactivate(LV2_Handle instance);
@@ -61,13 +88,13 @@ public:
 
 static const LV2_Descriptor Descriptor = {
     PLUGIN_URI,
-    PitchShifter::instantiate,
-    PitchShifter::connect_port,
-    PitchShifter::activate,
-    PitchShifter::run,
-    PitchShifter::deactivate,
-    PitchShifter::cleanup,
-    PitchShifter::extension_data
+    Harmonizer2::instantiate,
+    Harmonizer2::connect_port,
+    Harmonizer2::activate,
+    Harmonizer2::run,
+    Harmonizer2::deactivate,
+    Harmonizer2::cleanup,
+    Harmonizer2::extension_data
 };
 
 /**********************************************************************************************************************************************************/
@@ -81,45 +108,26 @@ const LV2_Descriptor* lv2_descriptor(uint32_t index)
 
 /**********************************************************************************************************************************************************/
 
-LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features)
+LV2_Handle Harmonizer2::instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features)
 {
-    PitchShifter *plugin = new PitchShifter();
-    
-    plugin->SampleRate = samplerate;
-        
-    plugin->nBuffers = 32;
-    plugin->nBuffers2 = 16;
-
-    plugin->obja = new PSAnalysis(TAMANHO_DO_BUFFER, plugin->nBuffers);
-    plugin->objs_1 = new PSSinthesis(plugin->obja);
-    plugin->objs_2 = new PSSinthesis(plugin->obja);
-    plugin->objpd = new PitchDetection(TAMANHO_DO_BUFFER, plugin->nBuffers2);
-    plugin->objgc = new GainClass(TAMANHO_DO_BUFFER);
-    plugin->objg1 = new GainClass(TAMANHO_DO_BUFFER);
-    plugin->objg2 = new GainClass(TAMANHO_DO_BUFFER);
-
-    plugin->cont = 0;
-
-    plugin->s_1 = 0;
-    plugin->s_2 = 0;
-	
+    Harmonizer2 *plugin = new Harmonizer2(N_SAMPLES_DEFAULT, 32, 16, samplerate);
     return (LV2_Handle)plugin;
 }
 
 /**********************************************************************************************************************************************************/
 
-void PitchShifter::activate(LV2_Handle instance){}
+void Harmonizer2::activate(LV2_Handle instance){}
 
 /**********************************************************************************************************************************************************/
 
-void PitchShifter::deactivate(LV2_Handle instance){}
+void Harmonizer2::deactivate(LV2_Handle instance){}
 
 /**********************************************************************************************************************************************************/
 
-void PitchShifter::connect_port(LV2_Handle instance, uint32_t port, void *data)
+void Harmonizer2::connect_port(LV2_Handle instance, uint32_t port, void *data)
 {
-    PitchShifter *plugin;
-    plugin = (PitchShifter *) instance;
+    Harmonizer2 *plugin;
+    plugin = (Harmonizer2 *) instance;
 
     switch (port)
     {
@@ -167,86 +175,74 @@ void PitchShifter::connect_port(LV2_Handle instance, uint32_t port, void *data)
 
 /**********************************************************************************************************************************************************/
 
-void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
+void Harmonizer2::run(LV2_Handle instance, uint32_t n_samples)
 {
-    PitchShifter *plugin;
-    plugin = (PitchShifter *) instance;
+    Harmonizer2 *plugin;
+    plugin = (Harmonizer2 *) instance;
     
     if ( (((plugin->obja)->hopa) != (int)n_samples) )
     {
+        int nbuffers;
+        int nbuffers2;
+        double samplerate = plugin->SampleRate;
 		
 		switch ((int)n_samples)
 		{
 			case 64:
-				plugin->nBuffers = 32;
-				plugin->nBuffers2 = 16;
+				nbuffers = 32;
+				nbuffers2 = 16;
 				break;
 			case 128:
-				plugin->nBuffers = 16;
-				plugin->nBuffers2 = 8;
+				nbuffers = 16;
+				nbuffers2 = 8;
 				break;
 			case 256:
-				plugin->nBuffers = 8;
-				plugin->nBuffers2 = 4;
+				nbuffers = 8;
+				nbuffers2 = 4;
 				break;
 			case 512:
-				plugin->nBuffers = 4;
-				plugin->nBuffers2 = 2;
+				nbuffers = 4;
+				nbuffers2 = 2;
 				break;
 		}
 
-        delete plugin->obja;
-        delete plugin->objs_1;
-        delete plugin->objs_2;
-        delete plugin->objpd;
-        delete plugin->objgc;
-        delete plugin->objg1;
-        delete plugin->objg2;
-
-        plugin->obja = new PSAnalysis(n_samples, plugin->nBuffers);
-        plugin->objs_1 = new PSSinthesis(plugin->obja);
-        plugin->objs_2 = new PSSinthesis(plugin->obja);
-        plugin->objpd = new PitchDetection(n_samples, plugin->nBuffers2);
-        plugin->objgc = new GainClass(n_samples);
-        plugin->objg1 = new GainClass(n_samples);
-        plugin->objg2 = new GainClass(n_samples);
-		
+        delete plugin;
+        plugin = new Harmonizer2(n_samples, nbuffers, nbuffers2, samplerate);		
 		return;
 	}
 
     float media = 0;
     
-    for (uint32_t i=1; i<=n_samples; i++)
+    for (uint32_t i=0; i<n_samples; i++)
     {
-		media = media + abs(plugin->in[i-1]);
+		media = media + abs(plugin->in[i]);
 	}
 	
 	if (media == 0)
 	{
-		for (uint32_t i=1; i<=n_samples; i++)
+		for (uint32_t i=0; i<n_samples; i++)
 		{
-			plugin->out_1[i-1] = 0;
-			plugin->out_2[i-1] = 0;
+			plugin->out_1[i] = 0;
+			plugin->out_2[i] = 0;
 		}
 	}
 	else
 	{
-		
-	int Tone = (int)(*(plugin->tone));
-	int Scale = (int)(*(plugin->scale));
-	int Interval_1 = (int)(*(plugin->interval_1));
-	int Interval_2 = (int)(*(plugin->interval_2));
-	int Mode = (int)(*(plugin->mode));
-	int LowNote = (int)(*(plugin->lownote));
+       	int Tone = (int)(*(plugin->tone));
+    	int Scale = (int)(*(plugin->scale));
+    	int Interval_1 = (int)(*(plugin->interval_1));
+    	int Interval_2 = (int)(*(plugin->interval_2));
+    	int Mode = (int)(*(plugin->mode));
+    	int LowNote = (int)(*(plugin->lownote));
 
-    (plugin->objgc)->g = pow(10, (float)(*(plugin->gain_clean))/20.0);
-    (plugin->objg1)->g = pow(10, (float)(*(plugin->gain_1))/20.0);
-    (plugin->objg2)->g = pow(10, (float)(*(plugin->gain_2))/20.0);
-    
-    (plugin->obja)->PreAnalysis(plugin->nBuffers, plugin->in);
-    (plugin->objs_1)->PreSinthesis();
-    (plugin->objs_2)->PreSinthesis();
-    (plugin->objpd)->PreProcessing(plugin->nBuffers2, plugin->in);
+        (plugin->objgc)->SetGaindB((double)(*(plugin->gain_clean)));
+        (plugin->objg1)->SetGaindB((double)(*(plugin->gain_1)));
+        (plugin->objg2)->SetGaindB((double)(*(plugin->gain_2)));
+        
+        (plugin->obja)->PreAnalysis(plugin->nBuffers, plugin->in);
+        (plugin->objs_1)->PreSinthesis();
+        (plugin->objs_2)->PreSinthesis();
+        (plugin->objpd)->PreProcessing(plugin->nBuffers2, plugin->in);
 		
 		if ( plugin->cont < plugin->nBuffers-1)
 		{
@@ -274,25 +270,14 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 
 /**********************************************************************************************************************************************************/
 
-void PitchShifter::cleanup(LV2_Handle instance)
+void Harmonizer2::cleanup(LV2_Handle instance)
 {
-	PitchShifter *plugin;
-	plugin = (PitchShifter *) instance;
-
-    delete plugin->obja;
-    delete plugin->objs_1;
-    delete plugin->objs_2;
-    delete plugin->objpd;
-    delete plugin->objgc;
-    delete plugin->objg1;
-    delete plugin->objg2;
-	
-    delete ((PitchShifter *) instance);
+    delete ((Harmonizer2 *) instance);
 }
 
 /**********************************************************************************************************************************************************/
 
-const void* PitchShifter::extension_data(const char* uri)
+const void* Harmonizer2::extension_data(const char* uri)
 {
     return NULL;
 }

@@ -7,8 +7,7 @@ PitchDetection::PitchDetection(uint32_t n_samples, int nBuffers) //Constructor
 	N = nBuffers*n_samples;
 
 	frames = fftwf_alloc_real(2*N); memset(frames, 0, 2*N );
-
-	b = (float**)calloc(hopa,sizeof(float*));
+	b = new float*[hopa];
 
 	for (int i=0 ; i< nBuffers; i++)
     {
@@ -32,7 +31,7 @@ PitchDetection::PitchDetection(uint32_t n_samples, int nBuffers) //Constructor
 
 PitchDetection::~PitchDetection() //Destructor
 {
-	free(b);
+	delete[] b;
 
 	fftwf_free(frames);
 	fftwf_free(q);

@@ -11,6 +11,7 @@ public:
     void SimpleGain(float  *in, float  *out);
     void SimpleGain(float  *in, double *out);
     void SimpleGain(double *in, float  *out);
+    void SetGaindB(double gdB);
 
     int N;
     double g;

@@ -9,6 +9,11 @@ GainClass::GainClass(uint32_t n_samples) //Constructor
 
 GainClass::~GainClass(){} //Destructor
 
+void GainClass::SetGaindB(double gdB)
+{
+	g = pow(10, gdB/20.0);
+}
+
 void GainClass::SimpleGain(double *in, double *out)
 {
 	for (int i=0; i<N; i++) out[i] = (g_1 + ((g - g_1)/(N - 1))*i )*in[i];
