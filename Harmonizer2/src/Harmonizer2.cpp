@@ -258,8 +258,8 @@ void Harmonizer2::run(LV2_Handle instance, uint32_t n_samples)
             (plugin->objs_2)->Sinthesis(plugin->s_2);
 
             (plugin->objgc)->SimpleGain((plugin->obja)->frames, plugin->out_clean);
-            (plugin->objgc)->SimpleGain((plugin->objs_1)->yshift, plugin->out_1);
-            (plugin->objgc)->SimpleGain((plugin->objs_2)->yshift, plugin->out_2);
+            (plugin->objg1)->SimpleGain((plugin->objs_1)->yshift, plugin->out_1);
+            (plugin->objg2)->SimpleGain((plugin->objs_2)->yshift, plugin->out_2);
 			
 		}
 		
