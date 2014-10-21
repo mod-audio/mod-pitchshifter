@@ -1,11 +1,13 @@
-#include <complex>
+#include <stdlib.h>
+#include <stdint.h>
 #include <cmath>
+#include <complex>
 #include <fftw3.h>
 #include <armadillo>
-#include <stdint.h>
+#include "Exp.h"
+#include "angle.h"
 
 using namespace arma;
-using namespace std;
 
 class PitchDetection
 {
@@ -37,6 +39,7 @@ public:
 	int note; //Note code from 0 to 11
 	int oitava; //Octave number
 	float fs; //Sample rate
+
 	int Tone;
 	int Scale;
 	int Interval;

@@ -1,15 +1,4 @@
-#include <fftw3.h>
 #include "shift.h"
-#include "Exp.h"
-#include "angle.h"
-#include <complex>
-#include <cmath>
-#include <stdio.h>
-#include <stdlib.h>
-#include <armadillo>
-#include "window.h"
-
-using namespace arma;
 
 PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers) //Construtor
 {

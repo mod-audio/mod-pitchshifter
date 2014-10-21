@@ -1,14 +1,4 @@
-#include <fftw3.h>
 #include "PitchDetection.h"
-#include "Exp.h"
-#include "angle.h"
-#include <complex>
-#include <cmath>
-#include <stdio.h>
-#include <stdlib.h>
-#include <armadillo>
-
-using namespace arma;
 
 PitchDetection::PitchDetection(uint32_t n_samples, int nBuffers) //Constructor
 {

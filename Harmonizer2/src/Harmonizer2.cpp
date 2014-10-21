@@ -1,14 +1,9 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <math.h>
+#include <cmath>
 #include <lv2.h>
-#include <complex>
-#include "PitchDetection.h"
 #include "shift.h"
-#include "window.h"
-#include "angle.h"
-#include <fftw3.h>
+#include "PitchDetection.h"
+#include "GainClass.h"
 
 /**********************************************************************************************************************************************************/
 
@@ -48,41 +43,18 @@ public:
     PSAnalysis *obja;
     PSSinthesis *objs_1;
     PSSinthesis *objs_2;
+    PitchDetection *objpd;
+    GainClass *objgc;
+    GainClass *objg1;
+    GainClass *objg2;
 
     int nBuffers;
-    int cont;
-
-    float g_clean;
-
-	float g_1;    
-    double s_1;
-
-    float g_2;
-    double s_2;
-
-    /*************/
-
     int nBuffers2;
-    int N2;
-    float *frames3;
-    fftwf_plan p3;
-	fftwf_plan p4;
-    
-    float *q2;
-    fftwf_complex *fXa2;
-    fftwf_complex *fXs2;
-    cx_vec Xa2;
-    cx_vec Xs2;
-        
-    vec R;
-	vec NORM;
-	vec F;
-	vec AUTO;
-	
-	int note;
-	int oitava;
-	
-	double SampleRate;
+    int cont;
+    double SampleRate;
+	   
+    double s_1;
+    double s_2;
 };
 
 /**********************************************************************************************************************************************************/
@@ -116,54 +88,31 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
     plugin->SampleRate = samplerate;
         
     plugin->nBuffers = 32;
+    plugin->nBuffers2 = 16;
 
     plugin->obja = new PSAnalysis(TAMANHO_DO_BUFFER, plugin->nBuffers);
     plugin->objs_1 = new PSSinthesis(plugin->obja);
     plugin->objs_2 = new PSSinthesis(plugin->obja);
+    plugin->objpd = new PitchDetection(TAMANHO_DO_BUFFER, plugin->nBuffers2);
+    plugin->objgc = new GainClass(TAMANHO_DO_BUFFER);
+    plugin->objg1 = new GainClass(TAMANHO_DO_BUFFER);
+    plugin->objg2 = new GainClass(TAMANHO_DO_BUFFER);
 
     plugin->cont = 0;
 
     plugin->s_1 = 0;
     plugin->s_2 = 0;
-    plugin->g_clean = 1;
-    plugin->g_1 = 1;
-    plugin->g_2 = 1;
-
-	plugin->nBuffers2 = 16;
-    plugin->N2 = plugin->nBuffers2*(plugin->obja)->hopa;   
-
-	plugin->Xa2.zeros(plugin->N2 + 1);
-	plugin->Xs2.zeros(plugin->N2 + 1);
-	
-	plugin->frames3 = fftwf_alloc_real(2*plugin->N2); memset(plugin->frames3, 0, 2*plugin->N2 );
-	plugin->q2 = fftwf_alloc_real(2*plugin->N2);	
-	plugin->fXa2 = fftwf_alloc_complex(plugin->N2 + 1);
-	plugin->fXs2 = fftwf_alloc_complex(plugin->N2 + 1);
-	
-	plugin->R.zeros(plugin->N2);
-	plugin->NORM.zeros(plugin->N2);
-	plugin->F.zeros(plugin->N2);
-	plugin->AUTO.zeros(plugin->N2);
-
-	plugin->p3 = fftwf_plan_dft_r2c_1d(2*plugin->N2, plugin->frames3, plugin->fXa2, FFTW_ESTIMATE);
-	plugin->p4 = fftwf_plan_dft_c2r_1d(2*plugin->N2, plugin->fXs2, plugin->q2, FFTW_ESTIMATE);
 	
     return (LV2_Handle)plugin;
 }
 
 /**********************************************************************************************************************************************************/
 
-void PitchShifter::activate(LV2_Handle instance)
-{
-    // TODO: include the activate function code here
-}
+void PitchShifter::activate(LV2_Handle instance){}
 
 /**********************************************************************************************************************************************************/
 
-void PitchShifter::deactivate(LV2_Handle instance)
-{
-    // TODO: include the deactivate function code here
-}
+void PitchShifter::deactivate(LV2_Handle instance){}
 
 /**********************************************************************************************************************************************************/
 
@@ -249,25 +198,18 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
         delete plugin->obja;
         delete plugin->objs_1;
         delete plugin->objs_2;
+        delete plugin->objpd;
+        delete plugin->objgc;
+        delete plugin->objg1;
+        delete plugin->objg2;
 
         plugin->obja = new PSAnalysis(n_samples, plugin->nBuffers);
         plugin->objs_1 = new PSSinthesis(plugin->obja);
         plugin->objs_2 = new PSSinthesis(plugin->obja);
-
-		/*************/
-		
-		fftwf_free(plugin->frames3); plugin->frames3 = fftwf_alloc_real(2*plugin->N2); memset(plugin->frames3, 0, 2*plugin->N2 );
-		fftwf_free(plugin->q2);      plugin->q2 = fftwf_alloc_real(2*plugin->N2);
-		fftwf_free(plugin->fXa2);    plugin->fXa2 = fftwf_alloc_complex(plugin->N2 + 1);
-		fftwf_free(plugin->fXs2);    plugin->fXs2 = fftwf_alloc_complex(plugin->N2 + 1);		
-		
-		plugin->R.zeros(plugin->N2);
-		plugin->NORM.zeros(plugin->N2);
-		plugin->F.zeros(plugin->N2);
-		plugin->AUTO.zeros(plugin->N2);	
-		
-		fftwf_destroy_plan(plugin->p3); plugin->p3 = fftwf_plan_dft_r2c_1d(2*plugin->N2, plugin->frames3, plugin->fXa2, FFTW_ESTIMATE);
-		fftwf_destroy_plan(plugin->p4); plugin->p4 = fftwf_plan_dft_c2r_1d(2*plugin->N2, plugin->fXs2, plugin->q2, FFTW_ESTIMATE);
+        plugin->objpd = new PitchDetection(n_samples, plugin->nBuffers2);
+        plugin->objgc = new GainClass(n_samples);
+        plugin->objg1 = new GainClass(n_samples);
+        plugin->objg2 = new GainClass(n_samples);
 		
 		return;
 	}
@@ -296,17 +238,15 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 	int Interval_2 = (int)(*(plugin->interval_2));
 	int Mode = (int)(*(plugin->mode));
 	int LowNote = (int)(*(plugin->lownote));
-	
-	double g0_before = plugin->g_clean;	    
-    double g1_before = plugin->g_1;
-    double g2_before = plugin->g_2;
-    plugin->g_clean = pow(10, (float)(*(plugin->gain_clean))/20.0);
-    plugin->g_1 = pow(10, (float)(*(plugin->gain_1))/20.0);
-    plugin->g_2 = pow(10, (float)(*(plugin->gain_2))/20.0);
+
+    (plugin->objgc)->g = pow(10, (float)(*(plugin->gain_clean))/20.0);
+    (plugin->objg1)->g = pow(10, (float)(*(plugin->gain_1))/20.0);
+    (plugin->objg2)->g = pow(10, (float)(*(plugin->gain_2))/20.0);
     
     (plugin->obja)->PreAnalysis(plugin->nBuffers, plugin->in);
     (plugin->objs_1)->PreSinthesis();
     (plugin->objs_2)->PreSinthesis();
+    (plugin->objpd)->PreProcessing(plugin->nBuffers2, plugin->in);
 		
 		if ( plugin->cont < plugin->nBuffers-1)
 		{
@@ -314,20 +254,17 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		}
 		else
 		{
-			FindNote(plugin->N2,(plugin->obja)->frames, plugin->frames3, &plugin->Xa2, &plugin->Xs2, plugin->q2, (plugin->obja)->Qcolumn, plugin->p3, plugin->p4, plugin->fXa2, plugin->fXs2, &plugin->R, &plugin->NORM, &plugin->F, &plugin->AUTO, plugin->SampleRate, &plugin->note, &plugin->oitava );
-			FindStep(plugin->note, plugin->oitava, Tone, Scale, Interval_1, Mode, LowNote, (plugin->obja)->hopa, (plugin->obja)->Qcolumn, &plugin->s_1, (plugin->objs_1)->hops);
-			FindStep(plugin->note, plugin->oitava, Tone, Scale, Interval_2, Mode, LowNote, (plugin->obja)->hopa, (plugin->obja)->Qcolumn, &plugin->s_2, (plugin->objs_2)->hops);
+			(plugin->objpd)->FindNote();
+			FindStep((plugin->objpd)->note, (plugin->objpd)->oitava, Tone, Scale, Interval_1, Mode, LowNote, (plugin->obja)->hopa, (plugin->obja)->Qcolumn, &plugin->s_1, (plugin->objs_1)->hops);
+			FindStep((plugin->objpd)->note, (plugin->objpd)->oitava, Tone, Scale, Interval_2, Mode, LowNote, (plugin->obja)->hopa, (plugin->obja)->Qcolumn, &plugin->s_2, (plugin->objs_2)->hops);
 
             (plugin->obja)->Analysis();
             (plugin->objs_1)->Sinthesis();
             (plugin->objs_2)->Sinthesis();
-			
-				for (int i=1; i<=(plugin->obja)->hopa; i++)
-				{
-					plugin->out_clean[i-1] = (g0_before + ((plugin->g_clean - g0_before)/((plugin->obja)->hopa - 1))*(i-1) )*(float)(plugin->obja)->frames[i-1];
-					plugin->out_1[i-1] = (g1_before + ((plugin->g_1 - g1_before)/((plugin->obja)->hopa - 1))*(i-1) )*(float)(plugin->objs_1)->yshift[i-1];
-					plugin->out_2[i-1] = (g2_before + ((plugin->g_2 - g2_before)/((plugin->obja)->hopa - 1))*(i-1) )*(float)(plugin->objs_2)->yshift[i-1];
-				}
+
+            (plugin->objgc)->SimpleGain((plugin->obja)->frames, plugin->out_clean);
+            (plugin->objgc)->SimpleGain((plugin->objs_1)->yshift, plugin->out_1);
+            (plugin->objgc)->SimpleGain((plugin->objs_2)->yshift, plugin->out_2);
 			
 		}
 		
@@ -345,22 +282,10 @@ void PitchShifter::cleanup(LV2_Handle instance)
     delete plugin->obja;
     delete plugin->objs_1;
     delete plugin->objs_2;
-
-	fftwf_free(plugin->frames3);
-	fftwf_free(plugin->q2);
-	fftwf_free(plugin->fXa2);
-	fftwf_free(plugin->fXs2);
-	
-	plugin->Xa2.clear();
-	plugin->Xs2.clear();
-
-	plugin->R.clear();
-	plugin->NORM.clear();
-	plugin->F.clear();
-	plugin->AUTO.clear();
-	
-	fftwf_destroy_plan(plugin->p3);
-	fftwf_destroy_plan(plugin->p4);
+    delete plugin->objpd;
+    delete plugin->objgc;
+    delete plugin->objg1;
+    delete plugin->objg2;
 	
     delete ((PitchShifter *) instance);
 }

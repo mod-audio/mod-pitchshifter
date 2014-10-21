@@ -1,8 +1,12 @@
-#include <complex>
+#include <stdlib.h>
+#include <stdint.h>
 #include <cmath>
+#include <complex>
 #include <fftw3.h>
 #include <armadillo>
-#include <stdint.h>
+#include "Exp.h"
+#include "angle.h"
+#include "window.h"
 
 using namespace arma;
 using namespace std;
