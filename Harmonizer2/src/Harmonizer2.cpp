@@ -52,9 +52,6 @@ public:
     int nBuffers;
     int cont;
 
-    double *frames;
-    double **b;
-
     float g_clean;
 
 	float g_1;    
@@ -131,14 +128,6 @@ LV2_Handle PitchShifter::instantiate(const LV2_Descriptor* descriptor, double sa
     plugin->g_clean = 1;
     plugin->g_1 = 1;
     plugin->g_2 = 1;
-
-    plugin->frames = (double*)calloc((plugin->obja)->N,sizeof(double));
-    plugin->b = (double**)calloc((plugin->obja)->hopa,sizeof(double*));
-
-	for (int i=1 ; i<= (plugin->nBuffers); i++)
-    {
-		plugin->b[i-1] = &plugin->frames[(i-1)*(plugin->obja)->hopa];
-	}
 
 	plugin->nBuffers2 = 16;
     plugin->N2 = plugin->nBuffers2*(plugin->obja)->hopa;   
@@ -265,14 +254,6 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
         plugin->objs_1 = new PSSinthesis(plugin->obja);
         plugin->objs_2 = new PSSinthesis(plugin->obja);
 
-		free(plugin->frames); plugin->frames = (double*)calloc((plugin->obja)->N,sizeof(double));
-    	free(plugin->b);      plugin->b = (double**)calloc((plugin->obja)->hopa,sizeof(double*));
-
-		for (int i=1 ; i<= plugin->nBuffers; i++)
-		{
-			plugin->b[i-1] = &plugin->frames[(i-1)*(plugin->obja)->hopa];
-		}
-
 		/*************/
 		
 		fftwf_free(plugin->frames3); plugin->frames3 = fftwf_alloc_real(2*plugin->N2); memset(plugin->frames3, 0, 2*plugin->N2 );
@@ -323,17 +304,9 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
     plugin->g_1 = pow(10, (float)(*(plugin->gain_1))/20.0);
     plugin->g_2 = pow(10, (float)(*(plugin->gain_2))/20.0);
     
-	for (int k=1; k<= (plugin->obja)->Qcolumn-1; k++) (plugin->objs_1)->hops[k-1] = (plugin->objs_1)->hops[k];
-	for (int k=1; k<= (plugin->obja)->Qcolumn-1; k++) (plugin->objs_2)->hops[k-1] = (plugin->objs_2)->hops[k];
-
-		for (int i=1; i<=(plugin->obja)->hopa; i++)
-		{
-			for (int j=1; j<=(plugin->nBuffers-1); j++)
-			{
-				plugin->b[j-1][i-1] = plugin->b[j][i-1];
-			}
-			plugin->b[plugin->nBuffers-1][i-1] = plugin->in[i-1];
-		}
+    (plugin->obja)->PreAnalysis(plugin->nBuffers, plugin->in);
+    (plugin->objs_1)->PreSinthesis();
+    (plugin->objs_2)->PreSinthesis();
 		
 		if ( plugin->cont < plugin->nBuffers-1)
 		{
@@ -341,11 +314,9 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 		}
 		else
 		{
-			FindNote(plugin->N2, plugin->frames, plugin->frames3, &plugin->Xa2, &plugin->Xs2, plugin->q2, (plugin->obja)->Qcolumn, plugin->p3, plugin->p4, plugin->fXa2, plugin->fXs2, &plugin->R, &plugin->NORM, &plugin->F, &plugin->AUTO, plugin->SampleRate, &plugin->note, &plugin->oitava );
+			FindNote(plugin->N2,(plugin->obja)->frames, plugin->frames3, &plugin->Xa2, &plugin->Xs2, plugin->q2, (plugin->obja)->Qcolumn, plugin->p3, plugin->p4, plugin->fXa2, plugin->fXs2, &plugin->R, &plugin->NORM, &plugin->F, &plugin->AUTO, plugin->SampleRate, &plugin->note, &plugin->oitava );
 			FindStep(plugin->note, plugin->oitava, Tone, Scale, Interval_1, Mode, LowNote, (plugin->obja)->hopa, (plugin->obja)->Qcolumn, &plugin->s_1, (plugin->objs_1)->hops);
 			FindStep(plugin->note, plugin->oitava, Tone, Scale, Interval_2, Mode, LowNote, (plugin->obja)->hopa, (plugin->obja)->Qcolumn, &plugin->s_2, (plugin->objs_2)->hops);
-
-            for (int i=0; i<(plugin->obja)->N; i++) (plugin->obja)->frames[i] = plugin->frames[i];
 
             (plugin->obja)->Analysis();
             (plugin->objs_1)->Sinthesis();
@@ -353,7 +324,7 @@ void PitchShifter::run(LV2_Handle instance, uint32_t n_samples)
 			
 				for (int i=1; i<=(plugin->obja)->hopa; i++)
 				{
-					plugin->out_clean[i-1] = (g0_before + ((plugin->g_clean - g0_before)/((plugin->obja)->hopa - 1))*(i-1) )*(float)plugin->frames[i-1];
+					plugin->out_clean[i-1] = (g0_before + ((plugin->g_clean - g0_before)/((plugin->obja)->hopa - 1))*(i-1) )*(float)(plugin->obja)->frames[i-1];
 					plugin->out_1[i-1] = (g1_before + ((plugin->g_1 - g1_before)/((plugin->obja)->hopa - 1))*(i-1) )*(float)(plugin->objs_1)->yshift[i-1];
 					plugin->out_2[i-1] = (g2_before + ((plugin->g_2 - g2_before)/((plugin->obja)->hopa - 1))*(i-1) )*(float)(plugin->objs_2)->yshift[i-1];
 				}
@@ -374,9 +345,6 @@ void PitchShifter::cleanup(LV2_Handle instance)
     delete plugin->obja;
     delete plugin->objs_1;
     delete plugin->objs_2;
-	
-	free(plugin->frames);
-	free(plugin->b);
 
 	fftwf_free(plugin->frames3);
 	fftwf_free(plugin->q2);

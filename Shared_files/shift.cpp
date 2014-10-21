@@ -18,6 +18,14 @@ PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers) //Construtor
 	N = nBuffers*n_samples;
 
 	frames = new double[N]; for (int i = 0; i < N; i++) frames[i] = 0;
+
+	b = (double**)calloc(hopa,sizeof(double*));
+
+	for (int i=0 ; i< nBuffers; i++)
+    {
+		b[i] = &frames[i*hopa];
+	}
+
 	frames2 = fftwf_alloc_real(N); for (int i = 0; i < N; i++) frames2[i] = 0;
 	fXa = fftwf_alloc_complex(N/2 + 1);
 	Xa->zeros(N/2 + 1);
@@ -37,6 +45,7 @@ PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers) //Construtor
 
 PSAnalysis::~PSAnalysis() //Destrutor
 {
+	free(b);
 	delete[] frames;
 	delete[] frames2;
 	fftwf_free(fXa);
@@ -53,6 +62,18 @@ PSAnalysis::~PSAnalysis() //Destrutor
 	w->clear();
 	I->clear();
 	fftwf_destroy_plan(p);
+}
+
+void PSAnalysis::PreAnalysis(int nBuffers, float *in)
+{
+	for (int i=0; i<hopa; i++)
+		{
+			for (int j=0; j<(nBuffers-1); j++)
+			{
+				b[j][i] = b[j+1][i];
+			}
+			b[nBuffers-1][i] = in[i];
+		}
 }
 
 void PSAnalysis::Analysis()
@@ -118,6 +139,11 @@ PSSinthesis::~PSSinthesis() //Destrutor
 	Phi->clear();
 	PhiPrevious->clear();
 	fftwf_destroy_plan(p2);
+}
+
+void PSSinthesis::PreSinthesis()
+{
+	for (int k=0; k< Qcolumn-1; k++) hops[k] = hops[k+1];
 }
 
 void PSSinthesis::Sinthesis()

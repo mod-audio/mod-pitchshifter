@@ -12,12 +12,14 @@ class PSAnalysis
 public:
     PSAnalysis(uint32_t n_samples, int nBuffers);
     ~PSAnalysis();
+    void PreAnalysis(int nBuffers, float *in);
     void Analysis();
 
     int N; //Size of the frame
     int hopa; //Analysis hop
     int Qcolumn; //Number of frames that may be used in the overlap-add
 
+    double **b;
     
     double *frames; //A frame of last N samples
     vec *w; //A hanning window vector
@@ -42,6 +44,7 @@ class PSSinthesis
 public:
     PSSinthesis(PSAnalysis *obj);
     ~PSSinthesis();
+    void PreSinthesis();
     void Sinthesis();
 
     int N; //Size of the frame
