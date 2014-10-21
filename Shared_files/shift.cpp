@@ -134,8 +134,9 @@ void PSSinthesis::PreSinthesis()
 	for (int k=0; k< Qcolumn-1; k++) hops[k] = hops[k+1];
 }
 
-void PSSinthesis::Sinthesis()
+void PSSinthesis::Sinthesis(double s)
 {
+	hops[Qcolumn-1] = round(hopa*(pow(2,(s/12))));	
 	static bool first = true;
 	
 	//Some declaration

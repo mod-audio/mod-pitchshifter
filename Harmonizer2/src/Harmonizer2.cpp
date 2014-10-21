@@ -200,10 +200,9 @@ void Harmonizer2::run(LV2_Handle instance, uint32_t n_samples)
 				nbuffers = 8;
 				nbuffers2 = 4;
 				break;
-			case 512:
+			default:
 				nbuffers = 4;
 				nbuffers2 = 2;
-				break;
 		}
 
         delete plugin;
@@ -211,14 +210,14 @@ void Harmonizer2::run(LV2_Handle instance, uint32_t n_samples)
 		return;
 	}
 
-    float media = 0;
+    float sum_abs = 0;
     
     for (uint32_t i=0; i<n_samples; i++)
     {
-		media = media + abs(plugin->in[i]);
+		sum_abs = sum_abs + abs(plugin->in[i]);
 	}
 	
-	if (media == 0)
+	if (sum_abs == 0)
 	{
 		for (uint32_t i=0; i<n_samples; i++)
 		{
@@ -251,12 +250,12 @@ void Harmonizer2::run(LV2_Handle instance, uint32_t n_samples)
 		else
 		{
 			(plugin->objpd)->FindNote();
-			FindStep((plugin->objpd)->note, (plugin->objpd)->oitava, Tone, Scale, Interval_1, Mode, LowNote, (plugin->obja)->hopa, (plugin->obja)->Qcolumn, &plugin->s_1, (plugin->objs_1)->hops);
-			FindStep((plugin->objpd)->note, (plugin->objpd)->oitava, Tone, Scale, Interval_2, Mode, LowNote, (plugin->obja)->hopa, (plugin->obja)->Qcolumn, &plugin->s_2, (plugin->objs_2)->hops);
+            FindStep2((plugin->objpd)->note, (plugin->objpd)->oitava, Tone, Scale, Interval_1, Mode, LowNote, &plugin->s_1);
+            FindStep2((plugin->objpd)->note, (plugin->objpd)->oitava, Tone, Scale, Interval_2, Mode, LowNote, &plugin->s_2);
 
             (plugin->obja)->Analysis();
-            (plugin->objs_1)->Sinthesis();
-            (plugin->objs_2)->Sinthesis();
+            (plugin->objs_1)->Sinthesis(plugin->s_1);
+            (plugin->objs_2)->Sinthesis(plugin->s_2);
 
             (plugin->objgc)->SimpleGain((plugin->obja)->frames, plugin->out_clean);
             (plugin->objgc)->SimpleGain((plugin->objs_1)->yshift, plugin->out_1);

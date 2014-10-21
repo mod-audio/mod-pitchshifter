@@ -49,7 +49,7 @@ public:
     PSSinthesis(PSAnalysis *obj);
     ~PSSinthesis();
     void PreSinthesis();
-    void Sinthesis();
+    void Sinthesis(double s);
 
     int N; //Size of the frame
     int hopa; //Analysis hop
