@@ -1,8 +1,9 @@
 #include <stdlib.h>
 #include <cmath>
 #include <lv2.h>
-#include "shift.h"
-#include "PitchDetection.h"
+#include "PitchShifterClasses.h"
+#include "PitchDetectionClass.h"
+#include "HarmonizerLib.h"
 #include "GainClass.h"
 
 /**********************************************************************************************************************************************************/
@@ -250,8 +251,8 @@ void Harmonizer2::run(LV2_Handle instance, uint32_t n_samples)
 		else
 		{
 			(plugin->objpd)->FindNote();
-            FindStep2((plugin->objpd)->note, (plugin->objpd)->oitava, Tone, Scale, Interval_1, Mode, LowNote, &plugin->s_1);
-            FindStep2((plugin->objpd)->note, (plugin->objpd)->oitava, Tone, Scale, Interval_2, Mode, LowNote, &plugin->s_2);
+            FindStep((plugin->objpd)->note, (plugin->objpd)->oitava, Tone, Scale, Interval_1, Mode, LowNote, &plugin->s_1);
+            FindStep((plugin->objpd)->note, (plugin->objpd)->oitava, Tone, Scale, Interval_2, Mode, LowNote, &plugin->s_2);
 
             (plugin->obja)->Analysis();
             (plugin->objs_1)->Sinthesis(plugin->s_1);
