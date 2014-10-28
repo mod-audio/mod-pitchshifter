@@ -15,7 +15,9 @@ enum {IN, OUT_1, STEP, GAIN, PLUGIN_PORT_COUNT};
 class SuperCapo
 {
 public:
-    SuperCapo(uint32_t n_samples, int nBuffers, double samplerate)
+    SuperCapo(uint32_t n_samples, int nBuffers, double samplerate){Construct(n_samples, nBuffers, samplerate);}
+    ~SuperCapo(){Destruct();}
+    void Construct(uint32_t n_samples, int nBuffers, double samplerate)
     {
     	this->nBuffers = nBuffers;
         SampleRate = samplerate;
@@ -27,11 +29,17 @@ public:
         cont = 0;
         s = 0;
     }
-    ~SuperCapo()
+    void Destruct()
     {
     	delete obja;
         delete objs;
-        delete objg; 
+        delete objg;
+    }
+    void Realloc(uint32_t n_samples, int nBuffers)
+    {
+    	double SampleRate = this->SampleRate;
+    	Destruct();
+    	Construct(n_samples, nBuffers, SampleRate);
     }
 
     static LV2_Handle instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features);
@@ -127,10 +135,9 @@ void SuperCapo::run(LV2_Handle instance, uint32_t n_samples)
     SuperCapo *plugin;
     plugin = (SuperCapo *) instance;
     
-    if ( (((plugin->obja)->hopa) != (int)n_samples) )
+    if ( (plugin->obja)->hopa != (int)n_samples )
     {
     	int nbuffers;
-        double samplerate = plugin->SampleRate;
 		
 		switch ((int)n_samples)
 		{
@@ -143,13 +150,10 @@ void SuperCapo::run(LV2_Handle instance, uint32_t n_samples)
 			case 256:
 				nbuffers = 12;
 				break;
-			case 512:
+			default:
 				nbuffers = 8;
-				break;
 		}
-		
-		delete plugin;
-        plugin = new SuperCapo(n_samples, nbuffers, samplerate);				
+		plugin->Realloc(n_samples, nbuffers);
 		return;
 	}
 
@@ -174,7 +178,6 @@ void SuperCapo::run(LV2_Handle instance, uint32_t n_samples)
         (plugin->objg)->SetGaindB((double)(*(plugin->gain)));
         (plugin->obja)->PreAnalysis(plugin->nBuffers, plugin->in);
         (plugin->objs)->PreSinthesis();
-	    
 			
 		if ( plugin->cont < plugin->nBuffers-1)
 		{
@@ -184,8 +187,8 @@ void SuperCapo::run(LV2_Handle instance, uint32_t n_samples)
 		{
             (plugin->obja)->Analysis();
             (plugin->objs)->Sinthesis(plugin->s);
-            (plugin->objg)->SimpleGain((plugin->obja)->frames, plugin->out_1);
-		}			
+            (plugin->objg)->SimpleGain((plugin->objs)->yshift, plugin->out_1);
+		}	
 	}
 }
 

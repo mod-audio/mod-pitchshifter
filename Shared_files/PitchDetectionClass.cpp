@@ -1,9 +1,10 @@
 #include "PitchDetectionClass.h"
 
-PitchDetection::PitchDetection(uint32_t n_samples, int nBuffers) //Constructor
+PitchDetection::PitchDetection(uint32_t n_samples, int nBuffers, double SampleRate) //Constructor
 {
 	hopa = n_samples;
 	N = nBuffers*n_samples;
+	fs = SampleRate;
 
 	frames = fftwf_alloc_real(2*N); memset(frames, 0, 2*N );
 	b = new float*[hopa];
@@ -17,12 +18,12 @@ PitchDetection::PitchDetection(uint32_t n_samples, int nBuffers) //Constructor
 	fXa = fftwf_alloc_complex(N + 1);
 	fXs = fftwf_alloc_complex(N + 1);
 
-	Xa->zeros(N + 1);
-	Xs->zeros(N + 1);
-	R->zeros(N);
-	NORM->zeros(N);
-	F->zeros(N);
-	AUTO->zeros(N);
+	Xa.zeros(N + 1);
+	Xs.zeros(N + 1);
+	R.zeros(N);
+	NORM.zeros(N);
+	F.zeros(N);
+	AUTO.zeros(N);
 
 	p  = fftwf_plan_dft_r2c_1d(2*N, frames, fXa, FFTW_ESTIMATE);
 	p2 = fftwf_plan_dft_c2r_1d(2*N, fXs, q, FFTW_ESTIMATE);
@@ -37,12 +38,12 @@ PitchDetection::~PitchDetection() //Destructor
 	fftwf_free(fXa);
 	fftwf_free(fXs);
 	
-	Xa->clear();
-	Xs->clear();
-	R->clear();
-	NORM->clear();
-	F->clear();
-	AUTO->clear();
+	Xa.clear();
+	Xs.clear();
+	R.clear();
+	NORM.clear();
+	F.clear();
+	AUTO.clear();
 	
 	fftwf_destroy_plan(p);
 	fftwf_destroy_plan(p2);
@@ -71,48 +72,48 @@ void PitchDetection::FindNote()
 	
 	for (int i=0; i<(N + 1); i++)
 	{
-		Xa[0](i) = cx_float(fXa[i][0], fXa[i][1]);
+		Xa(i) = cx_float(fXa[i][0], fXa[i][1]);
 	}
 	
-	Xs[0] = Xa[0] % conj(Xa[0]);
+	Xs = Xa % conj(Xa);
 	
 	for (int i=0; i<(N + 1); i++)
 	{
-        fXs[i][0] = real(Xs[0](i));
-        fXs[i][1] = imag(Xs[0](i));
+        fXs[i][0] = real(Xs(i));
+        fXs[i][1] = imag(Xs(i));
 	}
 	
 	fftwf_execute(p2);
 	
 	for (int i=0; i<N; i++)
 	{
-		R[0](i) = q[i]/(2*N); 
+		R(i) = q[i]/(2*N); 
 	}
 	
-	NORM[0].zeros();
+	NORM.zeros();
 	
-	NORM[0](0) = 2*R[0](0);
+	NORM(0) = 2*R(0);
 	
 	for (int i=1; i<N; i++)
 	{
-		NORM[0](i) = NORM[0](i-1) - pow(frames[i-1],2)- pow(frames[N-i],2);
+		NORM(i) = NORM(i-1) - pow(frames[i-1],2)- pow(frames[N-i],2);
 	}
 	
 	
 	for (int i=0; i<N; i++)
 	{
-		F[0](i) = 1 -0.05*i/(N-1);
+		F(i) = 1 -0.05*i/(N-1);
 	}
 	
-	AUTO[0] = ( 2*F[0] % R[0] )/NORM[0];
+	AUTO = ( 2*F % R )/NORM;
 	
 	int flag = 0;
 	
 	for (int i=0; (i<N)&&(flag==0); i++)
 	{
-		if( AUTO[0](i) > 0 )
+		if( AUTO(i) > 0 )
 		{
-			AUTO[0](i) = 0;
+			AUTO(i) = 0;
 		}
 		else
 		{
@@ -121,15 +122,15 @@ void PitchDetection::FindNote()
 	}
 	
 	uword max_index;
-	double fidelity = AUTO[0].max(max_index);
+	double fidelity = AUTO.max(max_index);
 	
 	
 	if ((fidelity > 0.95) && (fidelity < 1) && ((int)max_index < N-1))
 	{
 	
-		double a = AUTO[0](max_index-1);
-		double b = AUTO[0](max_index);
-		double c = AUTO[0](max_index+1);
+		double a = AUTO(max_index-1);
+		double b = AUTO(max_index);
+		double c = AUTO(max_index+1);
 	
 		double real_index = max_index + 0.5*(a-c)/(a-2*b+c);
 	

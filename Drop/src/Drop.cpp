@@ -3,7 +3,6 @@
 #include <lv2.h>
 #include "PitchShifterClasses.h"
 #include "GainClass.h"
-#include <iostream>
 
 /**********************************************************************************************************************************************************/
 
@@ -16,8 +15,8 @@ enum {IN, OUT_1, STEP, GAIN, PLUGIN_PORT_COUNT};
 class Drop
 {
 public:
-    Drop(uint32_t n_samples, int nBuffers, double samplerate){this->Construct(n_samples, nBuffers, samplerate);}
-    ~Drop(){this->Destruct();}
+    Drop(uint32_t n_samples, int nBuffers, double samplerate){Construct(n_samples, nBuffers, samplerate);}
+    ~Drop(){Destruct();}
     void Construct(uint32_t n_samples, int nBuffers, double samplerate)
     {
     	this->nBuffers = nBuffers;
@@ -39,8 +38,8 @@ public:
     void Realloc(uint32_t n_samples, int nBuffers)
     {
     	double SampleRate = this->SampleRate;
-    	this->Destruct();
-    	this->Construct(n_samples, nBuffers, SampleRate);
+    	Destruct();
+    	Construct(n_samples, nBuffers, SampleRate);
     }
 
     static LV2_Handle instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features);
@@ -93,9 +92,7 @@ const LV2_Descriptor* lv2_descriptor(uint32_t index)
 
 LV2_Handle Drop::instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features)
 {
-	cout << "Entrei no instantiate" << endl;
     Drop *plugin = new Drop(N_SAMPLES_DEFAULT, 16, samplerate);
-    cout << "Sai do instantiate" << endl;
     return (LV2_Handle)plugin;
 }
 
@@ -135,15 +132,13 @@ void Drop::connect_port(LV2_Handle instance, uint32_t port, void *data)
 
 void Drop::run(LV2_Handle instance, uint32_t n_samples)
 {
-	// cout << "Run" << endl;
     Drop *plugin;
     plugin = (Drop *) instance;
-
     
     if ( (plugin->obja)->hopa != (int)n_samples )
     {
     	int nbuffers;
-		
+
 		switch ((int)n_samples)
 		{
 			case 64:
@@ -157,7 +152,6 @@ void Drop::run(LV2_Handle instance, uint32_t n_samples)
 				break;
 			default:
 				nbuffers = 3;
-				break;
 		}
         plugin->Realloc(n_samples, nbuffers);
 		return;
@@ -165,12 +159,10 @@ void Drop::run(LV2_Handle instance, uint32_t n_samples)
 
     float sum_abs = 0;
 
-    
     for (uint32_t i=0; i<n_samples; i++)
     {
 		sum_abs = sum_abs + abs(plugin->in[i]);
 	}
-
 	
 	if (sum_abs == 0)
 	{
@@ -186,8 +178,7 @@ void Drop::run(LV2_Handle instance, uint32_t n_samples)
         (plugin->objg)->SetGaindB((double)(*(plugin->gain)));
         (plugin->obja)->PreAnalysis(plugin->nBuffers, plugin->in);
         (plugin->objs)->PreSinthesis();
-	    
-			
+	    	
 		if ( plugin->cont < plugin->nBuffers-1)
 		{
 			plugin->cont = plugin->cont + 1;

@@ -17,7 +17,9 @@ enum {IN, OUT_CLEAN, OUT_1, OUT_2, TONE, SCALE, INTERVAL_1, INTERVAL_2, MODE, LO
 class Harmonizer2
 {
 public:
-    Harmonizer2(uint32_t n_samples, int nBuffers, int nBuffers2, double samplerate) 
+    Harmonizer2(uint32_t n_samples, int nBuffers, int nBuffers2, double samplerate){Construct(n_samples, nBuffers, nBuffers2, samplerate);}
+    ~Harmonizer2(){Destruct();}
+    void Construct(uint32_t n_samples, int nBuffers, int nBuffers2, double samplerate)
     {
         this->nBuffers = nBuffers;
         this->nBuffers2 = nBuffers2;
@@ -26,7 +28,7 @@ public:
         obja = new PSAnalysis(n_samples, nBuffers);
         objs_1 = new PSSinthesis(obja);
         objs_2 = new PSSinthesis(obja);
-        objpd = new PitchDetection(n_samples, nBuffers2);
+        objpd = new PitchDetection(n_samples, nBuffers2, samplerate);
         objgc = new GainClass(n_samples);
         objg1 = new GainClass(n_samples);
         objg2 = new GainClass(n_samples);
@@ -35,7 +37,7 @@ public:
         s_1 = 0;
         s_2 = 0;
     }
-    ~Harmonizer2()
+    void Destruct()
     {
         delete obja;
         delete objs_1;
@@ -44,6 +46,12 @@ public:
         delete objgc;
         delete objg1;
         delete objg2;   
+    }
+    void Realloc(uint32_t n_samples, int nBuffers, int nBuffers2)
+    {
+        double SampleRate = this->SampleRate;
+        Destruct();
+        Construct(n_samples, nBuffers, nBuffers2, SampleRate);
     }
 
     static LV2_Handle instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features);
@@ -181,11 +189,10 @@ void Harmonizer2::run(LV2_Handle instance, uint32_t n_samples)
     Harmonizer2 *plugin;
     plugin = (Harmonizer2 *) instance;
     
-    if ( (((plugin->obja)->hopa) != (int)n_samples) )
+    if ( (plugin->obja)->hopa != (int)n_samples )
     {
         int nbuffers;
         int nbuffers2;
-        double samplerate = plugin->SampleRate;
 		
 		switch ((int)n_samples)
 		{
@@ -205,10 +212,8 @@ void Harmonizer2::run(LV2_Handle instance, uint32_t n_samples)
 				nbuffers = 4;
 				nbuffers2 = 2;
 		}
-
-        delete plugin;
-        plugin = new Harmonizer2(n_samples, nbuffers, nbuffers2, samplerate);		
-		return;
+        plugin->Realloc(n_samples, nbuffers, nbuffers2);
+        return;
 	}
 
     float sum_abs = 0;
@@ -222,6 +227,7 @@ void Harmonizer2::run(LV2_Handle instance, uint32_t n_samples)
 	{
 		for (uint32_t i=0; i<n_samples; i++)
 		{
+            plugin->out_clean[i] = 0;
 			plugin->out_1[i] = 0;
 			plugin->out_2[i] = 0;
 		}
@@ -261,11 +267,8 @@ void Harmonizer2::run(LV2_Handle instance, uint32_t n_samples)
             (plugin->objgc)->SimpleGain((plugin->obja)->frames, plugin->out_clean);
             (plugin->objg1)->SimpleGain((plugin->objs_1)->yshift, plugin->out_1);
             (plugin->objg2)->SimpleGain((plugin->objs_2)->yshift, plugin->out_2);
-			
-		}
-		
+		}	
 	}
-
 }
 
 /**********************************************************************************************************************************************************/

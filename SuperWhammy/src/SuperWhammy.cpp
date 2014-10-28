@@ -15,7 +15,9 @@ enum {IN, OUT_1, STEP, FIRST, LAST, CLEAN, GAIN, PLUGIN_PORT_COUNT};
 class SuperWhammy
 {
 public:
-    SuperWhammy(uint32_t n_samples, int nBuffers, double samplerate)
+    SuperWhammy(uint32_t n_samples, int nBuffers, double samplerate){Construct(n_samples, nBuffers, samplerate);}
+    ~SuperWhammy(){Destruct();}
+    void Construct(uint32_t n_samples, int nBuffers, double samplerate)
     {
     	this->nBuffers = nBuffers;
         SampleRate = samplerate;
@@ -27,11 +29,17 @@ public:
         cont = 0;
         s = 0;
     }
-    ~SuperWhammy()
+    void Destruct()
     {
     	delete obja;
         delete objs;
-        delete objg; 
+        delete objg;
+    }
+    void Realloc(uint32_t n_samples, int nBuffers)
+    {
+    	double SampleRate = this->SampleRate;
+    	Destruct();
+    	Construct(n_samples, nBuffers, SampleRate);
     }
 
     static LV2_Handle instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features);
@@ -139,10 +147,9 @@ void SuperWhammy::run(LV2_Handle instance, uint32_t n_samples)
     SuperWhammy *plugin;
     plugin = (SuperWhammy *) instance;
     
-    if ( (((plugin->obja)->hopa) != (int)n_samples) )
+    if ( (plugin->obja)->hopa != (int)n_samples )
     {
     	int nbuffers;
-        double samplerate = plugin->SampleRate;
 		
 		switch ((int)n_samples)
 		{
@@ -155,13 +162,10 @@ void SuperWhammy::run(LV2_Handle instance, uint32_t n_samples)
 			case 256:
 				nbuffers = 10;
 				break;
-			case 512:
+			default:
 				nbuffers = 8;
-				break;
 		}
-		
-		delete plugin;
-        plugin = new SuperWhammy(n_samples, nbuffers, samplerate);			
+		plugin->Realloc(n_samples, nbuffers);
 		return;
 	}
  
@@ -181,17 +185,15 @@ void SuperWhammy::run(LV2_Handle instance, uint32_t n_samples)
 	}
 	else
 	{
-		
-    plugin->s = (double)(*(plugin->step));
-	(plugin->objg)->SetGaindB((double)(*(plugin->gain)));
-    
-    double a = (double)(*(plugin->first));
-    double b = (double)(*(plugin->last));
-    double c = (double)(*(plugin->clean));  
-    double s_ = a + plugin->s*(b-a);
-    
-    (plugin->obja)->PreAnalysis(plugin->nBuffers, plugin->in);
-    (plugin->objs)->PreSinthesis();
+	    plugin->s = (double)(*(plugin->step));
+		(plugin->objg)->SetGaindB((double)(*(plugin->gain)));
+	    double a = (double)(*(plugin->first));
+	    double b = (double)(*(plugin->last));
+	    double c = (double)(*(plugin->clean));  
+	    double s_ = a + plugin->s*(b-a);
+	    
+	    (plugin->obja)->PreAnalysis(plugin->nBuffers, plugin->in);
+	    (plugin->objs)->PreSinthesis();
 		
 		if ( plugin->cont < plugin->nBuffers-1)
 		{
@@ -201,7 +203,8 @@ void SuperWhammy::run(LV2_Handle instance, uint32_t n_samples)
 		{
  			(plugin->obja)->Analysis();
             (plugin->objs)->Sinthesis(s_);
-            (plugin->objg)->SimpleGain((plugin->obja)->frames, plugin->out_1);
+            (plugin->objg)->SimpleGain((plugin->objs)->yshift, plugin->out_1);
+            if (c == 1) for (uint32_t i = 0; i<n_samples; i++) plugin->out_1[i] += (plugin->obja)->frames[i];
 		}
 		
 	}

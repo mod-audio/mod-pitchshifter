@@ -63,7 +63,7 @@ lv2:port
     lv2:portProperty lv2:integer;
     lv2:default 0;
     lv2:minimum -12;
-    lv2:maximum 12;
+    lv2:maximum 24;
 ],
 [
     a lv2:ControlPort, lv2:InputPort;
@@ -73,13 +73,23 @@ lv2:port
     lv2:portProperty lv2:integer;
     lv2:default 0;
     lv2:minimum -12;
-    lv2:maximum 12;
+    lv2:maximum 24;
 ],
 [
     a lv2:ControlPort, lv2:InputPort;
     lv2:index 5;
-    lv2:symbol "Gain";
-    lv2:name "Gain";
+    lv2:symbol "Gain_1";
+    lv2:name "Gain 1";
+    units:unit units:db ;
+    lv2:default 3;
+    lv2:minimum -20;
+    lv2:maximum 20;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 6;
+    lv2:symbol "Gain_2";
+    lv2:name "Gain 2";
     units:unit units:db ;
     lv2:default 3;
     lv2:minimum -20;

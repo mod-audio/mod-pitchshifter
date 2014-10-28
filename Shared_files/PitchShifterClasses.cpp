@@ -2,7 +2,6 @@
 
 PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers) //Construtor
 {
-	cout << "Entrei no contrutor do PSAnalysis" << endl;
 	Qcolumn = nBuffers;
 	hopa = n_samples;
 	N = nBuffers*n_samples;
@@ -32,45 +31,39 @@ PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers) //Construtor
 	w.zeros(N); hann(N,&w); 
 	I.zeros(N/2 + 1); I = linspace(0, N/2, N/2 + 1); 
 	p = fftwf_plan_dft_r2c_1d(N, frames2, fXa, FFTW_ESTIMATE);
-
-	cout << "Sai do contrutor do PSAnalysis" << endl;
-
 }
 
 PSAnalysis::~PSAnalysis() //Destrutor
 {
-	cout << "Entrei no destrutor do PSAnalysis" << endl;
-	fftwf_destroy_plan(p); cout << "1" << endl;
-	free(b); cout << "2" << endl;
-	free(frames); cout << "3" << endl;
-	fftwf_free(frames2); cout << "4" << endl;
-	fftwf_free(fXa); cout << "5" << endl;
-	Xa.clear(); cout << "6" << endl;
-	XaPrevious.clear(); cout << "7" << endl;
-	Xa_arg.clear(); cout << "8" << endl;
-	XaPrevious_arg.clear(); cout << "9" << endl;
-    d_phi.clear(); cout << "10" << endl;
-	d_phi_prime.clear(); cout << "11" << endl;
-	d_phi_wrapped.clear(); cout << "12" << endl;
-	omega_true_sobre_fs.clear(); cout << "13" << endl;
-	AUX.clear(); cout << "14" << endl;
-	Xa_abs.clear(); cout << "15" << endl;
-	w.clear(); cout << "16" << endl;
+	fftwf_destroy_plan(p);
+	free(b);
+	free(frames);
+	fftwf_free(frames2);
+	fftwf_free(fXa);
+	Xa.clear();
+	XaPrevious.clear();
+	Xa_arg.clear();
+	XaPrevious_arg.clear();
+    d_phi.clear(); 
+	d_phi_prime.clear(); 
+	d_phi_wrapped.clear(); 
+	omega_true_sobre_fs.clear(); 
+	AUX.clear(); 
+	Xa_abs.clear(); 
+	w.clear(); 
 	I.clear();
-
-	cout << "Sai do destrutor do PSAnalysis" << endl;
 }
 
 void PSAnalysis::PreAnalysis(int nBuffers, float *in)
 {
 	for (int i=0; i<hopa; i++)
+	{
+		for (int j=0; j<(nBuffers-1); j++)
 		{
-			for (int j=0; j<(nBuffers-1); j++)
-			{
-				b[j][i] = b[j+1][i];
-			}
-			b[nBuffers-1][i] = in[i];
+			b[j][i] = b[j+1][i];
 		}
+		b[nBuffers-1][i] = in[i];
+	}
 }
 
 void PSAnalysis::Analysis()
@@ -107,7 +100,6 @@ void PSAnalysis::Analysis()
 
 PSSinthesis::PSSinthesis(PSAnalysis *obj) //Construtor
 {
-	cout << "Entrei no construtor do PSSinthesis" << endl;
 	Qcolumn = obj->Qcolumn;
 	hopa = obj->hopa;
 	N = obj->N;
@@ -115,19 +107,15 @@ PSSinthesis::PSSinthesis(PSAnalysis *obj) //Construtor
 	Xa_abs = &obj->Xa_abs;
 	w = &obj->w;
 
-	cout << "?" << endl;
-
-	hops = new int[Qcolumn]; for (int i = 0; i < Qcolumn;i++) hops[i] = hopa; cout << "1" << endl;
-	ysaida = new double[2*N + 4*(Qcolumn-1)*hopa]; for (int i = 0; i < 2*N + 4*(Qcolumn-1)*hopa ;i++) ysaida[i] = 0; cout << "2" << endl;
-	yshift = new double[hopa]; for (int i = 0; i < hopa ;i++) yshift[i] = 0; cout << "3" << endl;
-	q = fftwf_alloc_real(N); cout << "4" << endl;
-	fXs = fftwf_alloc_complex(N/2 + 1); cout << "5" << endl;
-	Xs.zeros(N/2 + 1); cout << "6" << endl;
-	Phi.zeros(N/2 + 1); cout << "7" << endl;
-	PhiPrevious.zeros(N/2 + 1); cout << "8" << endl;
-	p2 = fftwf_plan_dft_c2r_1d(N, fXs, q, FFTW_ESTIMATE); cout << "9" << endl;
-
-	cout << "Sai do construtor do PSSinthesis" << endl;
+	hops = new int[Qcolumn]; for (int i = 0; i < Qcolumn;i++) hops[i] = hopa;
+	ysaida = new double[2*N + 4*(Qcolumn-1)*hopa]; for (int i = 0; i < 2*N + 4*(Qcolumn-1)*hopa ;i++) ysaida[i] = 0;
+	yshift = new double[hopa]; for (int i = 0; i < hopa ;i++) yshift[i] = 0;
+	q = fftwf_alloc_real(N);
+	fXs = fftwf_alloc_complex(N/2 + 1);
+	Xs.zeros(N/2 + 1);
+	Phi.zeros(N/2 + 1);
+	PhiPrevious.zeros(N/2 + 1);
+	p2 = fftwf_plan_dft_c2r_1d(N, fXs, q, FFTW_ESTIMATE);
 }
 
 PSSinthesis::~PSSinthesis() //Destrutor
