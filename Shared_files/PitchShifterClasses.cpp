@@ -6,9 +6,10 @@ PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers) //Construtor
 	hopa = n_samples;
 	N = nBuffers*n_samples;
 
-	frames = (double*)calloc(N,sizeof(double));
-	b = (double**)calloc(hopa,sizeof(double*));
-
+	// frames = (double*)calloc(N,sizeof(double));
+	// b = (double**)calloc(hopa,sizeof(double*));
+	frames = new double[N]; for (int i=0;i<N;i++) frames[i] = 0;
+	b = new double*[hopa];
 
 	for (int i=0 ; i< nBuffers; i++)
     {
@@ -36,8 +37,10 @@ PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers) //Construtor
 PSAnalysis::~PSAnalysis() //Destrutor
 {
 	fftwf_destroy_plan(p);
-	free(b);
-	free(frames);
+	// free(b);
+	// free(frames);
+	delete[] b;
+	delete[] frames;
 	fftwf_free(frames2);
 	fftwf_free(fXa);
 	Xa.clear();
@@ -72,9 +75,9 @@ void PSAnalysis::Analysis()
 	
 	//Windowing
 	
-	for (int i=1; i<=N; i++)
+	for (int i=0; i<N; i++)
 	{
-		frames2[i-1] = frames[i-1]*w(i-1)/(sqrt(((double)N/(2*(double)hopa))));
+		frames2[i] = frames[i]*w(i)/(sqrt(((double)N/(2*(double)hopa))));
 	}
 	
 	/*Analysis*/
@@ -82,10 +85,10 @@ void PSAnalysis::Analysis()
 	
 	/*Processing*/
 	
-	for (int i=1; i<=(N/2 + 1); i++)
+	for (int i=0; i<(N/2 + 1); i++)
 	{
-		Xa(i-1) = cx_float(fXa[i-1][0], fXa[i-1][1]);
-		Xa_arg(i-1) = angle(Xa(i-1));
+		Xa(i) = cx_float(fXa[i][0], fXa[i][1]);
+		Xa_arg(i) = angle(Xa(i));
 	}
 	d_phi = Xa_arg - XaPrevious_arg;
 	d_phi_prime = d_phi - ((2*M_PI * hopa) / N) * I;
@@ -107,6 +110,7 @@ PSSinthesis::PSSinthesis(PSAnalysis *obj) //Construtor
 	Xa_abs = &obj->Xa_abs;
 	w = &obj->w;
 
+	first = true;
 	hops = new int[Qcolumn]; for (int i = 0; i < Qcolumn;i++) hops[i] = hopa;
 	ysaida = new double[2*N + 4*(Qcolumn-1)*hopa]; for (int i = 0; i < 2*N + 4*(Qcolumn-1)*hopa ;i++) ysaida[i] = 0;
 	yshift = new double[hopa]; for (int i = 0; i < hopa ;i++) yshift[i] = 0;
@@ -138,15 +142,14 @@ void PSSinthesis::PreSinthesis()
 
 void PSSinthesis::Sinthesis(double s)
 {
-	hops[Qcolumn-1] = round(hopa*(pow(2,(s/12))));	
-	static bool first = true;
+	hops[Qcolumn-1] = round(hopa*(pow(2,(s/12))));
 	
 	//Some declaration
 	int L;
 	L = N;
-	for (int i=1; i<= Qcolumn-1; i++)
+	for (int i=0; i< Qcolumn-1; i++)
 	{
-		L = L + hops[i-1];
+		L = L + hops[i];
 	}
 	double r;
 	complex<double> j;
@@ -161,65 +164,65 @@ void PSSinthesis::Sinthesis(double s)
 	// We can divide the code in two here
 
 	Phi = PhiPrevious + (hops[Qcolumn-1])*omega_true_sobre_fs[0] ;
-	for (int i=1; i<=(N/2 + 1); i++)
+	for (int i=0; i<(N/2 + 1); i++)
 	{
-        Xs(i-1) = ExponencialComplexa(Phi(i-1));
+        Xs(i) = ExponencialComplexa(Phi(i));
 	}
 	Xs = Xa_abs[0] % Xs;
 	PhiPrevious = Phi;
 	
 	
-	for (int i=1; i<=(N/2 + 1); i++)
+	for (int i=0; i<(N/2 + 1); i++)
 	{
-        fXs[i-1][0] = real(Xs(i-1));
-        fXs[i-1][1] = imag(Xs(i-1));
+        fXs[i][0] = real(Xs(i));
+        fXs[i][1] = imag(Xs(i));
 	}
 	
 	/*Synthesis*/
 	fftwf_execute(p2);
 	
-	for (int i=1; i<=N; i++)
+	for (int i=0; i<N; i++)
 	{
-		q[i-1] = q[i-1]*w[0](i-1)/(N*sqrt((N/(2*hops[Qcolumn-1]))));
+		q[i] = q[i]*w[0](i)/(N*sqrt((N/(2*hops[Qcolumn-1]))));
 	}
 	
 	if ( first == true)
 	{
 		first = false;
-		for (int i=1; i<=L-N; i++)
+		for (int i=0; i<L-N; i++)
 		{
-			ysaida[i-1] = 0;
+			ysaida[i] = 0;
 		}
-		for (int i=L-N+1; i<=L; i++)
+		for (int i=L-N; i<L; i++)
 		{
-			ysaida[i-1] = q[i-(L-N+1)];
+			ysaida[i] = q[i-(L-N)];
 		}
 	}
 	else
 	{
-		for (int i=L-N+1; i<=L; i++)
+		for (int i=L-N; i<L; i++)
 		{
-			ysaida[i-1] = ysaida[i-1] + q[i-(L-N+1)];
+			ysaida[i] = ysaida[i] + q[i-(L-N)];
 		}
 	}
 	//Linear interpolation
 	r = ((double)hops[Qcolumn-1])/((double)hopa);
 
-        for (int n=1; n <= hopa; n++)
+        for (int n=0; n < hopa; n++)
         {
-            n3 = (((double)n-1)*r+1);
+            n3 = (((double)n)*r+1);
             n1 = floor(n3);
             n2 = ceil(n3);
-            yshift[n-1] = ysaida2[n1-1] + ((ysaida2[n2-1]-ysaida2[n1-1]))*(n3 - (double)n1);
+            yshift[n] = ysaida2[n1] + ((ysaida2[n2]-ysaida2[n1]))*(n3 - (double)n1);
 		}
 		
 	//Shift ysaida hops[0] left
-	for (int i=1; i<=L-hops[0]; i++)
+	for (int i=0; i<L-hops[0]; i++)
 	{
-		ysaida[i-1] = ysaida[i-1+hops[0]];
+		ysaida[i] = ysaida[i+hops[0]];
 	}
-	for (int i=L-hops[0]+1; i<=L; i++)
+	for (int i=L-hops[0]; i<L; i++)
 	{
-		ysaida[i-1] = 0;
+		ysaida[i] = 0;
 	}
 }

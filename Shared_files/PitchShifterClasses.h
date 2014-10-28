@@ -58,7 +58,7 @@ public:
     vec *Xa_abs; //Modulus of Xa
     vec *w; //A hanning window vector
 
-
+    bool first;
     int *hops; //The last Qcolumn's hop's used in the overlap-add
     vec Phi; //The synthesized phase
 	vec PhiPrevious;
