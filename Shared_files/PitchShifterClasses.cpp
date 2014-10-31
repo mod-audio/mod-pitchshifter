@@ -6,8 +6,6 @@ PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers) //Construtor
 	hopa = n_samples;
 	N = nBuffers*n_samples;
 
-	// frames = (double*)calloc(N,sizeof(double));
-	// b = (double**)calloc(hopa,sizeof(double*));
 	frames = new double[N]; for (int i=0;i<N;i++) frames[i] = 0;
 	b = new double*[hopa];
 
@@ -37,8 +35,6 @@ PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers) //Construtor
 PSAnalysis::~PSAnalysis() //Destrutor
 {
 	fftwf_destroy_plan(p);
-	// free(b);
-	// free(frames);
 	delete[] b;
 	delete[] frames;
 	fftwf_free(frames2);
