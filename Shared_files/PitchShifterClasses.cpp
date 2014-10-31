@@ -6,7 +6,7 @@ PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers) //Construtor
 	hopa = n_samples;
 	N = nBuffers*n_samples;
 
-	frames = new double[N]; for (int i=0;i<N;i++) frames[i] = 0;
+	frames = new double[N]; fill_n(frames,N,0);
 	b = new double*[hopa];
 
 	for (int i=0 ; i< nBuffers; i++)
@@ -102,9 +102,9 @@ PSSinthesis::PSSinthesis(PSAnalysis *obj) //Construtor
 	w = &obj->w;
 
 	first = true;
-	hops = new int[Qcolumn]; for (int i = 0; i < Qcolumn;i++) hops[i] = hopa;
-	ysaida = new double[2*N + 4*(Qcolumn-1)*hopa]; for (int i = 0; i < 2*N + 4*(Qcolumn-1)*hopa ;i++) ysaida[i] = 0;
-	yshift = new double[hopa]; for (int i = 0; i < hopa ;i++) yshift[i] = 0;
+	hops = new int[Qcolumn];                       fill_n(hops,Qcolumn,hopa);
+	ysaida = new double[2*N + 4*(Qcolumn-1)*hopa]; fill_n(ysaida,2*N + 4*(Qcolumn-1)*hopa,0);
+	yshift = new double[hopa];                     fill_n(yshift,hopa,0);
 	q = fftwf_alloc_real(N);
 	fXs = fftwf_alloc_complex(N/2 + 1);
 	Xs.zeros(N/2 + 1);
@@ -175,8 +175,7 @@ void PSSinthesis::Sinthesis(double s)
 	if (first == true)
 	{
 		first = false;
-		for (int i=0; i<L-N; i++)
-			ysaida[i] = 0;
+		fill_n(ysaida,L-N,0);
 		for (int i=L-N; i<L; i++)
 			ysaida[i] = q[i-(L-N)];
 	}

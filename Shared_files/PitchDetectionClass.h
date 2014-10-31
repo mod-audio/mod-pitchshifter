@@ -8,6 +8,7 @@
 #include "angle.h"
 
 using namespace arma;
+using namespace std;
 
 class PitchDetection
 {

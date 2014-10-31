@@ -49,7 +49,6 @@ public:
     }
     void Realloc(uint32_t n_samples, int nBuffers, int nBuffers2)
     {
-        double SampleRate = this->SampleRate;
         Destruct();
         Construct(n_samples, nBuffers, nBuffers2, SampleRate);
     }
