@@ -10,12 +10,9 @@ PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers) //Construtor
 	b = new double*[hopa];
 
 	for (int i=0 ; i< nBuffers; i++)
-    {
 		b[i] = &frames[i*hopa];
-	}
 
-
-	frames2 = fftwf_alloc_real(N); for (int i = 0; i < N; i++) frames2[i] = 0;
+	frames2 = fftwf_alloc_real(N); //for (int i = 0; i < N; i++) frames2[i] = 0;
 	fXa = fftwf_alloc_complex(N/2 + 1);
 	Xa.zeros(N/2 + 1);
 	XaPrevious.zeros(N/2 + 1);
