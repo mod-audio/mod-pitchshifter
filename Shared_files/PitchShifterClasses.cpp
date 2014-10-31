@@ -55,9 +55,7 @@ void PSAnalysis::PreAnalysis(int nBuffers, float *in)
 	for (int i=0; i<hopa; i++)
 	{
 		for (int j=0; j<(nBuffers-1); j++)
-		{
 			b[j][i] = b[j+1][i];
-		}
 		b[nBuffers-1][i] = in[i];
 	}
 }
@@ -67,11 +65,11 @@ void PSAnalysis::Analysis()
 	//Starts now
 	
 	//Windowing
+
+	double norm = sqrt( N/(2.0*hopa) );
 	
 	for (int i=0; i<N; i++)
-	{
-		frames2[i] = frames[i]*w(i)/(sqrt(((double)N/(2*(double)hopa))));
-	}
+		frames2[i] = frames[i]*w(i)/norm;
 	
 	/*Analysis*/
 	fftwf_execute(p);
@@ -141,11 +139,8 @@ void PSSinthesis::Sinthesis(double s)
 	int L;
 	L = N;
 	for (int i=0; i< Qcolumn-1; i++)
-	{
 		L = L + hops[i];
-	}
 	double r;
-	complex<double> j;
 	int n1;
 	int n2;
 	double n3;
@@ -158,9 +153,7 @@ void PSSinthesis::Sinthesis(double s)
 
 	Phi = PhiPrevious + (hops[Qcolumn-1])*omega_true_sobre_fs[0] ;
 	for (int i=0; i<(N/2 + 1); i++)
-	{
         Xs(i) = ExponencialComplexa(Phi(i));
-	}
 	Xs = Xa_abs[0] % Xs;
 	PhiPrevious = Phi;
 	
@@ -174,48 +167,38 @@ void PSSinthesis::Sinthesis(double s)
 	/*Synthesis*/
 	fftwf_execute(p2);
 	
+	double norm = N*sqrt( N/(2.0*hops[Qcolumn-1]) );
+
 	for (int i=0; i<N; i++)
-	{
-		q[i] = q[i]*w[0](i)/(N*sqrt((N/(2*hops[Qcolumn-1]))));
-	}
+		q[i] = q[i]*w[0](i)/norm;
 	
-	if ( first == true)
+	if (first == true)
 	{
 		first = false;
 		for (int i=0; i<L-N; i++)
-		{
 			ysaida[i] = 0;
-		}
 		for (int i=L-N; i<L; i++)
-		{
 			ysaida[i] = q[i-(L-N)];
-		}
 	}
 	else
 	{
 		for (int i=L-N; i<L; i++)
-		{
 			ysaida[i] = ysaida[i] + q[i-(L-N)];
-		}
 	}
 	//Linear interpolation
-	r = ((double)hops[Qcolumn-1])/((double)hopa);
+	r = hops[Qcolumn-1]/(1.0*hopa);
 
         for (int n=0; n < hopa; n++)
         {
-            n3 = (((double)n)*r+1);
+            n3 = n*r+1;
             n1 = floor(n3);
             n2 = ceil(n3);
-            yshift[n] = ysaida2[n1] + ((ysaida2[n2]-ysaida2[n1]))*(n3 - (double)n1);
+            yshift[n] = ysaida2[n1] + (ysaida2[n2]-ysaida2[n1])*(n3 - n1);
 		}
 		
 	//Shift ysaida hops[0] left
 	for (int i=0; i<L-hops[0]; i++)
-	{
 		ysaida[i] = ysaida[i+hops[0]];
-	}
 	for (int i=L-hops[0]; i<L; i++)
-	{
 		ysaida[i] = 0;
-	}
 }
