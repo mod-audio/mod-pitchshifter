@@ -27,7 +27,6 @@ public:
         objg = new GainClass(n_samples);
 
         cont = 0;
-        s = 0;
     }
     void Destruct()
     {
@@ -48,11 +47,7 @@ public:
     static void run(LV2_Handle instance, uint32_t n_samples);
     static void cleanup(LV2_Handle instance);
     static const void* extension_data(const char* uri);
-    //Ports
-    float *in;
-    float *out_1;
-    float *step;
-    float *gain;
+    float *ports[PLUGIN_PORT_COUNT];
     
     PSAnalysis *obja;
     PSSinthesis *objs;
@@ -61,8 +56,6 @@ public:
     int nBuffers;
     int cont;
     double SampleRate;
-	   
-    double s;
 };
 
 /**********************************************************************************************************************************************************/
@@ -109,22 +102,7 @@ void Drop::connect_port(LV2_Handle instance, uint32_t port, void *data)
 {
     Drop *plugin;
     plugin = (Drop *) instance;
-
-    switch (port)
-    {
-        case IN:
-            plugin->in = (float*) data;
-            break;
-        case OUT_1:
-            plugin->out_1 = (float*) data;
-            break;
-        case STEP:
-            plugin->step = (float*) data;
-            break;
-        case GAIN:
-            plugin->gain = (float*) data;
-            break;
-    }
+    plugin->ports[port] = (float*) data;
 }
 
 /**********************************************************************************************************************************************************/
@@ -133,6 +111,11 @@ void Drop::run(LV2_Handle instance, uint32_t n_samples)
 {
     Drop *plugin;
     plugin = (Drop *) instance;
+
+    float *in = plugin->ports[IN];
+	float *out = plugin->ports[OUT_1];
+	double s = (double)(*(plugin->ports[STEP]));
+	double gain = (double)(*(plugin->ports[GAIN]));
     
     if ( (plugin->obja)->hopa != (int)n_samples )
     {
@@ -160,22 +143,15 @@ void Drop::run(LV2_Handle instance, uint32_t n_samples)
 
     for (uint32_t i=0; i<n_samples; i++)
     {
-		sum_abs = sum_abs + abs(plugin->in[i]);
+		sum_abs = sum_abs + abs(in[i]);
 	}
 	
 	if (sum_abs == 0)
-	{
-		for (uint32_t i=0; i<n_samples; i++)
-		{
-			plugin->out_1[i] = 0;
-		}
-	}
+		fill_n(out,n_samples,0);
 	else
 	{
-		plugin->s = (double)(*(plugin->step));
-
-        (plugin->objg)->SetGaindB((double)(*(plugin->gain)));
-        (plugin->obja)->PreAnalysis(plugin->nBuffers, plugin->in);
+        (plugin->objg)->SetGaindB(gain);
+        (plugin->obja)->PreAnalysis(plugin->nBuffers, in);
         (plugin->objs)->PreSinthesis();
 	    	
 		if ( plugin->cont < plugin->nBuffers-1)
@@ -185,8 +161,8 @@ void Drop::run(LV2_Handle instance, uint32_t n_samples)
 		else
 		{
             (plugin->obja)->Analysis();
-            (plugin->objs)->Sinthesis(plugin->s);
-            (plugin->objg)->SimpleGain((plugin->objs)->yshift, plugin->out_1);
+            (plugin->objs)->Sinthesis(s);
+            (plugin->objg)->SimpleGain((plugin->objs)->yshift, out);
 		}
 	}
 }
