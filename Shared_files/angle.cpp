@@ -36,14 +36,9 @@ double angle( complex<double> z)
 {
 	double x = real(z);
 	double y = imag(z);
-	double Angle;
-	
-	
-	if( (x == 0)&&(y == 0) )
-	{
-		Angle = 0;
-	}
-	else
+	double Angle = 0;
+
+	if (x != 0 || y != 0)
 	{
 		if( (x == 0)&&(y > 0) )
 		{
