@@ -29,6 +29,6 @@ with open('arc.h', 'w') as f:
     f.write('const double Arctg[] = {')
 
     for i in range(N):
-        f.write('{},\n'.format(mp.atan(i * dx)))
+        f.write('' + str(mp.atan(i * dx)) + ',\n')
 
     f.write('\n};')
