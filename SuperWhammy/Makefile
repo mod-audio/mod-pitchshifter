@@ -7,11 +7,11 @@ CC = g++
 LD = g++
 
 # flags
-CFLAGS = -I. -I../Shared_files -O3 -ffast-math -msse -msse3 -mfpmath=sse -Wall -Wextra -march=native -mtune=native -c -fPIC -DPIC
-LDFLAGS = -shared -lc -lm -fPIC -DPIC
+CFLAGS += -I. -I../Shared_files -O3 -ffast-math -msse -msse3 -mfpmath=sse -Wall -Wextra -march=native -mtune=native -c -fPIC -DPIC `pkg-config --cflags fftw3f`
+LDFLAGS += -shared -lc -lm -fPIC -DPIC
 
 # libs
-LIBS = -lfftw3f -lm -larmadillo
+LIBS = `pkg-config --libs fftw3f` -lm -larmadillo
 
 # remove command
 RM = rm -f
