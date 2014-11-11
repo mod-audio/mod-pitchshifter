@@ -55,26 +55,7 @@ public:
     static void run(LV2_Handle instance, uint32_t n_samples);
     static void cleanup(LV2_Handle instance);
     static const void* extension_data(const char* uri);
-    //Ports
-    float *in;
-    float *out_1;
-    float *out_2;
-    float *tone;
-    float *step_0;
-    float *step_1;
-    float *step_2;
-    float *step_3;
-    float *step_4;
-    float *step_5;
-    float *step_6;
-    float *step_7;
-    float *step_8;
-    float *step_9;
-    float *step_10;
-    float *step_11;
-    float *lownote;
-    float *gain_1;
-    float *gain_2;
+    float *ports[PLUGIN_PORT_COUNT];
     
     PSAnalysis *obja;
     PSSinthesis *objs;
@@ -134,67 +115,7 @@ void HarmonizerCS::connect_port(LV2_Handle instance, uint32_t port, void *data)
 {
     HarmonizerCS *plugin;
     plugin = (HarmonizerCS *) instance;
-
-    switch (port)
-    {
-        case IN:
-            plugin->in = (float*) data;
-            break;
-        case OUT_1:
-            plugin->out_1 = (float*) data;
-            break;
-        case OUT_2:
-            plugin->out_2 = (float*) data;
-            break;
-        case TONE:
-            plugin->tone = (float*) data;
-            break;
-        case STEP_0:
-            plugin->step_0 = (float*) data;
-            break;
-        case STEP_1:
-            plugin->step_1 = (float*) data;
-            break;
-        case STEP_2:
-            plugin->step_2 = (float*) data;
-            break;
-        case STEP_3:
-            plugin->step_3 = (float*) data;
-            break;
-        case STEP_4:
-            plugin->step_4 = (float*) data;
-            break;
-        case STEP_5:
-            plugin->step_5 = (float*) data;
-            break;
-        case STEP_6:
-            plugin->step_6 = (float*) data;
-            break;
-        case STEP_7:
-            plugin->step_7 = (float*) data;
-            break;
-        case STEP_8:
-            plugin->step_8 = (float*) data;
-            break;
-        case STEP_9:
-            plugin->step_9 = (float*) data;
-            break;
-        case STEP_10:
-            plugin->step_10 = (float*) data;
-            break;
-        case STEP_11:
-            plugin->step_11 = (float*) data;
-            break;
-        case LOWNOTE:
-            plugin->lownote = (float*) data;
-            break;
-        case GAIN_1:
-            plugin->gain_1 = (float*) data;
-            break;
-        case GAIN_2:
-            plugin->gain_2 = (float*) data;
-            break;
-    }
+    plugin->ports[port] = (float*) data;
 }
 
 /**********************************************************************************************************************************************************/
@@ -203,7 +124,27 @@ void HarmonizerCS::run(LV2_Handle instance, uint32_t n_samples)
 {
     HarmonizerCS *plugin;
     plugin = (HarmonizerCS *) instance;
-    
+
+    float *in = plugin->ports[IN];
+    float *out_1 = plugin->ports[OUT_1];
+    float *out_2 = plugin->ports[OUT_2];
+    int Tone = (int)(*(plugin->ports[TONE]));
+    int LowNote = (int)(*(plugin->ports[LOWNOTE]));
+    int s_0 = (int)(*(plugin->ports[STEP_0]));
+    int s_1 = (int)(*(plugin->ports[STEP_1]));
+    int s_2 = (int)(*(plugin->ports[STEP_2]));
+    int s_3 = (int)(*(plugin->ports[STEP_3]));
+    int s_4 = (int)(*(plugin->ports[STEP_4]));
+    int s_5 = (int)(*(plugin->ports[STEP_5]));
+    int s_6 = (int)(*(plugin->ports[STEP_6]));
+    int s_7 = (int)(*(plugin->ports[STEP_7]));
+    int s_8 = (int)(*(plugin->ports[STEP_8]));
+    int s_9 = (int)(*(plugin->ports[STEP_9]));
+    int s_10 = (int)(*(plugin->ports[STEP_10]));
+    int s_11 = (int)(*(plugin->ports[STEP_11]));
+    double gain_1 = (double)(*(plugin->ports[GAIN_1]));
+    double gain_2 = (double)(*(plugin->ports[GAIN_2]));
+
     if ( (plugin->obja)->hopa != (int)n_samples )
     {
     	int nbuffers;
@@ -234,47 +175,24 @@ void HarmonizerCS::run(LV2_Handle instance, uint32_t n_samples)
     float sum_abs = 0;
     
     for (uint32_t i=0; i<n_samples; i++)
-    {
-		sum_abs = sum_abs + abs(plugin->in[i]);
-	}
+		sum_abs = sum_abs + abs(in[i]);
 	
 	if (sum_abs == 0)
 	{
-		for (uint32_t i=0; i<n_samples; i++)
-		{
-			plugin->out_1[i] = 0;
-			plugin->out_2[i] = 0;
-		}
+        fill_n(out_1,n_samples,0);
+        fill_n(out_2,n_samples,0);
 	}
 	else
-	{		
-		int Tone = (int)(*(plugin->tone));
-		int LowNote = (int)(*(plugin->lownote));
+	{					    
+		(plugin->objg1)->SetGaindB(gain_1);
+        (plugin->objg2)->SetGaindB(gain_2);
 
-		int s_0 = (int)(*(plugin->step_0));
-		int s_1 = (int)(*(plugin->step_1));
-		int s_2 = (int)(*(plugin->step_2));
-		int s_3 = (int)(*(plugin->step_3));
-		int s_4 = (int)(*(plugin->step_4));
-		int s_5 = (int)(*(plugin->step_5));
-		int s_6 = (int)(*(plugin->step_6));
-		int s_7 = (int)(*(plugin->step_7));
-		int s_8 = (int)(*(plugin->step_8));
-		int s_9 = (int)(*(plugin->step_9));
-		int s_10 = (int)(*(plugin->step_10));
-		int s_11 = (int)(*(plugin->step_11));
-			    
-		(plugin->objg1)->SetGaindB((double)(*(plugin->gain_1)));
-        (plugin->objg2)->SetGaindB((double)(*(plugin->gain_2)));
-
-        (plugin->obja)->PreAnalysis(plugin->nBuffers, plugin->in);
+        (plugin->obja)->PreAnalysis(plugin->nBuffers, in);
         (plugin->objs)->PreSinthesis();
-        (plugin->objpd)->PreProcessing(plugin->nBuffers2, plugin->in);
+        (plugin->objpd)->PreProcessing(plugin->nBuffers2, in);
 		
 		if ( plugin->cont < plugin->nBuffers-1)
-		{
 			plugin->cont = plugin->cont + 1;
-		}
 		else
 		{
 			(plugin->objpd)->FindNote();
@@ -283,12 +201,10 @@ void HarmonizerCS::run(LV2_Handle instance, uint32_t n_samples)
 			(plugin->obja)->Analysis();
             (plugin->objs)->Sinthesis(plugin->s);
 
-            (plugin->objg1)->SimpleGain((plugin->obja)->frames, plugin->out_1);
-            (plugin->objg2)->SimpleGain((plugin->objs)->yshift, plugin->out_2);			
+            (plugin->objg1)->SimpleGain((plugin->obja)->frames, out_1);
+            (plugin->objg2)->SimpleGain((plugin->objs)->yshift, out_2);			
 		}
-		
 	}
-
 }
 
 /**********************************************************************************************************************************************************/

@@ -8,7 +8,7 @@
 
 #define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/Drop"
 #define N_SAMPLES_DEFAULT 64
-enum {IN, OUT_1, STEP, GAIN, PLUGIN_PORT_COUNT};
+enum {IN, OUT, STEP, GAIN, PLUGIN_PORT_COUNT};
 
 /**********************************************************************************************************************************************************/
 
@@ -113,7 +113,7 @@ void Drop::run(LV2_Handle instance, uint32_t n_samples)
     plugin = (Drop *) instance;
 
     float *in = plugin->ports[IN];
-	float *out = plugin->ports[OUT_1];
+	float *out = plugin->ports[OUT];
 	double s = (double)(*(plugin->ports[STEP]));
 	double gain = (double)(*(plugin->ports[GAIN]));
     
@@ -142,9 +142,7 @@ void Drop::run(LV2_Handle instance, uint32_t n_samples)
     float sum_abs = 0;
 
     for (uint32_t i=0; i<n_samples; i++)
-    {
 		sum_abs = sum_abs + abs(in[i]);
-	}
 	
 	if (sum_abs == 0)
 		fill_n(out,n_samples,0);
@@ -155,9 +153,7 @@ void Drop::run(LV2_Handle instance, uint32_t n_samples)
         (plugin->objs)->PreSinthesis();
 	    	
 		if ( plugin->cont < plugin->nBuffers-1)
-		{
 			plugin->cont = plugin->cont + 1;
-		}
 		else
 		{
             (plugin->obja)->Analysis();

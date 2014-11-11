@@ -2,8 +2,6 @@
 #include <cmath>
 #include <lv2.h>
 #include "PitchShifterClasses.h"
-#include "PitchDetectionClass.h"
-#include "HarmonizerLib.h"
 #include "GainClass.h"
 
 /**********************************************************************************************************************************************************/
@@ -31,8 +29,6 @@ public:
         objg2 = new GainClass(n_samples);
 
         cont = 0;
-        s_1 = 0;
-        s_2 = 0;
     }
     void Destruct()
     {
@@ -55,14 +51,7 @@ public:
     static void run(LV2_Handle instance, uint32_t n_samples);
     static void cleanup(LV2_Handle instance);
     static const void* extension_data(const char* uri);
-    //Ports
-    float *in;
-    float *out_1;
-    float *out_2;
-    float *step_1;
-    float *step_2;
-    float *gain_1;
-    float *gain_2;
+    float *ports[PLUGIN_PORT_COUNT];
     
     PSAnalysis *obja;
     PSSinthesis *objs_1;
@@ -73,9 +62,6 @@ public:
     int nBuffers;
     int cont;
     double SampleRate;
-	   
-    double s_1;
-    double s_2;
 };
 
 /**********************************************************************************************************************************************************/
@@ -110,17 +96,11 @@ LV2_Handle TwoVoices::instantiate(const LV2_Descriptor* descriptor, double sampl
 
 /**********************************************************************************************************************************************************/
 
-void TwoVoices::activate(LV2_Handle instance)
-{
-    // TODO: include the activate function code here
-}
+void TwoVoices::activate(LV2_Handle instance){}
 
 /**********************************************************************************************************************************************************/
 
-void TwoVoices::deactivate(LV2_Handle instance)
-{
-    // TODO: include the deactivate function code here
-}
+void TwoVoices::deactivate(LV2_Handle instance){}
 
 /**********************************************************************************************************************************************************/
 
@@ -128,31 +108,7 @@ void TwoVoices::connect_port(LV2_Handle instance, uint32_t port, void *data)
 {
     TwoVoices *plugin;
     plugin = (TwoVoices *) instance;
-
-    switch (port)
-    {
-        case IN:
-            plugin->in = (float*) data;
-            break;
-        case OUT_1:
-            plugin->out_1 = (float*) data;
-            break;
-        case OUT_2:
-            plugin->out_2 = (float*) data;
-            break;
-        case STEP_1:
-            plugin->step_1 = (float*) data;
-            break;
-        case STEP_2:
-            plugin->step_2 = (float*) data;
-            break;
-        case GAIN_1:
-            plugin->gain_1 = (float*) data;
-            break;
-        case GAIN_2:
-            plugin->gain_2 = (float*) data;
-            break;
-    }
+    plugin->ports[port] = (float*) data;
 }
 
 /**********************************************************************************************************************************************************/
@@ -161,6 +117,14 @@ void TwoVoices::run(LV2_Handle instance, uint32_t n_samples)
 {
     TwoVoices *plugin;
     plugin = (TwoVoices *) instance;
+
+    float *in = plugin->ports[IN];
+    float *out_1 = plugin->ports[OUT_1];
+    float *out_2 = plugin->ports[OUT_2];
+    double s_1 = (double)(*(plugin->ports[STEP_1]));
+    double s_2 = (double)(*(plugin->ports[STEP_2]));
+    double gain_1 = (double)(*(plugin->ports[GAIN_1]));
+    double gain_2 = (double)(*(plugin->ports[GAIN_2]));
     
     if ( (plugin->obja)->hopa != (int)n_samples )
     {
@@ -185,44 +149,34 @@ void TwoVoices::run(LV2_Handle instance, uint32_t n_samples)
 	}
 
     float sum_abs = 0;
-    
+
     for (uint32_t i=0; i<n_samples; i++)
+        sum_abs = sum_abs + abs(in[i]);
+    
+    if (sum_abs == 0)
     {
-		sum_abs = sum_abs + abs(plugin->in[i]);
-	}
-	
-	if (sum_abs == 0)
-	{
-		for (uint32_t i=0; i<n_samples; i++)
-		{
-			plugin->out_1[i] = 0;
-			plugin->out_2[i] = 0;
-		}
-	}
+        fill_n(out_1,n_samples,0);
+        fill_n(out_2,n_samples,0);
+    }
 	else
 	{
-       	plugin->s_1 = (double)(*(plugin->step_1));
-       	plugin->s_2 = (double)(*(plugin->step_2));
-
-        (plugin->objg1)->SetGaindB((double)(*(plugin->gain_1)));
-        (plugin->objg2)->SetGaindB((double)(*(plugin->gain_2)));
+        (plugin->objg1)->SetGaindB(gain_1);
+        (plugin->objg2)->SetGaindB(gain_2);
         
-        (plugin->obja)->PreAnalysis(plugin->nBuffers, plugin->in);
+        (plugin->obja)->PreAnalysis(plugin->nBuffers, in);
         (plugin->objs_1)->PreSinthesis();
         (plugin->objs_2)->PreSinthesis();
 		
 		if ( plugin->cont < plugin->nBuffers-1)
-		{
 			plugin->cont = plugin->cont + 1;
-		}
 		else
 		{
             (plugin->obja)->Analysis();
-            (plugin->objs_1)->Sinthesis(plugin->s_1);
-            (plugin->objs_2)->Sinthesis(plugin->s_2);
+            (plugin->objs_1)->Sinthesis(s_1);
+            (plugin->objs_2)->Sinthesis(s_2);
 
-            (plugin->objg1)->SimpleGain((plugin->objs_1)->yshift, plugin->out_1);
-            (plugin->objg2)->SimpleGain((plugin->objs_2)->yshift, plugin->out_2);
+            (plugin->objg1)->SimpleGain((plugin->objs_1)->yshift, out_1);
+            (plugin->objg2)->SimpleGain((plugin->objs_2)->yshift, out_2);
 		}
 	}
 }

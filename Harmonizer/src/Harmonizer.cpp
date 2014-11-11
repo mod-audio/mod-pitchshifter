@@ -55,17 +55,7 @@ public:
     static void run(LV2_Handle instance, uint32_t n_samples);
     static void cleanup(LV2_Handle instance);
     static const void* extension_data(const char* uri);
-    //Ports
-    float *in;
-    float *out_1;
-    float *out_2;
-    float *tone;
-    float *scale;
-    float *interval;
-    float *mode;
-    float *lownote;
-    float *gain_1;
-    float *gain_2;
+    float *ports[PLUGIN_PORT_COUNT];
     
     PSAnalysis *obja;
     PSSinthesis *objs;
@@ -77,8 +67,8 @@ public:
     int nBuffers2;
     int cont;
     double SampleRate;
-	   
-    double s;
+
+    double s;	   
 };
 
 /**********************************************************************************************************************************************************/
@@ -125,40 +115,7 @@ void Harmonizer::connect_port(LV2_Handle instance, uint32_t port, void *data)
 {
     Harmonizer *plugin;
     plugin = (Harmonizer *) instance;
-
-    switch (port)
-    {
-        case IN:
-            plugin->in = (float*) data;
-            break;
-        case OUT_1:
-            plugin->out_1 = (float*) data;
-            break;
-        case OUT_2:
-            plugin->out_2 = (float*) data;
-            break;
-        case TONE:
-            plugin->tone = (float*) data;
-            break;
-        case SCALE:
-            plugin->scale = (float*) data;
-            break;
-        case INTERVAL:
-            plugin->interval = (float*) data;
-            break;
-        case MODE:
-            plugin->mode = (float*) data;
-            break;
-        case LOWNOTE:
-            plugin->lownote = (float*) data;
-            break;
-        case GAIN_1:
-            plugin->gain_1 = (float*) data;
-            break;
-        case GAIN_2:
-            plugin->gain_2 = (float*) data;
-            break;
-    }
+    plugin->ports[port] = (float*) data;
 }
 
 /**********************************************************************************************************************************************************/
@@ -167,6 +124,17 @@ void Harmonizer::run(LV2_Handle instance, uint32_t n_samples)
 {
     Harmonizer *plugin;
     plugin = (Harmonizer *) instance;
+
+    float *in = plugin->ports[IN];
+    float *out_1 = plugin->ports[OUT_1];
+    float *out_2 = plugin->ports[OUT_2];
+    int Tone = (int)(*(plugin->ports[TONE]));
+    int Scale = (int)(*(plugin->ports[SCALE]));
+    int Interval = (int)(*(plugin->ports[INTERVAL]));
+    int Mode = (int)(*(plugin->ports[MODE]));
+    int LowNote = (int)(*(plugin->ports[LOWNOTE]));
+    double gain_1 = (double)(*(plugin->ports[GAIN_1]));
+    double gain_2 = (double)(*(plugin->ports[GAIN_2]));
     
     if ( (plugin->obja)->hopa != (int)n_samples )
     {
@@ -198,37 +166,24 @@ void Harmonizer::run(LV2_Handle instance, uint32_t n_samples)
     float sum_abs = 0;
     
     for (uint32_t i=0; i<n_samples; i++)
-    {
-		sum_abs = sum_abs + abs(plugin->in[i]);
-	}
+		sum_abs = sum_abs + abs(in[i]);
 	
 	if (sum_abs == 0)
 	{
-		for (uint32_t i=0; i<n_samples; i++)
-		{
-			plugin->out_1[i] = 0;
-			plugin->out_2[i] = 0;
-		}
+        fill_n(out_1,n_samples,0);
+        fill_n(out_2,n_samples,0);
 	}
 	else
 	{
-		int Tone = (int)(*(plugin->tone));
-    	int Scale = (int)(*(plugin->scale));
-    	int Interval = (int)(*(plugin->interval));
-    	int Mode = (int)(*(plugin->mode));
-    	int LowNote = (int)(*(plugin->lownote));
-
-        (plugin->objg1)->SetGaindB((double)(*(plugin->gain_1)));
-        (plugin->objg2)->SetGaindB((double)(*(plugin->gain_2)));
+        (plugin->objg1)->SetGaindB(gain_1);
+        (plugin->objg2)->SetGaindB(gain_2);
         
-        (plugin->obja)->PreAnalysis(plugin->nBuffers, plugin->in);
+        (plugin->obja)->PreAnalysis(plugin->nBuffers, in);
         (plugin->objs)->PreSinthesis();
-        (plugin->objpd)->PreProcessing(plugin->nBuffers2, plugin->in);
+        (plugin->objpd)->PreProcessing(plugin->nBuffers2, in);
 		
 		if ( plugin->cont < plugin->nBuffers-1)
-		{
 			plugin->cont = plugin->cont + 1;
-		}
 		else
 		{
 			(plugin->objpd)->FindNote();
@@ -237,8 +192,8 @@ void Harmonizer::run(LV2_Handle instance, uint32_t n_samples)
             (plugin->obja)->Analysis();
             (plugin->objs)->Sinthesis(plugin->s);
 
-            (plugin->objg1)->SimpleGain((plugin->obja)->frames, plugin->out_1);
-            (plugin->objg2)->SimpleGain((plugin->objs)->yshift, plugin->out_2);
+            (plugin->objg1)->SimpleGain((plugin->obja)->frames, out_1);
+            (plugin->objg2)->SimpleGain((plugin->objs)->yshift, out_2);
 		}
 	}
 }
