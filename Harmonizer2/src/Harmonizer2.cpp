@@ -152,46 +152,38 @@ void Harmonizer2::run(LV2_Handle instance, uint32_t n_samples)
         plugin->Realloc(n_samples, nBuffersSW(n_samples,32,16,8,4), nBuffersSW(n_samples,16,8,4,2));
         return;
 	}
-
-    float sum_abs = 0;
-    
-    for (uint32_t i=0; i<n_samples; i++)
-		sum_abs = sum_abs + abs(in[i]);
 	
-	if (sum_abs == 0)
+	if (InputAbsSum(in, n_samples) == 0)
 	{
         fill_n(out_clean,n_samples,0);
         fill_n(out_1,n_samples,0);
         fill_n(out_2,n_samples,0);
+        return;
 	}
+
+    (plugin->objgc)->SetGaindB(gain_clean);
+    (plugin->objg1)->SetGaindB(gain_1);
+    (plugin->objg2)->SetGaindB(gain_2);
+    
+    (plugin->obja)->PreAnalysis(plugin->nBuffers, in);
+    (plugin->objs_1)->PreSinthesis();
+    (plugin->objs_2)->PreSinthesis();
+    (plugin->objpd)->PreProcessing(plugin->nBuffers2, in);
+	
+	if (plugin->cont < plugin->nBuffers-1)
+		plugin->cont = plugin->cont + 1;
 	else
 	{
-        (plugin->objgc)->SetGaindB(gain_clean);
-        (plugin->objg1)->SetGaindB(gain_1);
-        (plugin->objg2)->SetGaindB(gain_2);
-        
-        (plugin->obja)->PreAnalysis(plugin->nBuffers, in);
-        (plugin->objs_1)->PreSinthesis();
-        (plugin->objs_2)->PreSinthesis();
-        (plugin->objpd)->PreProcessing(plugin->nBuffers2, in);
-		
-		if ( plugin->cont < plugin->nBuffers-1)
-			plugin->cont = plugin->cont + 1;
-		else
-		{
-			(plugin->objpd)->FindNote();
-            FindStep((plugin->objpd)->note, (plugin->objpd)->oitava, Tone, Scale, Interval_1, Mode, LowNote, &plugin->s_1);
-            FindStep((plugin->objpd)->note, (plugin->objpd)->oitava, Tone, Scale, Interval_2, Mode, LowNote, &plugin->s_2);
-
-            (plugin->obja)->Analysis();
-            (plugin->objs_1)->Sinthesis(plugin->s_1);
-            (plugin->objs_2)->Sinthesis(plugin->s_2);
-
-            (plugin->objgc)->SimpleGain((plugin->obja)->frames, out_clean);
-            (plugin->objg1)->SimpleGain((plugin->objs_1)->yshift, out_1);
-            (plugin->objg2)->SimpleGain((plugin->objs_2)->yshift, out_2);
-		}	
-	}
+		(plugin->objpd)->FindNote();
+        FindStep((plugin->objpd)->note, (plugin->objpd)->oitava, Tone, Scale, Interval_1, Mode, LowNote, &plugin->s_1);
+        FindStep((plugin->objpd)->note, (plugin->objpd)->oitava, Tone, Scale, Interval_2, Mode, LowNote, &plugin->s_2);
+        (plugin->obja)->Analysis();
+        (plugin->objs_1)->Sinthesis(plugin->s_1);
+        (plugin->objs_2)->Sinthesis(plugin->s_2);
+        (plugin->objgc)->SimpleGain((plugin->obja)->frames, out_clean);
+        (plugin->objg1)->SimpleGain((plugin->objs_1)->yshift, out_1);
+        (plugin->objg2)->SimpleGain((plugin->objs_2)->yshift, out_2);
+	}	
 }
 
 /**********************************************************************************************************************************************************/

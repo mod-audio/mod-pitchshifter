@@ -125,32 +125,27 @@ void SuperWhammy::run(LV2_Handle instance, uint32_t n_samples)
         plugin->Realloc(n_samples, nBuffersSW(n_samples,34,18,10,8));
 		return;
 	}
- 
-    float sum_abs = 0;
 
-    for (uint32_t i=0; i<n_samples; i++)
-        sum_abs = sum_abs + abs(in[i]);
-    
-    if (sum_abs == 0)
+    if (InputAbsSum(in, n_samples) == 0)
+    {
         fill_n(out,n_samples,0);
+        return;
+    }
+
+    double s_ = a + s*(b-a);
+	(plugin->objg)->SetGaindB(gain);    
+    (plugin->obja)->PreAnalysis(plugin->nBuffers, in);
+    (plugin->objs)->PreSinthesis();
+	
+	if (plugin->cont < plugin->nBuffers-1)
+		plugin->cont = plugin->cont + 1;
 	else
 	{
-		(plugin->objg)->SetGaindB(gain);
-	    double s_ = a + s*(b-a);
-	    
-	    (plugin->obja)->PreAnalysis(plugin->nBuffers, in);
-	    (plugin->objs)->PreSinthesis();
-		
-		if ( plugin->cont < plugin->nBuffers-1)
-			plugin->cont = plugin->cont + 1;
-		else
-		{
- 			(plugin->obja)->Analysis();
-            (plugin->objs)->Sinthesis(s_);
-            (plugin->objg)->SimpleGain((plugin->objs)->yshift, out);
-            if (c == 1) for (uint32_t i = 0; i<n_samples; i++) out[i] += (plugin->obja)->frames[i];
-		}	
-	}
+        (plugin->obja)->Analysis();
+        (plugin->objs)->Sinthesis(s_);
+        (plugin->objg)->SimpleGain((plugin->objs)->yshift, out);
+        if (c == 1) for (uint32_t i = 0; i<n_samples; i++) out[i] += (plugin->obja)->frames[i];
+	}	
 }
 
 /**********************************************************************************************************************************************************/

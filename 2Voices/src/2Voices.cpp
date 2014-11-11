@@ -137,31 +137,29 @@ void TwoVoices::run(LV2_Handle instance, uint32_t n_samples)
     for (uint32_t i=0; i<n_samples; i++)
         sum_abs = sum_abs + abs(in[i]);
     
-    if (sum_abs == 0)
+    if (InputAbsSum(in, n_samples) == 0)
     {
         fill_n(out_1,n_samples,0);
         fill_n(out_2,n_samples,0);
+        return;
     }
+
+    (plugin->objg1)->SetGaindB(gain_1);
+    (plugin->objg2)->SetGaindB(gain_2);
+    
+    (plugin->obja)->PreAnalysis(plugin->nBuffers, in);
+    (plugin->objs_1)->PreSinthesis();
+    (plugin->objs_2)->PreSinthesis();
+	
+	if (plugin->cont < plugin->nBuffers-1)
+		plugin->cont = plugin->cont + 1;
 	else
 	{
-        (plugin->objg1)->SetGaindB(gain_1);
-        (plugin->objg2)->SetGaindB(gain_2);
-        
-        (plugin->obja)->PreAnalysis(plugin->nBuffers, in);
-        (plugin->objs_1)->PreSinthesis();
-        (plugin->objs_2)->PreSinthesis();
-		
-		if ( plugin->cont < plugin->nBuffers-1)
-			plugin->cont = plugin->cont + 1;
-		else
-		{
-            (plugin->obja)->Analysis();
-            (plugin->objs_1)->Sinthesis(s_1);
-            (plugin->objs_2)->Sinthesis(s_2);
-
-            (plugin->objg1)->SimpleGain((plugin->objs_1)->yshift, out_1);
-            (plugin->objg2)->SimpleGain((plugin->objs_2)->yshift, out_2);
-		}
+        (plugin->obja)->Analysis();
+        (plugin->objs_1)->Sinthesis(s_1);
+        (plugin->objs_2)->Sinthesis(s_2);
+        (plugin->objg1)->SimpleGain((plugin->objs_1)->yshift, out_1);
+        (plugin->objg2)->SimpleGain((plugin->objs_2)->yshift, out_2);
 	}
 }
 

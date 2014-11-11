@@ -221,3 +221,13 @@ int nBuffersSW(uint32_t n_samples, int c64, int c128, int c256, int c_default)
 	}
 	return nbuffers;
 }
+
+float InputAbsSum(float *in, uint32_t n_samples)
+{
+    float sum_abs = 0;
+
+    for (uint32_t i=0; i<n_samples; i++)
+		sum_abs = sum_abs + abs(in[i]);
+
+	return sum_abs;
+}

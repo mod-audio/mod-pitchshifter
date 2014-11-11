@@ -1,5 +1,5 @@
 cd 2Voices
-#make gentable
+make gentable
 make
 cd ..
 cd Capo

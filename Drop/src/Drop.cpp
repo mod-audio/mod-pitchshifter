@@ -123,27 +123,23 @@ void Drop::run(LV2_Handle instance, uint32_t n_samples)
 		return;
 	}
 
-    float sum_abs = 0;
-
-    for (uint32_t i=0; i<n_samples; i++)
-		sum_abs = sum_abs + abs(in[i]);
-	
-	if (sum_abs == 0)
+	if (InputAbsSum(in, n_samples) == 0)
+	{
 		fill_n(out,n_samples,0);
+		return;
+	}
+
+    (plugin->objg)->SetGaindB(gain);
+    (plugin->obja)->PreAnalysis(plugin->nBuffers, in);
+    (plugin->objs)->PreSinthesis();
+    	
+	if (plugin->cont < plugin->nBuffers-1)
+		plugin->cont = plugin->cont + 1;
 	else
 	{
-        (plugin->objg)->SetGaindB(gain);
-        (plugin->obja)->PreAnalysis(plugin->nBuffers, in);
-        (plugin->objs)->PreSinthesis();
-	    	
-		if ( plugin->cont < plugin->nBuffers-1)
-			plugin->cont = plugin->cont + 1;
-		else
-		{
-            (plugin->obja)->Analysis();
-            (plugin->objs)->Sinthesis(s);
-            (plugin->objg)->SimpleGain((plugin->objs)->yshift, out);
-		}
+    	(plugin->obja)->Analysis();
+        (plugin->objs)->Sinthesis(s);
+        (plugin->objg)->SimpleGain((plugin->objs)->yshift, out);
 	}
 }
 

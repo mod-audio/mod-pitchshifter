@@ -72,3 +72,4 @@ public:
 };
 
 int nBuffersSW(uint32_t n_samples, int c64, int c128, int c256, int c_default);
+float InputAbsSum(float *in, uint32_t n_samples);
