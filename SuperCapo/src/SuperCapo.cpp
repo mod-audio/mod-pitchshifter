@@ -119,23 +119,7 @@ void SuperCapo::run(LV2_Handle instance, uint32_t n_samples)
     
     if ( (plugin->obja)->hopa != (int)n_samples )
     {
-    	int nbuffers;
-		
-		switch ((int)n_samples)
-		{
-			case 64:
-				nbuffers = 38;
-				break;
-			case 128:
-				nbuffers = 20;
-				break;
-			case 256:
-				nbuffers = 12;
-				break;
-			default:
-				nbuffers = 8;
-		}
-		plugin->Realloc(n_samples, nbuffers);
+        plugin->Realloc(n_samples, nBuffersSW(n_samples,38,20,12,8));
 		return;
 	}
 

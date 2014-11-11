@@ -201,3 +201,23 @@ void PSSinthesis::Sinthesis(double s)
 	for (int i=L-hops[0]; i<L; i++)
 		ysaida[i] = 0;
 }
+
+int nBuffersSW(uint32_t n_samples, int c64, int c128, int c256, int c_default)
+{
+	int nbuffers;
+	switch((int)n_samples)
+	{
+		case 64:
+			nbuffers = c64;
+			break;
+		case 128:
+			nbuffers = c128;
+			break;
+		case 256:
+			nbuffers = c256;
+			break;
+		default:
+			nbuffers = c_default;
+	}
+	return nbuffers;
+}

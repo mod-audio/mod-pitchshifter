@@ -119,23 +119,7 @@ void Capo::run(LV2_Handle instance, uint32_t n_samples)
     
     if ( (plugin->obja)->hopa != (int)n_samples )
     {
-        int nbuffers;
-
-        switch ((int)n_samples)
-        {
-            case 64:
-                nbuffers = 32;
-                break;
-            case 128:
-                nbuffers = 16;
-                break;
-            case 256:
-                nbuffers = 8;
-                break;
-            default:
-                nbuffers = 4;
-        }
-        plugin->Realloc(n_samples, nbuffers);
+        plugin->Realloc(n_samples, nBuffersSW(n_samples,32,16,8,4));
         return;
     }
 

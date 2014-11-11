@@ -147,28 +147,7 @@ void HarmonizerCS::run(LV2_Handle instance, uint32_t n_samples)
 
     if ( (plugin->obja)->hopa != (int)n_samples )
     {
-    	int nbuffers;
-        int nbuffers2;
-		
-		switch ((int)n_samples)
-		{
-			case 64:
-				nbuffers = 32;
-				nbuffers2 = 16;
-				break;
-			case 128:
-				nbuffers = 16;
-				nbuffers2 = 8;
-				break;
-			case 256:
-				nbuffers = 8;
-				nbuffers2 = 4;
-				break;
-			default:
-				nbuffers = 4;
-				nbuffers2 = 2;
-		}
-		plugin->Realloc(n_samples, nbuffers, nbuffers2);
+        plugin->Realloc(n_samples, nBuffersSW(n_samples,32,16,8,4), nBuffersSW(n_samples,16,8,4,2));
         return;
 	}
 

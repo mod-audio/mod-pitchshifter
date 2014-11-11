@@ -70,3 +70,5 @@ public:
 	double *ysaida2; //Pointer that points to the elemente that is equivalent to the first element of frames
 	double *yshift; //The first hops[Qcolumn] elemements of ysaida2 resampled to hopa elements   
 };
+
+int nBuffersSW(uint32_t n_samples, int c64, int c128, int c256, int c_default);

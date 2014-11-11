@@ -122,23 +122,7 @@ void SuperWhammy::run(LV2_Handle instance, uint32_t n_samples)
     
     if ( (plugin->obja)->hopa != (int)n_samples )
     {
-    	int nbuffers;
-		
-		switch ((int)n_samples)
-		{
-			case 64:
-				nbuffers = 34;
-				break;
-			case 128:
-				nbuffers = 18;
-				break;
-			case 256:
-				nbuffers = 10;
-				break;
-			default:
-				nbuffers = 8;
-		}
-		plugin->Realloc(n_samples, nbuffers);
+        plugin->Realloc(n_samples, nBuffersSW(n_samples,34,18,10,8));
 		return;
 	}
  

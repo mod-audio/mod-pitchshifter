@@ -119,23 +119,7 @@ void Drop::run(LV2_Handle instance, uint32_t n_samples)
     
     if ( (plugin->obja)->hopa != (int)n_samples )
     {
-    	int nbuffers;
-
-		switch ((int)n_samples)
-		{
-			case 64:
-				nbuffers = 16;
-				break;
-			case 128:
-				nbuffers = 8;
-				break;
-			case 256:
-				nbuffers = 4;
-				break;
-			default:
-				nbuffers = 3;
-		}
-        plugin->Realloc(n_samples, nbuffers);
+        plugin->Realloc(n_samples, nBuffersSW(n_samples,16,8,4,3));
 		return;
 	}
 

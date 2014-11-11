@@ -1,16 +1,25 @@
-cd Capo
-make gentable
+cd 2Voices
+#make gentable
 make
 cd ..
-cd SuperCapo
+cd Capo
 make
 cd ..
 cd Drop
 make
 cd ..
-cd SuperWhammy
+cd Harmonizer
 make
 cd ..
-cd Harmonizer
+cd Harmonizer2
+make
+cd ..
+cd HarmonizerCS
+make
+cd ..
+cd SuperCapo
+make
+cd ..
+cd SuperWhammy
 make
 cd ..
