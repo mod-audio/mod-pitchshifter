@@ -118,11 +118,11 @@ void TwoVoices::run(LV2_Handle instance, uint32_t n_samples)
     TwoVoices *plugin;
     plugin = (TwoVoices *) instance;
 
-    float *in = plugin->ports[IN];
-    float *out_1 = plugin->ports[OUT_1];
-    float *out_2 = plugin->ports[OUT_2];
-    double s_1 = (double)(*(plugin->ports[STEP_1]));
-    double s_2 = (double)(*(plugin->ports[STEP_2]));
+    float *in     = plugin->ports[IN];
+    float *out_1  = plugin->ports[OUT_1];
+    float *out_2  = plugin->ports[OUT_2];
+    double s_1    = (double)(*(plugin->ports[STEP_1]));
+    double s_2    = (double)(*(plugin->ports[STEP_2]));
     double gain_1 = (double)(*(plugin->ports[GAIN_1]));
     double gain_2 = (double)(*(plugin->ports[GAIN_2]));
     

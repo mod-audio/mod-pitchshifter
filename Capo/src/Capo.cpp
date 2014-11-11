@@ -112,9 +112,9 @@ void Capo::run(LV2_Handle instance, uint32_t n_samples)
     Capo *plugin;
     plugin = (Capo *) instance;
     
-    float *in = plugin->ports[IN];
-    float *out = plugin->ports[OUT];
-    double s = (double)(*(plugin->ports[STEP]));
+    float *in   = plugin->ports[IN];
+    float *out  = plugin->ports[OUT];
+    double s    = (double)(*(plugin->ports[STEP]));
     double gain = (double)(*(plugin->ports[GAIN]));
     
     if ( (plugin->obja)->hopa != (int)n_samples )

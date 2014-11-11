@@ -125,14 +125,14 @@ void Harmonizer::run(LV2_Handle instance, uint32_t n_samples)
     Harmonizer *plugin;
     plugin = (Harmonizer *) instance;
 
-    float *in = plugin->ports[IN];
-    float *out_1 = plugin->ports[OUT_1];
-    float *out_2 = plugin->ports[OUT_2];
-    int Tone = (int)(*(plugin->ports[TONE]));
-    int Scale = (int)(*(plugin->ports[SCALE]));
-    int Interval = (int)(*(plugin->ports[INTERVAL]));
-    int Mode = (int)(*(plugin->ports[MODE]));
-    int LowNote = (int)(*(plugin->ports[LOWNOTE]));
+    float *in     = plugin->ports[IN];
+    float *out_1  = plugin->ports[OUT_1];
+    float *out_2  = plugin->ports[OUT_2];
+    int Tone      = (int)(*(plugin->ports[TONE]));
+    int Scale     = (int)(*(plugin->ports[SCALE]));
+    int Interval  = (int)(*(plugin->ports[INTERVAL]));
+    int Mode      = (int)(*(plugin->ports[MODE]));
+    int LowNote   = (int)(*(plugin->ports[LOWNOTE]));
     double gain_1 = (double)(*(plugin->ports[GAIN_1]));
     double gain_2 = (double)(*(plugin->ports[GAIN_2]));
     

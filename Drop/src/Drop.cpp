@@ -112,9 +112,9 @@ void Drop::run(LV2_Handle instance, uint32_t n_samples)
     Drop *plugin;
     plugin = (Drop *) instance;
 
-    float *in = plugin->ports[IN];
-	float *out = plugin->ports[OUT];
-	double s = (double)(*(plugin->ports[STEP]));
+    float *in   = plugin->ports[IN];
+	float *out  = plugin->ports[OUT];
+	double s    = (double)(*(plugin->ports[STEP]));
 	double gain = (double)(*(plugin->ports[GAIN]));
     
     if ( (plugin->obja)->hopa != (int)n_samples )

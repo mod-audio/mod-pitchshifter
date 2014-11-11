@@ -112,13 +112,13 @@ void SuperWhammy::run(LV2_Handle instance, uint32_t n_samples)
     SuperWhammy *plugin;
     plugin = (SuperWhammy *) instance;
 
-    float *in = plugin->ports[IN];
-    float *out = plugin->ports[OUT];
-    double s = (double)(*(plugin->ports[STEP]));
+    float *in   = plugin->ports[IN];
+    float *out  = plugin->ports[OUT];
+    double s    = (double)(*(plugin->ports[STEP]));
     double gain = (double)(*(plugin->ports[GAIN]));
-    double a = (double)(*(plugin->ports[FIRST]));
-    double b = (double)(*(plugin->ports[LAST]));
-    int c = (int)(*(plugin->ports[CLEAN]));
+    double a    = (double)(*(plugin->ports[FIRST]));
+    double b    = (double)(*(plugin->ports[LAST]));
+    int c       = (int)(*(plugin->ports[CLEAN]));
     
     if ( (plugin->obja)->hopa != (int)n_samples )
     {
