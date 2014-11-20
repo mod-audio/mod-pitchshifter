@@ -25,8 +25,9 @@ PitchDetection::PitchDetection(uint32_t n_samples, int nBuffers, double SampleRa
 	F.zeros(N);
 	AUTO.zeros(N);
 
-	p  = fftwf_plan_dft_r2c_1d(2*N, frames, fXa, FFTW_ESTIMATE);
-	p2 = fftwf_plan_dft_c2r_1d(2*N, fXs, q, FFTW_ESTIMATE);
+    fftwf_import_wisdom_from_filename("/etc/fftw/wisdom/my.wisdom");
+	p  = fftwf_plan_dft_r2c_1d(2*N, frames, fXa, FFTW_WISDOM_ONLY);
+	p2 = fftwf_plan_dft_c2r_1d(2*N, fXs, q, FFTW_WISDOM_ONLY);
 }
 
 PitchDetection::~PitchDetection() //Destructor
