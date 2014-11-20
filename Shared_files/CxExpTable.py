@@ -10,6 +10,7 @@ N = long(sys.argv[1]) if len(sys.argv) > 1 else 20000
 inicio = -1*mp.pi
 fim = 1*mp.pi
 dx = (fim-inicio)/(N-1)
+idx = 1 / dx
 
 Idx = mp.mpf(1/dx)
 
@@ -21,6 +22,7 @@ with open('Exponencial.h', 'w') as f:
         'using namespace std;',
         '',
         '#define EXP_N {N}',
+        '#define EXP_Idx {idx}',
         '#define EXP_inicio {inicio}',
         '#define EXP_fim {fim}',
         '',

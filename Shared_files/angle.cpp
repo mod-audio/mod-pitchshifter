@@ -15,21 +15,16 @@ double arctg( double x)
 		x = -x;
 	}
 	
-	int n = round(((x-ATAN_inicio)/(ATAN_fim-ATAN_inicio))*ATAN_N);
-	
-	double ArcTg;
-	
+	int n = round((x-ATAN_inicio)*ATAN_Idx);
+		
 	if( x > ATAN_fim)
 	{
-		ArcTg = flag*M_PI/2;
+		return flag*M_PI/2;
 	}
 	else
 	{
-		ArcTg = Arctg[n]*flag;
-	}
-	//ArcTg = flag*atan(x);
-	
-	return ArcTg;
+		return Arctg[n]*flag;
+	}	
 }
 
 double angle( complex<double> z)
@@ -58,13 +53,13 @@ double angle( complex<double> z)
 				}
 				else
 				{
-					if ( (x < 0)&&(y>0) )
+					if ( y>0 )
 					{
 						Angle = arctg(y/x) + M_PI;
 					}
 					else
 					{
-						if ( (x < 0)&&(y<0) )
+						if ( y<0 )
 						{
 							Angle = arctg(y/x) - M_PI;
 						}
@@ -73,8 +68,5 @@ double angle( complex<double> z)
 			}
 		}
 	}
-	
-	
-	
 	return Angle;
 }

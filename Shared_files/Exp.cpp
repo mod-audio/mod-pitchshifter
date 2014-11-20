@@ -1,15 +1,15 @@
 #include <complex>
 #include <cmath>
-#include "Exponencial.h"
+#include "Sin.h"
+#include "Cos.h"
 
 using namespace std;
 
 complex<double> ExponencialComplexa( double x)
-{
-	
+{	
 	double aux;
 	
-	if ( (x>EXP_fim)||(x<EXP_inicio))
+	if ( (x>SIN_fim)||(x<SIN_inicio))
 	{
 		aux = ((x +M_PI)/(2*M_PI));
         aux = floor(aux);
@@ -17,9 +17,6 @@ complex<double> ExponencialComplexa( double x)
 	}
 	
 	int n;
-	n = round(((x-EXP_inicio)/(EXP_fim-EXP_inicio))*EXP_N);
-	
-	complex<double> Expo = Exponencial[n] ;
-	
-	return Expo;
+	n = round((x-SIN_inicio)*SIN_Idx);
+	return complex<double>(Cos[n],Sin[n]);
 }

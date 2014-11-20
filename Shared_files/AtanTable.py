@@ -5,9 +5,9 @@ import sys
 from mpmath import mp
 mp.dps = 50
 
-N = long(sys.argv[1]) if len(sys.argv) > 1 else 3000000
+N = long(sys.argv[1]) if len(sys.argv) > 1 else 500000
 
-dx = mp.mpf("0.0005")
+dx = mp.mpf("0.002")
 
 inicio = 0
 fim = (N-1)*dx

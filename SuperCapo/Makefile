@@ -28,7 +28,8 @@ $(PLUGIN): $(OBJ)
 
 gentable:
 	cd ./../Shared_files && ./AtanTable.py
-	cd ./../Shared_files && ./CxExpTable.py
+	cd ./../Shared_files && ./SinTable.py
+	cd ./../Shared_files && ./CosTable.py
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) -o $@ $<
