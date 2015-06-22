@@ -4,13 +4,13 @@
         height: 428px
     }
     .mod-swhammy .mod-control-group-1 {
-        margin: 3em 0 0 1em;
+        margin: 3em 0 0 30px;
         width: 90px;
         height: 300px;
         float: left;
     }
     .mod-swhammy .mod-control-group-2 {
-        margin: 9.6em 0 0 109px;
+        margin: 9.6em 0 0 126px;
     }
     .mod-swhammy .mod-control-group-1 .mod-slider {
         position: absolute;

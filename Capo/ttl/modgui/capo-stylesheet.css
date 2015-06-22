@@ -13,7 +13,7 @@
     }
     .mod-capo .mod-knob {
         position: absolute;
-        margin: 6em 2em;
+        margin: 84px 36px;
         z-index: 100
     }
     .mod-capo .mod-knob .mod-knob-image {
@@ -30,7 +30,7 @@
         background-repeat:no-repeat;
         background-size:auto 132px;
         bottom: 24px;
-        right: 62px;
+        right: 47px;
         cursor:pointer;
         height:66px;
         width: 66px;
