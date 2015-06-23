@@ -1,39 +1,37 @@
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#>.
-@prefix doap: <http://usefulinc.com/ns/doap#>.
-@prefix epp: <http://lv2plug.in/ns/ext/port-props/#>.
-@prefix foaf: <http://xmlns.com/foaf/0.1/>.
-@prefix mod: <http://portalmod.com/ns/modgui#>.
-@prefix units: <http://lv2plug.in/ns/extension/units#> .
-@prefix host: <http://portalmod.com/ns/modhost#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix doap:   <http://usefulinc.com/ns/doap#>.
+@prefix epp:    <http://lv2plug.in/ns/ext/port-props/#>.
+@prefix foaf:   <http://xmlns.com/foaf/0.1/>.
+@prefix lv2:    <http://lv2plug.in/ns/lv2core#>.
+@prefix modgui: <http://portalmod.com/ns/modgui#>.
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix units:  <http://lv2plug.in/ns/extension/units#> .
 
 <http://portalmod.com/plugins/mod-devel/2Voices>
 a lv2:Plugin, lv2:SpectralPlugin;
 
 doap:name "2Voices";
+doap:shortname "2Voices";
 
 doap:developer [
     foaf:name "Andre";
     foaf:homepage <>;
     foaf:mbox <mailto:andre_coutinho@rocketmail.com>;
-    ];
+];
 
 doap:maintainer [
     foaf:name "MOD Team";
+    doap:shortname "MOD";
     foaf:homepage <http://portalmod.com>;
     foaf:mbox <mailto:devel@portalmod.com>;
-    ];
+];
 
-doap:license <GPL>;
-host:recommendedBufferSize 128;
+doap:license "GPL";
 
 lv2:minorVersion 0;
 lv2:microVersion 4;
 
-
 rdfs:comment """
 It's a pitch shifter which can rise the pitch until 4 semitones (steps). Despite being more limited than Super Whammy, it uses less processing.
-
 """;
 
 lv2:port
@@ -95,11 +93,26 @@ lv2:port
     lv2:minimum -20;
     lv2:maximum 20;
 ];
-mod:gui [
-        a mod:Gui;
-        mod:resourcesDirectory <modgui>;
-        mod:iconTemplate <modgui/icon-2voices.html>;
-        mod:templateData <modgui/data-2voices.json>;
-        mod:screenshot <modgui/screenshot-2voices.png>;
-        mod:thumbnail <modgui/thumb-2voices.png>;
-    ] .
+
+modgui:gui [
+    a modgui:Gui;
+    modgui:resourcesDirectory <modgui>;
+    modgui:iconTemplate <modgui/icon-2voices.html>;
+    modgui:stylesheet <modgui/stylesheet-2voices.css>;
+    modgui:screenshot <modgui/screenshot-2voices.png>;
+    modgui:thumbnail <modgui/thumb-2voices.png>;
+    modgui:author "MOD";
+    modgui:label "2Voices";
+    modgui:model "boxy";
+    modgui:panel "2-knobs";
+    modgui:color "darkblue";
+    modgui:port [
+        lv2:index 0;
+        lv2:symbol "Step1";
+        lv2:name "Step 1";
+    ],[
+        lv2:index 1;
+        lv2:symbol "Step2";
+        lv2:name "Step 2";
+    ];
+].
