@@ -1,0 +1,27 @@
+@prefix modgui: <http://portalmod.com/ns/modgui#> .
+@prefix lv2:    <http://lv2plug.in/ns/lv2core#> .
+@prefix ui:     <http://lv2plug.in/ns/extensions/ui#> .
+
+<http://portalmod.com/plugins/mod-devel/2Voices>
+    modgui:gui [
+        a modgui:Gui ;
+        modgui:resourcesDirectory <modgui> ;
+        modgui:iconTemplate <modgui/icon-2voices.html> ;
+        modgui:stylesheet <modgui/stylesheet-2voices.css> ;
+        modgui:screenshot <modgui/screenshot-2voices.png> ;
+        modgui:thumbnail <modgui/thumbnail-2voices.png> ;
+        modgui:author "MOD" ;
+        modgui:label "2Voices" ;
+        modgui:model "boxy" ;
+        modgui:panel "2-knobs" ;
+        modgui:color "darkblue" ;
+        modgui:port [
+            lv2:index 0 ;
+            lv2:symbol "Step1" ;
+            lv2:name "Step 1" ;
+        ] , [
+            lv2:index 1 ;
+            lv2:symbol "Step2" ;
+            lv2:name "Step 2" ;
+        ] ;
+    ] .

@@ -307,7 +307,7 @@
 /* = FOOTSWITCH
 ================================================ */
 .mod-pedal-boxy{{{cns}}} .mod-footswitch {
-    background-image:url(/resources/pedals/boxy/footswitch.png{{{ns}}});
+    background-image:url(/resources/pedals/footswitch.png{{{ns}}});
     background-position:bottom center;
     background-repeat:no-repeat;
     background-size:auto 132px;

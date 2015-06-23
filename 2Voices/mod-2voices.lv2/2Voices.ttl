@@ -1,10 +1,9 @@
-@prefix doap:   <http://usefulinc.com/ns/doap#>.
-@prefix epp:    <http://lv2plug.in/ns/ext/port-props/#>.
-@prefix foaf:   <http://xmlns.com/foaf/0.1/>.
-@prefix lv2:    <http://lv2plug.in/ns/lv2core#>.
-@prefix modgui: <http://portalmod.com/ns/modgui#>.
-@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#>.
-@prefix units:  <http://lv2plug.in/ns/extension/units#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#>.
+@prefix epp:   <http://lv2plug.in/ns/ext/port-props/#>.
+@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#>.
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix units: <http://lv2plug.in/ns/extension/units#> .
 
 <http://portalmod.com/plugins/mod-devel/2Voices>
 a lv2:Plugin, lv2:SpectralPlugin;
@@ -92,27 +91,4 @@ lv2:port
     lv2:default 3;
     lv2:minimum -20;
     lv2:maximum 20;
-];
-
-modgui:gui [
-    a modgui:Gui;
-    modgui:resourcesDirectory <modgui>;
-    modgui:iconTemplate <modgui/icon-2voices.html>;
-    modgui:stylesheet <modgui/stylesheet-2voices.css>;
-    modgui:screenshot <modgui/screenshot-2voices.png>;
-    modgui:thumbnail <modgui/thumb-2voices.png>;
-    modgui:author "MOD";
-    modgui:label "2Voices";
-    modgui:model "boxy";
-    modgui:panel "2-knobs";
-    modgui:color "darkblue";
-    modgui:port [
-        lv2:index 0;
-        lv2:symbol "Step1";
-        lv2:name "Step 1";
-    ],[
-        lv2:index 1;
-        lv2:symbol "Step2";
-        lv2:name "Step 2";
-    ];
 ].
