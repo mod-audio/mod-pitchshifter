@@ -1,31 +1,32 @@
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#>.
-@prefix doap: <http://usefulinc.com/ns/doap#>.
-@prefix epp: <http://lv2plug.in/ns/ext/port-props/#>.
-@prefix foaf: <http://xmlns.com/foaf/0.1/>.
-@prefix mod: <http://portalmod.com/ns/modgui#>.
-@prefix units: <http://lv2plug.in/ns/extension/units#> .
-@prefix host: <http://portalmod.com/ns/modhost#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#>.
+@prefix doap:  <http://usefulinc.com/ns/doap#>.
+@prefix epp:   <http://lv2plug.in/ns/ext/port-props/#>.
+@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#>.
+@prefix mod:   <http://portalmod.com/ns/modgui#>.
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix units: <http://lv2plug.in/ns/extension/units#>.
 
 <http://portalmod.com/plugins/mod-devel/Capo>
 a lv2:Plugin, lv2:SpectralPlugin;
 
 doap:name "Capo";
+doap:shortname "Capo";
 
 doap:developer [
     foaf:name "Andre";
     foaf:homepage <>;
     foaf:mbox <mailto:andre_coutinho@rocketmail.com>;
-    ];
+];
 
 doap:maintainer [
     foaf:name "MOD Team";
+    doap:shortname "MOD";
     foaf:homepage <http://portalmod.com>;
     foaf:mbox <mailto:devel@portalmod.com>;
-    ];
+];
 
-doap:license <GPL>;
-host:recommendedBufferSize 128;
+doap:license "GPL";
 
 lv2:minorVersion 0;
 lv2:microVersion 4;
@@ -33,7 +34,6 @@ lv2:microVersion 4;
 
 rdfs:comment """
 It's a pitch shifter which can rise the pitch until 4 semitones (steps). Despite being more limited than Super Whammy, it uses less processing.
-
 """;
 
 lv2:port
@@ -64,17 +64,17 @@ lv2:port
     lv2:index 3;
     lv2:symbol "Gain";
     lv2:name "Gain";
-    units:unit units:db ;
+    units:unit units:db;
     lv2:default 3;
     lv2:minimum -20;
     lv2:maximum 20;
 ];
 mod:gui [
-        a mod:Gui;
-        mod:resourcesDirectory <modgui>;
-        mod:stylesheet <modgui/capo-stylesheet.css>;
-        mod:iconTemplate <modgui/icon-capo.html>;
-        mod:templateData <modgui/data-capo.json>;
-        mod:screenshot <modgui/capo-screenshot.png>;
-        mod:thumbnail <modgui/Capo-thumb.png>;
-    ] .
+    a mod:Gui;
+    mod:resourcesDirectory <modgui>;
+    mod:stylesheet <modgui/capo-stylesheet.css>;
+    mod:iconTemplate <modgui/icon-capo.html>;
+    mod:templateData <modgui/data-capo.json>;
+    mod:screenshot <modgui/capo-screenshot.png>;
+    mod:thumbnail <modgui/Capo-thumb.png>;
+].
