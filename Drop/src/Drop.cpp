@@ -6,7 +6,7 @@
 
 /**********************************************************************************************************************************************************/
 
-#define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/Drop"
+#define PLUGIN_URI "http://moddevices.com/plugins/mod-devel/Drop"
 #define N_SAMPLES_DEFAULT 64
 enum {IN, OUT, STEP, GAIN, PLUGIN_PORT_COUNT};
 

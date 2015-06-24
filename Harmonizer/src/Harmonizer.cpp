@@ -8,7 +8,7 @@
 
 /**********************************************************************************************************************************************************/
 
-#define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/Harmonizer"
+#define PLUGIN_URI "http://moddevices.com/plugins/mod-devel/Harmonizer"
 #define N_SAMPLES_DEFAULT 64
 enum {IN, OUT_1, OUT_2, TONE, SCALE, INTERVAL, MODE, LOWNOTE, GAIN_1, GAIN_2, PLUGIN_PORT_COUNT};
 

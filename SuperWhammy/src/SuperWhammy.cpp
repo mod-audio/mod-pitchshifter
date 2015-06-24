@@ -6,7 +6,7 @@
 
 /**********************************************************************************************************************************************************/
 
-#define PLUGIN_URI "http://portalmod.com/plugins/mod-devel/SuperWhammy"
+#define PLUGIN_URI "http://moddevices.com/plugins/mod-devel/SuperWhammy"
 #define N_SAMPLES_DEFAULT 64
 enum {IN, OUT, STEP, FIRST, LAST, CLEAN, GAIN, PLUGIN_PORT_COUNT};
 
