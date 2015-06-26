@@ -2,6 +2,5 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 
 <http://moddevices.com/plugins/mod-devel/2Voices> a lv2:Plugin;
-    lv2:binary <mod-2voices.so> ;
+    lv2:binary <mod-2voices.so>;
     rdfs:seeAlso <2Voices.ttl>.
-

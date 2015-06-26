@@ -29,8 +29,12 @@ doap:license "GPL";
 lv2:minorVersion 0;
 lv2:microVersion 4;
 
+doap:description """
+A two voice pitchshifter.
+""";
+
 rdfs:comment """
-It's a pitch shifter which can rise the pitch until 4 semitones (steps). Despite being more limited than Super Whammy, it uses less processing.
+It's a pitch shifter which can rise the pitch until 4 semitones (steps). Despite being more limited than Super Whammy it uses less processing.
 """;
 
 lv2:port
