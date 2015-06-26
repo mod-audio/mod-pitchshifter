@@ -13,7 +13,7 @@
     }
     .mod-drop .mod-knob {
         position: absolute;
-        margin: 6em 0.6em;
+        margin: 84px 25px;
         z-index: 100
     }
     .mod-drop .mod-knob .mod-knob-image {
@@ -30,7 +30,7 @@
         background-repeat:no-repeat;
         background-size:auto 132px;
         bottom: 24px;
-        right: 62px;
+        right: 47px;
         cursor:pointer;
         height:66px;
         width: 66px;
@@ -50,8 +50,8 @@
         position: absolute !important
       }
     .mod-drop .mod-light.off { 
-      background-image:url(/resources/red-light-off.png{{{ns}}}); 
+      background-image:url(/resources/red-light-off.png{{{ns}}});
     }
     .mod-drop .mod-light.on  { 
-      background-image:url(/resources/red-light-on.png{{{ns}}}); 
+      background-image:url(/resources/red-light-on.png{{{ns}}});
     }

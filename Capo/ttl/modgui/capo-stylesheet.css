@@ -50,8 +50,8 @@
         position: absolute !important
       }
     .mod-capo .mod-light.off { 
-      background-image:url(/resources/red-light-off.png{{{ns}}}); 
+      background-image:url(/resources/red-light-off.png{{{ns}}});
     }
     .mod-capo .mod-light.on  { 
-      background-image:url(/resources/red-light-on.png{{{ns}}}); 
+      background-image:url(/resources/red-light-on.png{{{ns}}});
     }
