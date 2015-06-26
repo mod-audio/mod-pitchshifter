@@ -39,5 +39,5 @@ clean:
 
 install:
 	mkdir -p $(INSTALL_PATH)
-	cp -r mod-2voices.{lv2,modgui} $(INSTALL_PATH)
+	cp -r mod-2voices.lv2 mod-2voices.modgui $(INSTALL_PATH)
 	cp $(PLUGIN) $(INSTALL_PATH)/mod-2voices.lv2/
