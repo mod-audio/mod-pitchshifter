@@ -1,8 +1,11 @@
     .mod-drop {
-        background: url(/resources/drop-bg.png{{{ns}}}) no-repeat;
-        width: 158px;
-        height: 352px;
-
+        background:url(/resources/drop-bg.png{{{ns}}});
+        background-position:center center;
+        background-repeat:no-repeat;
+        background-size:158px 352px;
+        width:158px;
+        height:352px;
+        position:relative;
     }
     .mod-drop .mod-drag-handle {
         bottom:0;
