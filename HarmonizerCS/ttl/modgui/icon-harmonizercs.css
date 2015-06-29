@@ -7,7 +7,6 @@
         position:relative;
         width:701px;
         height:406px;
-
     }
     .mod-harmonizercs .mod-drag-handle {
         bottom:0;
@@ -125,12 +124,12 @@
         width: 180px;
         float: left;
         margin: 9px 0 0 31px;
-        }
+    }
     .mod-harmonizercs .mod-control-group-bottom .mod-slider .mod-slider-image {
         background: url(/resources/slider-serial-whammy.png{{{ns}}}) no-repeat;
         background-size: auto 33px;
         width: 87px;
-        height: 33px;        
+        height: 33px;
     }
 
     .mod-harmonizercs .mod-footswitch {
@@ -147,12 +146,11 @@
         position: absolute !important;
     }
 
-
     .mod-harmonizercs .mod-control.low {
         width: 86px;
         height: 33px;
-            margin: 13px 0px 26px 13px;
-        }
+        margin: 13px 0px 26px 13px;
+    }
 
     .mod-harmonizercs .mod-control.low .mod-control-image {
         background-image:url(/resources/slider-serial-key.png{{{ns}}}) !important;
@@ -210,22 +208,21 @@
         left: 4px;
         margin: 0 0 0 5px;
         top: 7px;
-        width: 200px; 
+        width: 200px;
     }
- .mod-harmonizercs  .mod-enumerated-list:hover, .mod-harmonizercs  .mod-enumerated-list:active {
-    background: black;
-}
-.mod-harmonizercs .mod-light {
-    height: 32px;
-    width: 32px;
-    bottom: 44px;
-    position: absolute !important;
-    right: 140px;
+    .mod-harmonizercs  .mod-enumerated-list:hover, .mod-harmonizercs  .mod-enumerated-list:active {
+        background: black;
     }
-  }
-.mod-harmonizercs .mod-light.off { 
-  background-image:url(/resources/red-light-off.png{{{ns}}}); 
-}
-.mod-harmonizercs .mod-light.on  { 
-  background-image:url(/resources/red-light-on.png{{{ns}}}); 
-}
+    .mod-harmonizercs .mod-light {
+        height: 32px;
+        width: 32px;
+        bottom: 44px;
+        position: absolute !important;
+        right: 140px;
+    }
+    .mod-harmonizercs .mod-light.off {
+        background-image:url(/resources/red-light-off.png{{{ns}}});
+    }
+    .mod-harmonizercs .mod-light.on {
+        background-image:url(/resources/red-light-on.png{{{ns}}});
+    }

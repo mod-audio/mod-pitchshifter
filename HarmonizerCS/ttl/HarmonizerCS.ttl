@@ -1,35 +1,42 @@
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#>.
-@prefix doap: <http://usefulinc.com/ns/doap#>.
-@prefix epp: <http://lv2plug.in/ns/ext/port-props/#>.
-@prefix foaf: <http://xmlns.com/foaf/0.1/>.
-@prefix units: <http://lv2plug.in/ns/extensions/units#> .
-@prefix mod: <http://moddevices.com/ns/modgui#>.
-@prefix host: <http://moddevices.com/ns/modhost#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#>.
+@prefix epp:   <http://lv2plug.in/ns/ext/port-props/#>.
+@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#>.
+@prefix mod:   <http://moddevices.com/ns/modgui#>.
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix units: <http://lv2plug.in/ns/extensions/units#>.
 
 <http://moddevices.com/plugins/mod-devel/HarmonizerCS>
 a lv2:Plugin, lv2:SpectralPlugin;
 
 doap:name "HarmonizerCS";
+doap:shortname "HarmonizerCS";
 
 doap:developer [
     foaf:name "Andre";
     foaf:homepage <>;
     foaf:mbox <mailto:andre_coutinho@rocketmail.com>;
-    ];
+];
 
 doap:maintainer [
     foaf:name "MOD Team";
+    doap:shortname "MOD";
     foaf:homepage <http://moddevices.com>;
     foaf:mbox <mailto:devel@moddevices.com>;
-    ];
+];
 
-doap:license <GPL>;
+doap:license "GPL";
+
+doap:description """
+A pitchshifter that shit pitch from 12 semitones down to 24 semitones up.
+""";
 
 rdfs:comment """
-A pitch shifter that can shift an input pitch from 12 semitones down to 24 semitones up. "First" and "Last" determine the range of variation where the "Step" parameter will work. "First" doesn't need to be necessarily smaller than "Last". "Clean" parameter allows you to hear the bypass sound summed with the pitch shifted signal and "Gain" it's the effect gain, does not affect the clean signal.
-
+A pitch shifter that can shift an input pitch from 12 semitones down to 24 semitones up.
+"First" and "Last" determine the range of variation where the "Step" parameter will work.
+"First" doesn't need to be necessarily smaller than "Last".
+"Clean" parameter allows you to hear the bypass sound summed with the pitch shifted signal and "Gain" it's the effect gain, does not affect the clean signal.
 """;
 
 lv2:port
@@ -38,29 +45,32 @@ lv2:port
     lv2:index 0;
     lv2:symbol "In";
     lv2:name "In";
+    doap:shortname "In";
 ],
 [
     a lv2:AudioPort, lv2:OutputPort;
     lv2:index 1;
     lv2:symbol "Out1";
     lv2:name "Out 1";
+    doap:shortname "Out 1";
 ],
 [
     a lv2:AudioPort, lv2:OutputPort;
     lv2:index 2;
     lv2:symbol "Out2";
     lv2:name "Out 2";
+    doap:shortname "Out 2";
 ],
 [
     a lv2:ControlPort, lv2:InputPort;
     lv2:index 3;
     lv2:symbol "Tone";
     lv2:name "Tone";
-	lv2:default 0.00000 ;
-	lv2:minimum 0.00000 ;
-	lv2:maximum 11.00000 ;
-	lv2:portProperty lv2:integer;
-    lv2:portProperty lv2:enumeration ;
+    doap:shortname "Tone";
+    lv2:default 0;
+    lv2:minimum 0;
+    lv2:maximum 11;
+    lv2:portProperty lv2:integer, lv2:enumeration;
     lv2:scalePoint [rdfs:label "C"; rdf:value 0];
     lv2:scalePoint [rdfs:label "C#"; rdf:value 1];
     lv2:scalePoint [rdfs:label "D"; rdf:value 2];
@@ -79,9 +89,10 @@ lv2:port
     lv2:index 4;
     lv2:symbol "Step_0";
     lv2:name "Tonic";
-    lv2:default 0.00000 ;
-    lv2:minimum -12.00000 ;
-    lv2:maximum 12.00000 ;
+    doap:shortname "Tonic";
+    lv2:default 0;
+    lv2:minimum -12;
+    lv2:maximum 12;
     lv2:portProperty lv2:integer;
 ],
 [
@@ -89,9 +100,10 @@ lv2:port
     lv2:index 5;
     lv2:symbol "Step_1";
     lv2:name "Minor 2nd";
-    lv2:default 0.00000 ;
-    lv2:minimum -12.00000 ;
-    lv2:maximum 12.00000 ;
+    doap:shortname "Minor 2nd";
+    lv2:default 0;
+    lv2:minimum -12;
+    lv2:maximum 12;
     lv2:portProperty lv2:integer;
 ],
 [
@@ -99,9 +111,10 @@ lv2:port
     lv2:index 6;
     lv2:symbol "Step_2";
     lv2:name "Major 2nd";
-    lv2:default 0.00000 ;
-    lv2:minimum -12.00000 ;
-    lv2:maximum 12.00000 ;
+    doap:shortname "Major 2nd";
+    lv2:default 0;
+    lv2:minimum -12;
+    lv2:maximum 12;
     lv2:portProperty lv2:integer;
 ],
 [
@@ -109,9 +122,10 @@ lv2:port
     lv2:index 7;
     lv2:symbol "Step_3";
     lv2:name "Minor 3rd";
-    lv2:default 0.00000 ;
-    lv2:minimum -12.00000 ;
-    lv2:maximum 12.00000 ;
+    doap:shortname "Minor 3rd";
+    lv2:default 0;
+    lv2:minimum -12;
+    lv2:maximum 12;
     lv2:portProperty lv2:integer;
 ],
 [
@@ -119,9 +133,10 @@ lv2:port
     lv2:index 8;
     lv2:symbol "Step_4";
     lv2:name "Major 3rd";
-    lv2:default 0.00000 ;
-    lv2:minimum -12.00000 ;
-    lv2:maximum 12.00000 ;
+    doap:shortname "Major 3rd";
+    lv2:default 0;
+    lv2:minimum -12;
+    lv2:maximum 12;
     lv2:portProperty lv2:integer;
 ],
 [
@@ -129,9 +144,10 @@ lv2:port
     lv2:index 9;
     lv2:symbol "Step_5";
     lv2:name "Perfect 4th";
-    lv2:default 0.00000 ;
-    lv2:minimum -12.00000 ;
-    lv2:maximum 12.00000 ;
+    doap:shortname "Perfect 4th";
+    lv2:default 0;
+    lv2:minimum -12;
+    lv2:maximum 12;
     lv2:portProperty lv2:integer;
 ],
 [
@@ -139,9 +155,10 @@ lv2:port
     lv2:index 10;
     lv2:symbol "Step_6";
     lv2:name "Diminished 5th";
-    lv2:default 0.00000 ;
-    lv2:minimum -12.00000 ;
-    lv2:maximum 12.00000 ;
+    doap:shortname "Diminished 5th";
+    lv2:default 0;
+    lv2:minimum -12;
+    lv2:maximum 12;
     lv2:portProperty lv2:integer;
 ],
 [
@@ -149,9 +166,10 @@ lv2:port
     lv2:index 11;
     lv2:symbol "Step_7";
     lv2:name "Perfect 5th";
-    lv2:default 0.00000 ;
-    lv2:minimum -12.00000 ;
-    lv2:maximum 12.00000 ;
+    doap:shortname "Perfect 5th";
+    lv2:default 0;
+    lv2:minimum -12;
+    lv2:maximum 12;
     lv2:portProperty lv2:integer;
 ],
 [
@@ -159,9 +177,10 @@ lv2:port
     lv2:index 12;
     lv2:symbol "Step_8";
     lv2:name "Minor 6th";
-    lv2:default 0.00000 ;
-    lv2:minimum -12.00000 ;
-    lv2:maximum 12.00000 ;
+    doap:shortname "Minor 6th";
+    lv2:default 0;
+    lv2:minimum -12;
+    lv2:maximum 12;
     lv2:portProperty lv2:integer;
 ],
 [
@@ -169,9 +188,10 @@ lv2:port
     lv2:index 13;
     lv2:symbol "Step_9";
     lv2:name "Major 6th";
-    lv2:default 0.00000 ;
-    lv2:minimum -12.00000 ;
-    lv2:maximum 12.00000 ;
+    doap:shortname "Major 6th";
+    lv2:default 0;
+    lv2:minimum -12;
+    lv2:maximum 12;
     lv2:portProperty lv2:integer;
 ],
 [
@@ -179,9 +199,10 @@ lv2:port
     lv2:index 14;
     lv2:symbol "Step_10";
     lv2:name "Minor 7th";
-    lv2:default 0.00000 ;
-    lv2:minimum -12.00000 ;
-    lv2:maximum 12.00000 ;
+    doap:shortname "Minor 7th";
+    lv2:default 0;
+    lv2:minimum -12;
+    lv2:maximum 12;
     lv2:portProperty lv2:integer;
 ],
 [
@@ -189,9 +210,10 @@ lv2:port
     lv2:index 15;
     lv2:symbol "Step_11";
     lv2:name "Major 7th";
-    lv2:default 0.00000 ;
-    lv2:minimum -12.00000 ;
-    lv2:maximum 12.00000 ;
+    doap:shortname "Major 7th";
+    lv2:default 0;
+    lv2:minimum -12;
+    lv2:maximum 12;
     lv2:portProperty lv2:integer;
 ],
 [
@@ -199,25 +221,25 @@ lv2:port
     lv2:index 16;
     lv2:symbol "LowestNoteToChangeThePitch";
     lv2:name "Lowest note to change the pitch";
-	lv2:default 0.00000 ;
-	lv2:minimum 0.00000 ;
-	lv2:maximum 14.00000 ;
-	lv2:portProperty lv2:integer;
-    lv2:portProperty lv2:enumeration ;
-    lv2:scalePoint [rdfs:label "B1"; rdf:value 0];
-    lv2:scalePoint [rdfs:label "C2"; rdf:value 1];
+    doap:shortname "Lowest Wet";
+    lv2:default 0;
+    lv2:minimum 0;
+    lv2:maximum 14;
+    lv2:portProperty lv2:integer, lv2:enumeration;
+    lv2:scalePoint [rdfs:label "B1";  rdf:value 0];
+    lv2:scalePoint [rdfs:label "C2";  rdf:value 1];
     lv2:scalePoint [rdfs:label "C#2"; rdf:value 2];
-    lv2:scalePoint [rdfs:label "D2"; rdf:value 3];
+    lv2:scalePoint [rdfs:label "D2";  rdf:value 3];
     lv2:scalePoint [rdfs:label "D#2"; rdf:value 4];
-    lv2:scalePoint [rdfs:label "E2"; rdf:value 5];
-    lv2:scalePoint [rdfs:label "F2"; rdf:value 6];
+    lv2:scalePoint [rdfs:label "E2";  rdf:value 5];
+    lv2:scalePoint [rdfs:label "F2";  rdf:value 6];
     lv2:scalePoint [rdfs:label "F#2"; rdf:value 7];
-    lv2:scalePoint [rdfs:label "G2"; rdf:value 8];
+    lv2:scalePoint [rdfs:label "G2";  rdf:value 8];
     lv2:scalePoint [rdfs:label "G#2"; rdf:value 9];
-    lv2:scalePoint [rdfs:label "A2"; rdf:value 10];
+    lv2:scalePoint [rdfs:label "A2";  rdf:value 10];
     lv2:scalePoint [rdfs:label "A#2"; rdf:value 11];
-    lv2:scalePoint [rdfs:label "B2"; rdf:value 12];
-    lv2:scalePoint [rdfs:label "C3"; rdf:value 13];
+    lv2:scalePoint [rdfs:label "B2";  rdf:value 12];
+    lv2:scalePoint [rdfs:label "C3";  rdf:value 13];
     lv2:scalePoint [rdfs:label "C#3"; rdf:value 14];
 ],
 [
@@ -225,21 +247,24 @@ lv2:port
     lv2:index 17;
     lv2:symbol "Gain1";
     lv2:name "Gain 1";
-    units:unit units:db ;
-    lv2:default 0;
-    lv2:minimum -20;
-    lv2:maximum 20;
+    doap:shortname "Gain 1";
+    lv2:default 0.0;
+    lv2:minimum -20.0;
+    lv2:maximum 20.0;
+    units:unit units:db;
 ],
 [
     a lv2:ControlPort, lv2:InputPort;
     lv2:index 18;
     lv2:symbol "Gain2";
     lv2:name "Gain 2";
-    units:unit units:db ;
-    lv2:default 3;
-    lv2:minimum -20;
-    lv2:maximum 20;
+    doap:shortname "Gain 2";
+    lv2:default 3.0;
+    lv2:minimum -20.0;
+    lv2:maximum 20.0;
+    units:unit units:db;
 ];
+
 mod:gui [
     a mod:Gui;
     mod:resourcesDirectory <modgui>;
