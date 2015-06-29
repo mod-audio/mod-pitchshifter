@@ -66,15 +66,14 @@
         width: 71px;
         height: 32px;
     }
-    .mod-harmonizercs .mod-control-group-left .mod-slider  {
+    .mod-harmonizercs .mod-control-group-left .mod-slider {
         width: 87px;
         height: 33px;
         z-index: 100;
         float: none;
         margin-bottom: 6.6em;
-
     }
-    .mod-harmonizercs .mod-slider.wet .mod-slider-image , .mod-harmonizercs .mod-slider.tonic .mod-slider-image {
+    .mod-harmonizercs .mod-slider.wet .mod-slider-image, .mod-harmonizercs .mod-slider.tonic .mod-slider-image {
         background-size: auto 33px;
         width: 87px;
         height: 33px;
@@ -172,11 +171,11 @@
         height: 30px;
         margin: 25px 0 0 89px;
     }
-    .mod-harmonizercs  .mod-enumerated {
+    .mod-harmonizercs .mod-enumerated {
         position: absolute;
         z-index: 2000000
     }
-    .mod-harmonizercs  .mod-enumerated-list {
+    .mod-harmonizercs .mod-enumerated-list {
         background-color: rgba(0,0,0,.8) !important;
         display: none;
         height: 120px;
@@ -193,7 +192,7 @@
     .mod-harmonizercs  .mod-enumerated-list div:hover{
         background: white;
         color: black;
-        }
+    }
     .mod-harmonizercs .mode .mod-enumerated-selected:before {
         content: '\25BE \a0';
     }
