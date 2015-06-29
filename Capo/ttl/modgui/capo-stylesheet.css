@@ -51,10 +51,10 @@
         right: 0;
         left: 0;
         position: absolute !important
-      }
-    .mod-capo .mod-light.off { 
+    }
+    .mod-capo .mod-light.off {
       background-image:url(/resources/red-light-off.png{{{ns}}});
     }
-    .mod-capo .mod-light.on  { 
+    .mod-capo .mod-light.on {
       background-image:url(/resources/red-light-on.png{{{ns}}});
     }

@@ -1,8 +1,11 @@
     .mod-supercapo {
-        background: url(/resources/supercapo-bg.png{{{ns}}}) no-repeat;
-        width: 158px;
-        height: 352px;
-
+        background:url(/resources/supercapo-bg.png{{{ns}}});
+        background-position:center center;
+        background-repeat:no-repeat;
+        background-size:158px 352px;
+        width:158px;
+        height:352px;
+        position:relative;
     }
     .mod-supercapo .mod-drag-handle {
         bottom:0;
@@ -49,9 +52,9 @@
         left: 0;
         position: absolute !important
       }
-    .mod-supercapo .mod-light.off { 
-      background-image:url(/resources/red-light-off.png{{{ns}}}); 
+    .mod-supercapo .mod-light.off {
+      background-image:url(/resources/red-light-off.png{{{ns}}});
     }
-    .mod-supercapo .mod-light.on  { 
-      background-image:url(/resources/red-light-on.png{{{ns}}}); 
+    .mod-supercapo .mod-light.on {
+      background-image:url(/resources/red-light-on.png{{{ns}}});
     }
