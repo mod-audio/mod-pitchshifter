@@ -1,34 +1,41 @@
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#>.
-@prefix doap: <http://usefulinc.com/ns/doap#>.
-@prefix epp: <http://lv2plug.in/ns/ext/port-props/#>.
-@prefix foaf: <http://xmlns.com/foaf/0.1/>.
-@prefix units: <http://lv2plug.in/ns/extensions/units#> .
-@prefix mod: <http://moddevices.com/ns/modgui#>.
-@prefix host: <http://moddevices.com/ns/modhost#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix doap:  <http://usefulinc.com/ns/doap#>.
+@prefix epp:   <http://lv2plug.in/ns/ext/port-props/#>.
+@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#>.
+@prefix mod:   <http://moddevices.com/ns/modgui#>.
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix units: <http://lv2plug.in/ns/extensions/units#>.
 
 <http://moddevices.com/plugins/mod-devel/SuperWhammy>
 a lv2:Plugin, lv2:SpectralPlugin;
 
 doap:name "Super Whammy";
+doap:shortname "Super Whammy";
 
 doap:developer [
     foaf:name "Andre";
     foaf:homepage <>;
     foaf:mbox <mailto:andre_coutinho@rocketmail.com>;
-    ];
+];
 
 doap:maintainer [
     foaf:name "MOD Team";
+    doap:shortname "MOD";
     foaf:homepage <http://moddevices.com>;
     foaf:mbox <mailto:devel@moddevices.com>;
-    ];
+];
 
-doap:license <GPL>;
+doap:license "GPL";
+
+doap:description """
+A pitchshifter that shift pitch from 12 semitones down to 24 semitones up.
+""";
 
 rdfs:comment """
-A pitch shifter that can shift an input pitch from 12 semitones down to 24 semitones up. "First" and "Last" determine the range of variation where the "Step" parameter will work. "First" doesn't need to be necessarily smaller than "Last". "Clean" parameter allows you to hear the bypass sound summed with the pitch shifted signal and "Gain" it's the effect gain, does not affect the clean signal.
-
+A pitch shifter that can shift an input pitch from 12 semitones down to 24 semitones up.
+"First" and "Last" determine the range of variation where the "Step" parameter will work.
+"First" doesn't need to be necessarily smaller than "Last".
+"Clean" parameter allows you to hear the bypass sound summed with the pitch shifted signal and "Gain" it's the effect gain, does not affect the clean signal.
 """;
 
 lv2:port
@@ -37,27 +44,31 @@ lv2:port
     lv2:index 0;
     lv2:symbol "In";
     lv2:name "In";
+    doap:shortname "In";
 ],
 [
     a lv2:AudioPort, lv2:OutputPort;
     lv2:index 1;
-    lv2:symbol "Out1";
-    lv2:name "Out 1";
+    lv2:symbol "Out";
+    lv2:name "Out";
+    doap:shortname "Out";
 ],
 [
     a lv2:ControlPort, lv2:InputPort;
     lv2:index 2;
     lv2:symbol "Step";
     lv2:name "Step";
-    lv2:default 0;
-    lv2:minimum 0;
-    lv2:maximum 1;
+    doap:shortname "Step";
+    lv2:default 0.0;
+    lv2:minimum 0.0;
+    lv2:maximum 1.0;
 ],
 [
     a lv2:ControlPort, lv2:InputPort;
     lv2:index 3;
     lv2:symbol "First";
     lv2:name "First";
+    doap:shortname "First";
     lv2:portProperty lv2:integer;
     lv2:default 0;
     lv2:minimum -12;
@@ -68,6 +79,7 @@ lv2:port
     lv2:index 4;
     lv2:symbol "Last";
     lv2:name "Last";
+    doap:shortname "Last";
     lv2:portProperty lv2:integer;
     lv2:default 12;
     lv2:minimum -12;
@@ -78,23 +90,24 @@ lv2:port
     lv2:index 5;
     lv2:symbol "Clean";
     lv2:name "Clean";
-    lv2:portProperty lv2:integer;
-    lv2:portProperty epp:hasStrictBounds ;
-    lv2:portProperty lv2:toggled ;
-	lv2:default 0.00000 ;
-	lv2:minimum 0.00000 ;
-	lv2:maximum 1.00000 ;
+    doap:shortname "Clean";
+    lv2:portProperty lv2:toggled, lv2:integer;
+    lv2:default 0;
+    lv2:minimum 0;
+    lv2:maximum 1;
 ],
 [
     a lv2:ControlPort, lv2:InputPort;
     lv2:index 6;
     lv2:symbol "Gain";
     lv2:name "Gain";
-    units:unit units:db ;
-    lv2:default 3;
-    lv2:minimum -20;
-    lv2:maximum 20;
+    doap:shortname "Gain";
+    lv2:default 3.0;
+    lv2:minimum -20.0;
+    lv2:maximum 20.0;
+    units:unit units:db;
 ];
+
 mod:gui [
     a mod:Gui;
     mod:resourcesDirectory <modgui>;
@@ -103,4 +116,4 @@ mod:gui [
     mod:templateData <modgui/data-super-whammy.json>;
     mod:screenshot <modgui/screenshot-super-whammy.png>;
     mod:thumbnail <modgui/thumb-super-whammy.png>;
-] .
+].
