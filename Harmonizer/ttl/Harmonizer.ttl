@@ -29,7 +29,7 @@ doap:maintainer [
 doap:license "GPL";
 
 doap:description """
-A pitchshifter that shit pitch from 12 semitones down to 24 semitones up.
+A pitchshifter that shift pitch from 12 semitones down to 24 semitones up.
 """;
 
 rdfs:comment """

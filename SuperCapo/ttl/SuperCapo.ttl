@@ -9,8 +9,8 @@
 <http://moddevices.com/plugins/mod-devel/SuperCapo>
 a lv2:Plugin, lv2:SpectralPlugin;
 
-doap:name "SuperCapo";
-doap:shortname "SuperCapo";
+doap:name "Super Capo";
+doap:shortname "Super Capo";
 
 doap:developer [
     foaf:name "Andre";

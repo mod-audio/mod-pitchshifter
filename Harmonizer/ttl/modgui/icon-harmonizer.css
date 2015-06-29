@@ -54,14 +54,14 @@
         position: absolute;
         z-index: 2000000;
     }
-    .mod-harmonizer .mod-knob , .mod-harmonizer .mod-control {
+    .mod-harmonizer .mod-knob, .mod-harmonizer .mod-control {
         position: relative;
         float: left;
         cursor: pointer;
     }
     .mod-harmonizer .mod-control.tone {
-            margin: 15px 44px 26px 2px;
-        }
+        margin: 15px 44px 26px 2px;
+    }
 
     .mod-harmonizer .mod-control.tone .mod-control-image {
         background-image:url(/resources/slider-serial.png{{{ns}}}) !important;
@@ -98,12 +98,11 @@
         position:relative !important;
     }
 
-
     .mod-harmonizer .mod-control.low {
         width: 86px;
         height: 33px;
-            margin: 13px 0px 26px -1px;
-        }
+        margin: 13px 0px 26px -1px;
+    }
 
     .mod-harmonizer .mod-control.low .mod-control-image {
         background-image:url(/resources/slider-serial-nmb.png{{{ns}}}) !important;
@@ -125,11 +124,11 @@
         height: 30px;
         margin: -26px 0 0 73px;
     }
-    .mod-harmonizer  .mod-enumerated {
+    .mod-harmonizer .mod-enumerated {
         position: absolute;
         z-index: 2000000
     }
-    .mod-harmonizer  .mod-enumerated-list {
+    .mod-harmonizer .mod-enumerated-list {
         background-color: rgba(0,0,0,.8) !important;
         display: none;
         height: 120px;
@@ -143,10 +142,10 @@
         overflow-x: hidden;
         position: absolute;
     }
-    .mod-harmonizer  .mod-enumerated-list div:hover{
+    .mod-harmonizer .mod-enumerated-list div:hover{
         background: white;
         color: black;
-        }
+    }
     .mod-harmonizer .mode .mod-enumerated-selected:before {
         content: '\25BE \a0';
     }
@@ -161,20 +160,20 @@
         left: 4px;
         margin: 0 0 0 5px;
         top: 7px;
-        width: 200px; 
+        width: 200px;
     }
- .mod-harmonizer  .mod-enumerated-list:hover, .mod-harmonizer  .mod-enumerated-list:active {
-    background: black;
-}
-.mod-harmonizer .mod-light {
-height: 32px;
-width: 32px;
-margin: auto;
-position: relative !important
-  }
-.mod-harmonizer .mod-light.off { 
-  background-image:url(/resources/red-light-off.png{{{ns}}}); 
-}
-.mod-harmonizer .mod-light.on  { 
-  background-image:url(/resources/red-light-on.png{{{ns}}}); 
-}
+    .mod-harmonizer  .mod-enumerated-list:hover, .mod-harmonizer  .mod-enumerated-list:active {
+        background: black;
+    }
+    .mod-harmonizer .mod-light {
+        height: 32px;
+        width: 32px;
+        margin: auto;
+        position: relative !important
+    }
+    .mod-harmonizer .mod-light.off { 
+        background-image:url(/resources/red-light-off.png{{{ns}}}); 
+    }
+    .mod-harmonizer .mod-light.on  { 
+        background-image:url(/resources/red-light-on.png{{{ns}}}); 
+    }
