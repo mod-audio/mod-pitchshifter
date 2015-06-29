@@ -26,7 +26,7 @@
     .mod-harmonizer-2 .mod-pedal-output .mod-output {
         margin-bottom: 109px;
     }
-    .mod-harmonizer .mod-control-group{
+    .mod-harmonizer .mod-control-group {
         margin: 94px 0 -9px 26px !important;
         height: 100px;
         width: 248px;
@@ -149,7 +149,7 @@
     .mod-harmonizer .mode .mod-enumerated-selected:before {
         content: '\25BE \a0';
     }
-    .mod-harmonizer  .mod-enumerated-selected {
+    .mod-harmonizer .mod-enumerated-selected {
         background: transparent;
         border: none;
         color: orange;
@@ -162,7 +162,7 @@
         top: 7px;
         width: 200px;
     }
-    .mod-harmonizer  .mod-enumerated-list:hover, .mod-harmonizer  .mod-enumerated-list:active {
+    .mod-harmonizer .mod-enumerated-list:hover, .mod-harmonizer .mod-enumerated-list:active {
         background: black;
     }
     .mod-harmonizer .mod-light {
@@ -171,9 +171,9 @@
         margin: auto;
         position: relative !important
     }
-    .mod-harmonizer .mod-light.off { 
-        background-image:url(/resources/red-light-off.png{{{ns}}}); 
+    .mod-harmonizer .mod-light.off {
+        background-image:url(/resources/red-light-off.png{{{ns}}});
     }
-    .mod-harmonizer .mod-light.on  { 
-        background-image:url(/resources/red-light-on.png{{{ns}}}); 
+    .mod-harmonizer .mod-light.on {
+        background-image:url(/resources/red-light-on.png{{{ns}}});
     }

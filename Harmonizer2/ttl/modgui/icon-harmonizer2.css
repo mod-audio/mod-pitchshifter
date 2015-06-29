@@ -104,12 +104,11 @@
         position:relative !important;
     }
 
-
     .mod-harmonizer2 .mod-control.low {
         width: 86px;
         height: 33px;
-            margin: 13px 0px 26px 13px;
-        }
+        margin: 13px 0px 26px 13px;
+    }
 
     .mod-harmonizer2 .mod-control.low .mod-control-image {
         background-image:url(/resources/slider-serial-nmb.png{{{ns}}}) !important;
@@ -152,11 +151,11 @@
     .mod-harmonizer2  .mod-enumerated-list div:hover{
         background: white;
         color: black;
-        }
+    }
     .mod-harmonizer2 .mode .mod-enumerated-selected:before {
         content: '\25BE \a0';
     }
-    .mod-harmonizer2  .mod-enumerated-selected {
+    .mod-harmonizer2 .mod-enumerated-selected {
         background: transparent;
         border: none;
         color: orange;
@@ -167,20 +166,20 @@
         left: 4px;
         margin: 0 0 0 5px;
         top: 7px;
-        width: 200px; 
+        width: 200px;
     }
- .mod-harmonizer2  .mod-enumerated-list:hover, .mod-harmonizer2  .mod-enumerated-list:active {
-    background: black;
-}
-.mod-harmonizer2 .mod-light {
-height: 32px;
-width: 32px;
-margin: auto;
-position: relative !important
-  }
-.mod-harmonizer2 .mod-light.off { 
-  background-image:url(/resources/red-light-off.png{{{ns}}}); 
-}
-.mod-harmonizer2 .mod-light.on  { 
-  background-image:url(/resources/red-light-on.png{{{ns}}}); 
-}
+    .mod-harmonizer2 .mod-enumerated-list:hover, .mod-harmonizer2 .mod-enumerated-list:active {
+        background: black;
+    }
+    .mod-harmonizer2 .mod-light {
+        height: 32px;
+        width: 32px;
+        margin: auto;
+        position: relative !important
+    }
+    .mod-harmonizer2 .mod-light.off {
+        background-image:url(/resources/red-light-off.png{{{ns}}});
+    }
+    .mod-harmonizer2 .mod-light.on {
+        background-image:url(/resources/red-light-on.png{{{ns}}});
+    }
