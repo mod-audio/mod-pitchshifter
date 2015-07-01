@@ -11,7 +11,6 @@
 a lv2:Plugin, lv2:SpectralPlugin;
 
 doap:name "Super Whammy";
-doap:shortname "Super Whammy";
 
 doap:developer [
     foaf:name "Andre";
@@ -26,6 +25,8 @@ doap:maintainer [
 ];
 
 mod:brand "MOD";
+mod:label "Super Whammy";
+
 doap:license "GPL";
 
 rdfs:comment """

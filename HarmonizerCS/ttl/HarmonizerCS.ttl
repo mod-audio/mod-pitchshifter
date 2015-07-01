@@ -12,7 +12,6 @@
 a lv2:Plugin, lv2:SpectralPlugin;
 
 doap:name "HarmonizerCS";
-doap:shortname "HarmonizerCS";
 
 doap:developer [
     foaf:name "Andre";
@@ -27,6 +26,8 @@ doap:maintainer [
 ];
 
 mod:brand "MOD";
+mod:label "HarmonizerCS";
+
 doap:license "GPL";
 
 rdfs:comment """

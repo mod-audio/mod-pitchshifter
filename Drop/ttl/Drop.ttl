@@ -11,7 +11,6 @@
 a lv2:Plugin, lv2:SpectralPlugin;
 
 doap:name "Drop";
-doap:shortname "Drop";
 
 doap:developer [
     foaf:name "Andre";
@@ -26,6 +25,8 @@ doap:maintainer [
 ];
 
 mod:brand "MOD";
+mod:label "Drop";
+
 doap:license "GPL";
 
 lv2:minorVersion 0;
