@@ -1,11 +1,12 @@
-@prefix doap:  <http://usefulinc.com/ns/doap#>.
-@prefix epp:   <http://lv2plug.in/ns/ext/port-props/#>.
-@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
-@prefix lv2:   <http://lv2plug.in/ns/lv2core#>.
-@prefix mod:   <http://moddevices.com/ns/modgui#>.
-@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#>.
-@prefix units: <http://lv2plug.in/ns/extensions/units#>.
+@prefix doap:   <http://usefulinc.com/ns/doap#>.
+@prefix epp:    <http://lv2plug.in/ns/ext/port-props/#>.
+@prefix foaf:   <http://xmlns.com/foaf/0.1/>.
+@prefix lv2:    <http://lv2plug.in/ns/lv2core#>.
+@prefix mod:    <http://moddevices.com/ns/mod#>.
+@prefix modgui: <http://moddevices.com/ns/modgui#>.
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix units:  <http://lv2plug.in/ns/extensions/units#>.
 
 <http://moddevices.com/plugins/mod-devel/Harmonizer>
 a lv2:Plugin, lv2:SpectralPlugin;
@@ -21,16 +22,12 @@ doap:developer [
 
 doap:maintainer [
     foaf:name "MOD Team";
-    doap:shortname "MOD";
     foaf:homepage <http://moddevices.com>;
     foaf:mbox <mailto:devel@moddevices.com>;
 ];
 
+mod:brand "MOD";
 doap:license "GPL";
-
-doap:description """
-A pitchshifter that shift pitch from 12 semitones down to 24 semitones up.
-""";
 
 rdfs:comment """
 A pitch shifter that can shift an input pitch from 12 semitones down to 24 semitones up.
@@ -45,28 +42,28 @@ lv2:port
     lv2:index 0;
     lv2:symbol "In";
     lv2:name "In";
-    doap:shortname "In";
+    lv2:shortname "In";
 ],
 [
     a lv2:AudioPort, lv2:OutputPort;
     lv2:index 1;
     lv2:symbol "Out1";
     lv2:name "Out 1";
-    doap:shortname "Out 1";
+    lv2:shortname "Out 1";
 ],
 [
     a lv2:AudioPort, lv2:OutputPort;
     lv2:index 2;
     lv2:symbol "Out2";
     lv2:name "Out 2";
-    doap:shortname "Out 2";
+    lv2:shortname "Out 2";
 ],
 [
     a lv2:ControlPort, lv2:InputPort;
     lv2:index 3;
     lv2:symbol "Tone";
     lv2:name "Tone";
-    doap:shortname "Tone";
+    lv2:shortname "Tone";
     lv2:default 0;
     lv2:minimum 0;
     lv2:maximum 11;
@@ -89,7 +86,7 @@ lv2:port
     lv2:index 4;
     lv2:symbol "Scale";
     lv2:name "Scale";
-    doap:shortname "Scale";
+    lv2:shortname "Scale";
     lv2:default 0;
     lv2:minimum 0;
     lv2:maximum 2;
@@ -103,7 +100,7 @@ lv2:port
     lv2:index 5;
     lv2:symbol "Interval";
     lv2:name "Interval";
-    doap:shortname "Interval";
+    lv2:shortname "Interval";
     lv2:default 0;
     lv2:minimum 0;
     lv2:maximum 9;
@@ -118,7 +115,7 @@ lv2:port
     lv2:index 6;
     lv2:symbol "Mode";
     lv2:name "Mode";
-    doap:shortname "Mode";
+    lv2:shortname "Mode";
     lv2:default 0;
     lv2:minimum 0;
     lv2:maximum 2;
@@ -132,7 +129,7 @@ lv2:port
     lv2:index 7;
     lv2:symbol "LowestNoteToChangeThePitch";
     lv2:name "Lowest note to change the pitch";
-    doap:shortname "Lowest Wet";
+    lv2:shortname "Lowest Wet";
     lv2:default 0;
     lv2:minimum 0;
     lv2:maximum 14;
@@ -158,7 +155,7 @@ lv2:port
     lv2:index 8;
     lv2:symbol "Gain1";
     lv2:name "Gain 1";
-    doap:shortname "Gain 1";
+    lv2:shortname "Gain 1";
     lv2:default 0.0;
     lv2:minimum -20.0;
     lv2:maximum 20.0;
@@ -169,19 +166,19 @@ lv2:port
     lv2:index 9;
     lv2:symbol "Gain2";
     lv2:name "Gain 2";
-    doap:shortname "Gain 2";
+    lv2:shortname "Gain 2";
     lv2:default 3.0;
     lv2:minimum -20.0;
     lv2:maximum 20.0;
     units:unit units:db;
 ];
 
-mod:gui [
-    a mod:Gui;
-    mod:resourcesDirectory <modgui>;
-    mod:stylesheet <modgui/icon-harmonizer.css>;
-    mod:iconTemplate <modgui/icon-harmonizer.html>;
-    mod:templateData <modgui/data-harmonizer.json>;
-    mod:screenshot <modgui/screenshot-harmonizer.png>;
-    mod:thumbnail <modgui/thumb-harmonizer.png>;
+modgui:gui [
+    a modgui:Gui;
+    modgui:resourcesDirectory <modgui>;
+    modgui:stylesheet <modgui/icon-harmonizer.css>;
+    modgui:iconTemplate <modgui/icon-harmonizer.html>;
+    modgui:templateData <modgui/data-harmonizer.json>;
+    modgui:screenshot <modgui/screenshot-harmonizer.png>;
+    modgui:thumbnail <modgui/thumb-harmonizer.png>;
 ].

@@ -1,11 +1,12 @@
-@prefix doap:  <http://usefulinc.com/ns/doap#>.
-@prefix epp:   <http://lv2plug.in/ns/ext/port-props/#>.
-@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
-@prefix lv2:   <http://lv2plug.in/ns/lv2core#>.
-@prefix mod:   <http://moddevices.com/ns/modgui#>.
-@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#>.
-@prefix units: <http://lv2plug.in/ns/extensions/units#>.
+@prefix doap:   <http://usefulinc.com/ns/doap#>.
+@prefix epp:    <http://lv2plug.in/ns/ext/port-props/#>.
+@prefix foaf:   <http://xmlns.com/foaf/0.1/>.
+@prefix lv2:    <http://lv2plug.in/ns/lv2core#>.
+@prefix mod:    <http://moddevices.com/ns/mod#>.
+@prefix modgui: <http://moddevices.com/ns/modgui#>.
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix units:  <http://lv2plug.in/ns/extensions/units#>.
 
 <http://moddevices.com/plugins/mod-devel/HarmonizerCS>
 a lv2:Plugin, lv2:SpectralPlugin;
@@ -21,16 +22,12 @@ doap:developer [
 
 doap:maintainer [
     foaf:name "MOD Team";
-    doap:shortname "MOD";
     foaf:homepage <http://moddevices.com>;
     foaf:mbox <mailto:devel@moddevices.com>;
 ];
 
+mod:brand "MOD";
 doap:license "GPL";
-
-doap:description """
-A pitchshifter that shit pitch from 12 semitones down to 24 semitones up.
-""";
 
 rdfs:comment """
 A pitch shifter that can shift an input pitch from 12 semitones down to 24 semitones up.
@@ -45,28 +42,28 @@ lv2:port
     lv2:index 0;
     lv2:symbol "In";
     lv2:name "In";
-    doap:shortname "In";
+    lv2:shortname "In";
 ],
 [
     a lv2:AudioPort, lv2:OutputPort;
     lv2:index 1;
     lv2:symbol "Out1";
     lv2:name "Out 1";
-    doap:shortname "Out 1";
+    lv2:shortname "Out 1";
 ],
 [
     a lv2:AudioPort, lv2:OutputPort;
     lv2:index 2;
     lv2:symbol "Out2";
     lv2:name "Out 2";
-    doap:shortname "Out 2";
+    lv2:shortname "Out 2";
 ],
 [
     a lv2:ControlPort, lv2:InputPort;
     lv2:index 3;
     lv2:symbol "Tone";
     lv2:name "Tone";
-    doap:shortname "Tone";
+    lv2:shortname "Tone";
     lv2:default 0;
     lv2:minimum 0;
     lv2:maximum 11;
@@ -89,7 +86,7 @@ lv2:port
     lv2:index 4;
     lv2:symbol "Step_0";
     lv2:name "Tonic";
-    doap:shortname "Tonic";
+    lv2:shortname "Tonic";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -100,7 +97,7 @@ lv2:port
     lv2:index 5;
     lv2:symbol "Step_1";
     lv2:name "Minor 2nd";
-    doap:shortname "Minor 2nd";
+    lv2:shortname "Minor 2nd";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -111,7 +108,7 @@ lv2:port
     lv2:index 6;
     lv2:symbol "Step_2";
     lv2:name "Major 2nd";
-    doap:shortname "Major 2nd";
+    lv2:shortname "Major 2nd";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -122,7 +119,7 @@ lv2:port
     lv2:index 7;
     lv2:symbol "Step_3";
     lv2:name "Minor 3rd";
-    doap:shortname "Minor 3rd";
+    lv2:shortname "Minor 3rd";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -133,7 +130,7 @@ lv2:port
     lv2:index 8;
     lv2:symbol "Step_4";
     lv2:name "Major 3rd";
-    doap:shortname "Major 3rd";
+    lv2:shortname "Major 3rd";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -144,7 +141,7 @@ lv2:port
     lv2:index 9;
     lv2:symbol "Step_5";
     lv2:name "Perfect 4th";
-    doap:shortname "Perfect 4th";
+    lv2:shortname "Perfect 4th";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -155,7 +152,7 @@ lv2:port
     lv2:index 10;
     lv2:symbol "Step_6";
     lv2:name "Diminished 5th";
-    doap:shortname "Diminished 5th";
+    lv2:shortname "Diminished 5th";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -166,7 +163,7 @@ lv2:port
     lv2:index 11;
     lv2:symbol "Step_7";
     lv2:name "Perfect 5th";
-    doap:shortname "Perfect 5th";
+    lv2:shortname "Perfect 5th";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -177,7 +174,7 @@ lv2:port
     lv2:index 12;
     lv2:symbol "Step_8";
     lv2:name "Minor 6th";
-    doap:shortname "Minor 6th";
+    lv2:shortname "Minor 6th";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -188,7 +185,7 @@ lv2:port
     lv2:index 13;
     lv2:symbol "Step_9";
     lv2:name "Major 6th";
-    doap:shortname "Major 6th";
+    lv2:shortname "Major 6th";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -199,7 +196,7 @@ lv2:port
     lv2:index 14;
     lv2:symbol "Step_10";
     lv2:name "Minor 7th";
-    doap:shortname "Minor 7th";
+    lv2:shortname "Minor 7th";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -210,7 +207,7 @@ lv2:port
     lv2:index 15;
     lv2:symbol "Step_11";
     lv2:name "Major 7th";
-    doap:shortname "Major 7th";
+    lv2:shortname "Major 7th";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -221,7 +218,7 @@ lv2:port
     lv2:index 16;
     lv2:symbol "LowestNoteToChangeThePitch";
     lv2:name "Lowest note to change the pitch";
-    doap:shortname "Lowest Wet";
+    lv2:shortname "Lowest Wet";
     lv2:default 0;
     lv2:minimum 0;
     lv2:maximum 14;
@@ -247,7 +244,7 @@ lv2:port
     lv2:index 17;
     lv2:symbol "Gain1";
     lv2:name "Gain 1";
-    doap:shortname "Gain 1";
+    lv2:shortname "Gain 1";
     lv2:default 0.0;
     lv2:minimum -20.0;
     lv2:maximum 20.0;
@@ -258,19 +255,19 @@ lv2:port
     lv2:index 18;
     lv2:symbol "Gain2";
     lv2:name "Gain 2";
-    doap:shortname "Gain 2";
+    lv2:shortname "Gain 2";
     lv2:default 3.0;
     lv2:minimum -20.0;
     lv2:maximum 20.0;
     units:unit units:db;
 ];
 
-mod:gui [
-    a mod:Gui;
-    mod:resourcesDirectory <modgui>;
-    mod:stylesheet <modgui/icon-harmonizercs.css>;
-    mod:iconTemplate <modgui/icon-harmonizercs.html>;
-    mod:templateData <modgui/data-harmonizercs.json>;
-    mod:screenshot <modgui/screenshot-harmonizercs.png>;
-    mod:thumbnail <modgui/thumb-harmonizercs.png>;
+modgui:gui [
+    a modgui:Gui;
+    modgui:resourcesDirectory <modgui>;
+    modgui:stylesheet <modgui/icon-harmonizercs.css>;
+    modgui:iconTemplate <modgui/icon-harmonizercs.html>;
+    modgui:templateData <modgui/data-harmonizercs.json>;
+    modgui:screenshot <modgui/screenshot-harmonizercs.png>;
+    modgui:thumbnail <modgui/thumb-harmonizercs.png>;
 ].

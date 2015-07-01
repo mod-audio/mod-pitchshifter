@@ -1,10 +1,11 @@
-@prefix doap:  <http://usefulinc.com/ns/doap#>.
-@prefix epp:   <http://lv2plug.in/ns/ext/port-props/#>.
-@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
-@prefix lv2:   <http://lv2plug.in/ns/lv2core#>.
-@prefix mod:   <http://moddevices.com/ns/modgui#>.
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#>.
-@prefix units: <http://lv2plug.in/ns/extensions/units#>.
+@prefix doap:   <http://usefulinc.com/ns/doap#>.
+@prefix epp:    <http://lv2plug.in/ns/ext/port-props/#>.
+@prefix foaf:   <http://xmlns.com/foaf/0.1/>.
+@prefix lv2:    <http://lv2plug.in/ns/lv2core#>.
+@prefix mod:    <http://moddevices.com/ns/mod#>.
+@prefix modgui: <http://moddevices.com/ns/modgui#>.
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix units:  <http://lv2plug.in/ns/extensions/units#>.
 
 <http://moddevices.com/plugins/mod-devel/SuperWhammy>
 a lv2:Plugin, lv2:SpectralPlugin;
@@ -20,16 +21,12 @@ doap:developer [
 
 doap:maintainer [
     foaf:name "MOD Team";
-    doap:shortname "MOD";
     foaf:homepage <http://moddevices.com>;
     foaf:mbox <mailto:devel@moddevices.com>;
 ];
 
+mod:brand "MOD";
 doap:license "GPL";
-
-doap:description """
-A pitchshifter that shift pitch from 12 semitones down to 24 semitones up.
-""";
 
 rdfs:comment """
 A pitch shifter that can shift an input pitch from 12 semitones down to 24 semitones up.
@@ -44,21 +41,21 @@ lv2:port
     lv2:index 0;
     lv2:symbol "In";
     lv2:name "In";
-    doap:shortname "In";
+    lv2:shortname "In";
 ],
 [
     a lv2:AudioPort, lv2:OutputPort;
     lv2:index 1;
     lv2:symbol "Out";
     lv2:name "Out";
-    doap:shortname "Out";
+    lv2:shortname "Out";
 ],
 [
     a lv2:ControlPort, lv2:InputPort;
     lv2:index 2;
     lv2:symbol "Step";
     lv2:name "Step";
-    doap:shortname "Step";
+    lv2:shortname "Step";
     lv2:default 0.0;
     lv2:minimum 0.0;
     lv2:maximum 1.0;
@@ -68,7 +65,7 @@ lv2:port
     lv2:index 3;
     lv2:symbol "First";
     lv2:name "First";
-    doap:shortname "First";
+    lv2:shortname "First";
     lv2:portProperty lv2:integer;
     lv2:default 0;
     lv2:minimum -12;
@@ -79,7 +76,7 @@ lv2:port
     lv2:index 4;
     lv2:symbol "Last";
     lv2:name "Last";
-    doap:shortname "Last";
+    lv2:shortname "Last";
     lv2:portProperty lv2:integer;
     lv2:default 12;
     lv2:minimum -12;
@@ -90,7 +87,7 @@ lv2:port
     lv2:index 5;
     lv2:symbol "Clean";
     lv2:name "Clean";
-    doap:shortname "Clean";
+    lv2:shortname "Clean";
     lv2:portProperty lv2:toggled, lv2:integer;
     lv2:default 0;
     lv2:minimum 0;
@@ -101,19 +98,19 @@ lv2:port
     lv2:index 6;
     lv2:symbol "Gain";
     lv2:name "Gain";
-    doap:shortname "Gain";
+    lv2:shortname "Gain";
     lv2:default 3.0;
     lv2:minimum -20.0;
     lv2:maximum 20.0;
     units:unit units:db;
 ];
 
-mod:gui [
-    a mod:Gui;
-    mod:resourcesDirectory <modgui>;
-    mod:stylesheet <modgui/css-super-whammy.css>;
-    mod:iconTemplate <modgui/icon-super-whammy.html>;
-    mod:templateData <modgui/data-super-whammy.json>;
-    mod:screenshot <modgui/screenshot-super-whammy.png>;
-    mod:thumbnail <modgui/thumb-super-whammy.png>;
+modgui:gui [
+    a modgui:Gui;
+    modgui:resourcesDirectory <modgui>;
+    modgui:stylesheet <modgui/css-super-whammy.css>;
+    modgui:iconTemplate <modgui/icon-super-whammy.html>;
+    modgui:templateData <modgui/data-super-whammy.json>;
+    modgui:screenshot <modgui/screenshot-super-whammy.png>;
+    modgui:thumbnail <modgui/thumb-super-whammy.png>;
 ].

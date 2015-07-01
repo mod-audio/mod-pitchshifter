@@ -1,10 +1,11 @@
-@prefix doap:  <http://usefulinc.com/ns/doap#>.
-@prefix epp:   <http://lv2plug.in/ns/ext/port-props/#>.
-@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
-@prefix lv2:   <http://lv2plug.in/ns/lv2core#>.
-@prefix mod:   <http://moddevices.com/ns/modgui#>.
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#>.
-@prefix units: <http://lv2plug.in/ns/extensions/units#>.
+@prefix doap:   <http://usefulinc.com/ns/doap#>.
+@prefix epp:    <http://lv2plug.in/ns/ext/port-props/#>.
+@prefix foaf:   <http://xmlns.com/foaf/0.1/>.
+@prefix lv2:    <http://lv2plug.in/ns/lv2core#>.
+@prefix mod:    <http://moddevices.com/ns/mod#>.
+@prefix modgui: <http://moddevices.com/ns/modgui#>.
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix units:  <http://lv2plug.in/ns/extensions/units#>.
 
 <http://moddevices.com/plugins/mod-devel/SuperCapo>
 a lv2:Plugin, lv2:SpectralPlugin;
@@ -20,16 +21,12 @@ doap:developer [
 
 doap:maintainer [
     foaf:name "MOD Team";
-    doap:shortname "MOD";
     foaf:homepage <http://moddevices.com>;
     foaf:mbox <mailto:devel@moddevices.com>;
 ];
 
+mod:brand "MOD";
 doap:license "GPL";
-
-doap:description """
-A pitchshifter that can rise in pitch until 24 semitones.
-""";
 
 rdfs:comment """
 It's a pitch shifter which can rise the pitch until 24 semitones (steps).
@@ -42,21 +39,21 @@ lv2:port
     lv2:index 0;
     lv2:symbol "In";
     lv2:name "In";
-    doap:shortname "In";
+    lv2:shortname "In";
 ],
 [
     a lv2:AudioPort, lv2:OutputPort;
     lv2:index 1;
     lv2:symbol "Out";
     lv2:name "Out";
-    doap:shortname "Out";
+    lv2:shortname "Out";
 ],
 [
     a lv2:ControlPort, lv2:InputPort;
     lv2:index 2;
     lv2:symbol "Step";
     lv2:name "Step";
-    doap:shortname "Step";
+    lv2:shortname "Step";
     lv2:portProperty lv2:integer;
     lv2:default 0;
     lv2:minimum 0;
@@ -67,19 +64,19 @@ lv2:port
     lv2:index 3;
     lv2:symbol "Gain";
     lv2:name "Gain";
-    doap:shortname "Gain";
+    lv2:shortname "Gain";
     lv2:default 3.0;
     lv2:minimum -20.0;
     lv2:maximum 20.0;
     units:unit units:db;
 ];
 
-mod:gui [
-    a mod:Gui;
-    mod:resourcesDirectory <modgui>;
-    mod:stylesheet <modgui/supercapo-stylesheet.css>;
-    mod:iconTemplate <modgui/icon-supercapo.html>;
-    mod:templateData <modgui/data-supercapo.json>;
-    mod:screenshot <modgui/screenshot-supercapo.png>;
-    mod:thumbnail <modgui/thumb-supercapo.png>;
+modgui:gui [
+    a modgui:Gui;
+    modgui:resourcesDirectory <modgui>;
+    modgui:stylesheet <modgui/supercapo-stylesheet.css>;
+    modgui:iconTemplate <modgui/icon-supercapo.html>;
+    modgui:templateData <modgui/data-supercapo.json>;
+    modgui:screenshot <modgui/screenshot-supercapo.png>;
+    modgui:thumbnail <modgui/thumb-supercapo.png>;
 ].
