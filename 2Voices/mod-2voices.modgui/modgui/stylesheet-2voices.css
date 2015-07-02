@@ -158,7 +158,7 @@
 
 /* = PLUGIN'S AUTHOR
 ================================================ */
-.mod-pedal-boxy{{{cns}}} .mod-plugin-author {
+.mod-pedal-boxy{{{cns}}} .mod-plugin-brand {
     left:0;
     position:absolute;
     right:0;
@@ -167,7 +167,7 @@
     top:160px;
 }
 
-.mod-pedal-boxy{{{cns}}} .mod-plugin-author h1 {
+.mod-pedal-boxy{{{cns}}} .mod-plugin-brand h1 {
     border-color:#000;
     border-radius:12px;
     border-style:solid;
@@ -178,14 +178,14 @@
     padding:3px 9px 0;
 }
 
-.mod-pedal-boxy{{{cns}}}.mod-five-knobs .mod-plugin-author,
-.mod-pedal-boxy{{{cns}}}.mod-six-knobs .mod-plugin-author,
-.mod-pedal-boxy{{{cns}}}.mod-seven-knobs .mod-plugin-author,
-.mod-pedal-boxy{{{cns}}}.mod-eight-knobs .mod-plugin-author {
+.mod-pedal-boxy{{{cns}}}.mod-five-knobs .mod-plugin-brand,
+.mod-pedal-boxy{{{cns}}}.mod-six-knobs .mod-plugin-brand,
+.mod-pedal-boxy{{{cns}}}.mod-seven-knobs .mod-plugin-brand,
+.mod-pedal-boxy{{{cns}}}.mod-eight-knobs .mod-plugin-brand {
     top:190px;
 }
 
-.mod-pedal-boxy{{{cns}}}.mod-boxy50 .mod-plugin-author {
+.mod-pedal-boxy{{{cns}}}.mod-boxy50 .mod-plugin-brand {
   top:16px;
 }
 
@@ -221,61 +221,61 @@
 
 /* = PLUGIN'S AUTHO AND NAME COLOURS
 ================================================ */
-.mod-pedal-boxy{{{cns}}}.mod-blue .mod-plugin-author h1,
+.mod-pedal-boxy{{{cns}}}.mod-blue .mod-plugin-brand h1,
 .mod-pedal-boxy{{{cns}}}.mod-blue .mod-plugin-name h1 {
     color:rgb(0,0,0);
 }
 
-.mod-pedal-boxy{{{cns}}}.mod-brown .mod-plugin-author h1,
+.mod-pedal-boxy{{{cns}}}.mod-brown .mod-plugin-brand h1,
 .mod-pedal-boxy{{{cns}}}.mod-brown .mod-plugin-name h1 {
     border-color:rgb(255,255,255);
     color:rgb(255,255,255);
 }
 
-.mod-pedal-boxy{{{cns}}}.mod-cream .mod-plugin-author h1,
+.mod-pedal-boxy{{{cns}}}.mod-cream .mod-plugin-brand h1,
 .mod-pedal-boxy{{{cns}}}.mod-cream .mod-plugin-name h1 {
     color:rgb(0,0,0);
 }
 
-.mod-pedal-boxy{{{cns}}}.mod-darkblue .mod-plugin-author h1,
+.mod-pedal-boxy{{{cns}}}.mod-darkblue .mod-plugin-brand h1,
 .mod-pedal-boxy{{{cns}}}.mod-darkblue .mod-plugin-name h1 {
     border-color:rgb(255,255,255);
     color:rgb(255,255,255);
 }
 
-.mod-pedal-boxy{{{cns}}}.mod-gray .mod-plugin-author h1,
+.mod-pedal-boxy{{{cns}}}.mod-gray .mod-plugin-brand h1,
 .mod-pedal-boxy{{{cns}}}.mod-gray .mod-plugin-name h1 {
     color:rgb(0,0,0);
 }
 
-.mod-pedal-boxy{{{cns}}}.mod-green .mod-plugin-author h1,
+.mod-pedal-boxy{{{cns}}}.mod-green .mod-plugin-brand h1,
 .mod-pedal-boxy{{{cns}}}.mod-green .mod-plugin-name h1 {
     border-color:rgb(255,255,255);
     color:rgb(255,255,255);
 }
 
-.mod-pedal-boxy{{{cns}}}.mod-orange .mod-plugin-author h1,
+.mod-pedal-boxy{{{cns}}}.mod-orange .mod-plugin-brand h1,
 .mod-pedal-boxy{{{cns}}}.mod-orange .mod-plugin-name h1 {
     color:rgb(0,0,0);
 }
 
-.mod-pedal-boxy{{{cns}}}.mod-purple .mod-plugin-author h1,
+.mod-pedal-boxy{{{cns}}}.mod-purple .mod-plugin-brand h1,
 .mod-pedal-boxy{{{cns}}}.mod-purple .mod-plugin-name h1 {
     border-color:rgb(255,255,255);
     color:rgb(255,255,255);
 }
 
-.mod-pedal-boxy{{{cns}}}.mod-red .mod-plugin-author h1,
+.mod-pedal-boxy{{{cns}}}.mod-red .mod-plugin-brand h1,
 .mod-pedal-boxy{{{cns}}}.mod-red .mod-plugin-name h1 {
     color:rgb(0,0,0);
 }
 
-.mod-pedal-boxy{{{cns}}}.mod-white .mod-plugin-author h1,
+.mod-pedal-boxy{{{cns}}}.mod-white .mod-plugin-brand h1,
 .mod-pedal-boxy{{{cns}}}.mod-white .mod-plugin-name h1 {
     color:rgb(0,0,0);
 }
 
-.mod-pedal-boxy{{{cns}}}.mod-yellow .mod-plugin-author h1,
+.mod-pedal-boxy{{{cns}}}.mod-yellow .mod-plugin-brand h1,
 .mod-pedal-boxy{{{cns}}}.mod-yellow .mod-plugin-name h1 {
     color:rgb(0,0,0);
 }
@@ -332,7 +332,7 @@
 }
 
 .mod-pedal-boxy{{{cns}}}.mod-boxy50 .mod-footswitch {
-  top:140px;
+    top:140px;
 }
 
 
@@ -504,7 +504,6 @@
     box-shadow:inset 0 0 4px rgba(0,0,0,.3);
     border-radius:4px;
     padding:3px 9px;
-
 }
 
 .mod-pedal-boxy{{{cns}}} .mod-enumerated .mod-enumerated-selected {
@@ -577,4 +576,102 @@
 .mod-pedal-boxy{{{cns}}}.mod-yellow .mod-enumerated {
     background-image:url(/resources/utils/dropdown-arrow-black.png{{{ns}}});
     color:black;
+}
+
+/* SLIDER
+================================================ */
+.mod-pedal-boxy{{{cns}}} .mod-slider:first-child {
+    margin-left:8px;
+}
+
+.mod-pedal-boxy{{{cns}}} .mod-slider {
+    color:black;
+    float:left;
+    font-size:11px;
+    height:140px;
+    margin-bottom:2px;
+    margin-right:2px;
+    overflow:hidden;
+    position:relative;
+    text-align:center;
+    width:33px;
+}
+
+
+.mod-pedal-boxy{{{cns}}} .mod-slider .mod-slider-title {
+    display:block;
+    font-size:11px;
+    font-weight:bold;
+    height:7px;
+    line-height:1;
+    margin-bottom:3px;
+    overflow:hidden;
+    padding:7px 0 5px;
+    position:relative;
+}
+
+.mod-pedal-boxy{{{cns}}} .mod-slider .mod-slider-image {
+    background-image:url(/resources/pedals/slider.png{{{ns}}});
+    background-repeat:no-repeat;
+    background-size:auto 110px;
+    height:110px;
+    margin:0 auto;
+    width:44px;
+}
+
+.mod-pedal-boxy{{{cns}}} .mod-slider .mod-slider-image:hover {
+    cursor:pointer;
+}
+
+.mod-pedal-boxy{{{cns}}}.mod-three-sliders .mod-slider {
+    margin:0;
+    width:33%;
+}
+
+.mod-pedal-boxy{{{cns}}}.mod-four-sliders .mod-slider {
+    margin:0;
+    width:25%;
+}
+
+.mod-pedal-boxy{{{cns}}}.mod-five-sliders .mod-slider {
+    margin:0;
+    width:20%;
+}
+
+.mod-pedal-boxy{{{cns}}}.mod-six-sliders .mod-slider {
+    margin:0;
+    width:16.5%;
+}
+
+.mod-pedal-boxy{{{cns}}}.mod-seven-sliders .mod-slider {
+    margin:0;
+    width:14.2%;
+}
+
+.mod-pedal-boxy{{{cns}}}.mod-eight-sliders .mod-slider {
+    margin:0;
+    width:12.5%;
+}
+
+.mod-pedal-boxy{{{cns}}}.mod-nine-sliders .mod-slider {
+    margin:0;
+    width:11.11%;
+}
+
+.mod-pedal-boxy{{{cns}}}.mod-ten-sliders .mod-slider {
+    margin:0;
+    width:10%;
+}
+
+.mod-pedal-boxy{{{cns}}}.mod-ten-sliders .mod-slider .mod-slider-image {
+    margin-left:-5px;
+}
+
+.mod-pedal-boxy{{{cns}}}.mod-twelve-sliders .mod-slider {
+    margin:0;
+    width:8.333333%;
+}
+
+.mod-pedal-boxy{{{cns}}}.mod-twelve-sliders .mod-slider .mod-slider-image {
+    margin-left:-5px;
 }
