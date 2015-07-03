@@ -4,7 +4,6 @@
 
 <http://moddevices.com/plugins/mod-devel/2Voices>
     modgui:gui [
-        a modgui:Gui ;
         modgui:resourcesDirectory <modgui> ;
         modgui:iconTemplate <modgui/icon-2voices.html> ;
         modgui:stylesheet <modgui/stylesheet-2voices.css> ;

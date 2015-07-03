@@ -224,7 +224,6 @@ lv2:port
 ];
 
 modgui:gui [
-    a modgui:Gui;
     modgui:resourcesDirectory <modgui>;
     modgui:stylesheet <modgui/icon-harmonizer2.css>;
     modgui:iconTemplate <modgui/icon-harmonizer2.html>;

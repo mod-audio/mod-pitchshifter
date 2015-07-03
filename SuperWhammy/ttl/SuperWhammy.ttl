@@ -107,7 +107,6 @@ lv2:port
 ];
 
 modgui:gui [
-    a modgui:Gui;
     modgui:resourcesDirectory <modgui>;
     modgui:stylesheet <modgui/css-super-whammy.css>;
     modgui:iconTemplate <modgui/icon-super-whammy.html>;

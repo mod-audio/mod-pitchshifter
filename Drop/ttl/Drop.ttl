@@ -75,7 +75,6 @@ lv2:port
 ];
 
 modgui:gui [
-    a modgui:Gui;
     modgui:resourcesDirectory <modgui>;
     modgui:stylesheet <modgui/drop-stylesheet.css>;
     modgui:iconTemplate <modgui/icon-drop.html>;

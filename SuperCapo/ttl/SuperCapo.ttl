@@ -73,7 +73,6 @@ lv2:port
 ];
 
 modgui:gui [
-    a modgui:Gui;
     modgui:resourcesDirectory <modgui>;
     modgui:stylesheet <modgui/supercapo-stylesheet.css>;
     modgui:iconTemplate <modgui/icon-supercapo.html>;
