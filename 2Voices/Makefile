@@ -38,6 +38,6 @@ clean:
 	$(RM) src/*.o $(PLUGIN)
 
 install:
-	mkdir -p $(INSTALL_PATH)
-	cp -r mod-2voices.lv2 mod-2voices.modgui $(INSTALL_PATH)
+	mkdir -p $(INSTALL_PATH)/mod-2voices.lv2/
+	cp -r ttl/* $(INSTALL_PATH)/mod-2voices.lv2/
 	cp $(PLUGIN) $(INSTALL_PATH)/mod-2voices.lv2/

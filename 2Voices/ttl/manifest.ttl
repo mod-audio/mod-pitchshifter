@@ -3,4 +3,4 @@
 
 <http://moddevices.com/plugins/mod-devel/2Voices> a lv2:Plugin;
     lv2:binary <mod-2voices.so>;
-    rdfs:seeAlso <2Voices.ttl>.
+    rdfs:seeAlso <2Voices.ttl>,<modgui.ttl>.
