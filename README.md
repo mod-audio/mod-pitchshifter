@@ -3,8 +3,8 @@ mod-pitchshifter
 
 Pitch Shifter lv2 effects
 
-These effects ONLY work with the following buffer sizes: 64, 128, 256 and 512.
-
+These effects are supposed to work well with the
+following values of Frames/Period: 64, 128, 256, 512
 
 You need a PC with at least 2Gb of ram to compile the source code.
 
