@@ -27,8 +27,15 @@ PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers, const char* wisdomFile)
 	w.zeros(N); hann(N,&w); 
 	I.zeros(N/2 + 1); I = linspace(0, N/2, N/2 + 1);
 
-	fftwf_import_wisdom_from_filename(wisdomFile);
-	p = fftwf_plan_dft_r2c_1d(N, frames2, fXa, FFTW_WISDOM_ONLY);
+	if (fftwf_import_wisdom_from_filename(wisdomFile) != 0)
+	{
+		p = fftwf_plan_dft_r2c_1d(N, frames2, fXa, FFTW_WISDOM_ONLY);
+	}
+	else
+	{
+		p = NULL;
+		printf("PSAnalysis: failed to import wisdom file '%s'\n", wisdomFile);
+	}
 }
 
 PSAnalysis::~PSAnalysis() //Destrutor
@@ -113,8 +120,15 @@ PSSinthesis::PSSinthesis(PSAnalysis *obj, const char* wisdomFile) //Construtor
 	Phi.zeros(N/2 + 1);
 	PhiPrevious.zeros(N/2 + 1);
 
-	fftwf_import_wisdom_from_filename(wisdomFile);
-	p2 = fftwf_plan_dft_c2r_1d(N, fXs, q, FFTW_WISDOM_ONLY);
+	if (fftwf_import_wisdom_from_filename(wisdomFile) != 0)
+	{
+		p2 = fftwf_plan_dft_c2r_1d(N, fXs, q, FFTW_WISDOM_ONLY);
+	}
+	else
+	{
+		p2 = NULL;
+		printf("PSSinthesis: failed to import wisdom file '%s'\n", wisdomFile);
+	}
 }
 
 PSSinthesis::~PSSinthesis() //Destrutor

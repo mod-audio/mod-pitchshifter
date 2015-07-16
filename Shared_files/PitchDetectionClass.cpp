@@ -25,9 +25,16 @@ PitchDetection::PitchDetection(uint32_t n_samples, int nBuffers, double SampleRa
 	F.zeros(N);
 	AUTO.zeros(N);
 
-	fftwf_import_wisdom_from_filename(wisdomFile);
-	p  = fftwf_plan_dft_r2c_1d(2*N, frames, fXa, FFTW_WISDOM_ONLY);
-	p2 = fftwf_plan_dft_c2r_1d(2*N, fXs, q, FFTW_WISDOM_ONLY);
+	if (fftwf_import_wisdom_from_filename(wisdomFile) != 0)
+	{
+		p  = fftwf_plan_dft_r2c_1d(2*N, frames, fXa, FFTW_WISDOM_ONLY);
+		p2 = fftwf_plan_dft_c2r_1d(2*N, fXs, q, FFTW_WISDOM_ONLY);
+	}
+	else
+	{
+		p = p2 = NULL;
+		printf("PitchDetection: failed to import wisdom file '%s'\n", wisdomFile);
+	}
 }
 
 PitchDetection::~PitchDetection() //Destructor
