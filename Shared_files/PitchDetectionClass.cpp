@@ -10,7 +10,7 @@ PitchDetection::PitchDetection(uint32_t n_samples, int nBuffers, double SampleRa
 	b = new float*[hopa];
 
 	for (int i=0 ; i< nBuffers; i++)
-    {
+	{
 		b[i] = &frames[i*hopa];
 	}
 
@@ -80,8 +80,8 @@ void PitchDetection::FindNote()
 	
 	for (int i=0; i<(N + 1); i++)
 	{
-        fXs[i][0] = real(Xs(i));
-        fXs[i][1] = imag(Xs(i));
+		fXs[i][0] = real(Xs(i));
+		fXs[i][1] = imag(Xs(i));
 	}
 	
 	fftwf_execute(p2);

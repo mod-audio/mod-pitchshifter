@@ -42,7 +42,7 @@ PSAnalysis::~PSAnalysis() //Destrutor
 	XaPrevious.clear();
 	Xa_arg.clear();
 	XaPrevious_arg.clear();
-    d_phi.clear(); 
+	d_phi.clear(); 
 	d_phi_prime.clear(); 
 	d_phi_wrapped.clear(); 
 	omega_true_sobre_fs.clear(); 
@@ -157,15 +157,15 @@ void PSSinthesis::Sinthesis(double s)
 
 	Phi = PhiPrevious + (hops[Qcolumn-1])*omega_true_sobre_fs[0] ;
 	for (int i=0; i<(N/2 + 1); i++)
-        Xs(i) = ExponencialComplexa(Phi(i));
+		Xs(i) = ExponencialComplexa(Phi(i));
 	Xs = Xa_abs[0] % Xs;
 	PhiPrevious = Phi;
 	
 	
 	for (int i=0; i<(N/2 + 1); i++)
 	{
-        fXs[i][0] = real(Xs(i));
-        fXs[i][1] = imag(Xs(i));
+	    fXs[i][0] = real(Xs(i));
+	    fXs[i][1] = imag(Xs(i));
 	}
 	
 	/*Synthesis*/
@@ -193,12 +193,12 @@ void PSSinthesis::Sinthesis(double s)
 
         for (int n=0; n < hopa; n++)
         {
-            n3 = n*r+1;
-            n1 = floor(n3);
-            n2 = ceil(n3);
-            yshift[n] = ysaida2[n1] + (ysaida2[n2]-ysaida2[n1])*(n3 - n1);
-		}
-		
+		n3 = n*r+1;
+		n1 = floor(n3);
+		n2 = ceil(n3);
+		yshift[n] = ysaida2[n1] + (ysaida2[n2]-ysaida2[n1])*(n3 - n1);
+	}
+	
 	//Shift ysaida hops[0] left
 	for (int i=0; i<L-hops[0]; i++)
 		ysaida[i] = ysaida[i+hops[0]];
@@ -228,9 +228,9 @@ int nBuffersSW(uint32_t n_samples, int c64, int c128, int c256, int c_default)
 
 float InputAbsSum(float *in, uint32_t n_samples)
 {
-    float sum_abs = 0;
+	float sum_abs = 0;
 
-    for (uint32_t i=0; i<n_samples; i++)
+	for (uint32_t i=0; i<n_samples; i++)
 		sum_abs = sum_abs + abs(in[i]);
 
 	return sum_abs;
