@@ -1,9 +1,4 @@
 
-# run make in each plugins subdirectory
-
-.PHONY:
-	all
-
 all: Shared_files/arc.h Shared_files/Exponencial.h Shared_files/Cos.h Shared_files/Sin.h Shared_files/Sin.h Shared_files/harmonizer.wisdom
 	$(MAKE) -C 2Voices
 	$(MAKE) -C Capo
@@ -14,7 +9,7 @@ all: Shared_files/arc.h Shared_files/Exponencial.h Shared_files/Cos.h Shared_fil
 	$(MAKE) -C Harmonizer2
 	$(MAKE) -C HarmonizerCS
 
-install:
+install: all
 	$(MAKE) -C 2Voices install
 	$(MAKE) -C Capo install
 	$(MAKE) -C Drop install
