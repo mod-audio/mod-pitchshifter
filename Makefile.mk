@@ -41,7 +41,7 @@ clean:
 
 install: all
 	mkdir -p $(INSTALLATION_PATH)
-	cp -r $(PLUGIN_SO) ttl/* $(INSTALLATION_PATH)
+	cp -rL $(PLUGIN_SO) ttl/* $(INSTALLATION_PATH)
 
 %.o: %.cpp
 	$(CXX) $< $(CXXFLAGS) -c -o $@
