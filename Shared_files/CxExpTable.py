@@ -4,8 +4,8 @@ import sys
 
 from mpmath import mp
 mp.dps = 50
-    
-N = long(sys.argv[1]) if len(sys.argv) > 1 else 20000
+
+N = int(sys.argv[1]) if len(sys.argv) > 1 else 20000
 
 inicio = -1*mp.pi
 fim = 1*mp.pi
