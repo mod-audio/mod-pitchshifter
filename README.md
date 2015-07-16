@@ -15,11 +15,11 @@ Installation:
 
 	Dependencies:
 	-python-mpmath
-	-FFTW (configure fftw with the flags --enable-shared and --enable-float)
+	-FFTW (configure fftw with the flags --enable-float)
 	-Armadillo
 
-	./make.sh
-	sudo ./make_install.sh
+	make
+	sudo make install
 	
 (Be pacient, may take more than 20 minutes to compile)
 	

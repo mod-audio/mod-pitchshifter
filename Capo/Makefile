@@ -7,7 +7,7 @@ CC = g++
 LD = g++
 
 # flags
-CFLAGS += -I. -I../Shared_files -O3 -ffast-math -msse -msse3 -mfpmath=sse -Wall -Wextra -march=native -mtune=native -c -fPIC -DPIC `pkg-config --cflags fftw3f`
+CFLAGS += -I. -I../Shared_files -O3 -ffast-math -Wall -Wextra -c -fPIC -DPIC `pkg-config --cflags fftw3f`
 LDFLAGS += -shared -lc -lm -fPIC -DPIC
 
 # libs
