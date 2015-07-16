@@ -1,3 +1,4 @@
+@prefix bsize:  <http://lv2plug.in/ns/ext/buf-size#>.
 @prefix doap:   <http://usefulinc.com/ns/doap#>.
 @prefix epp:    <http://lv2plug.in/ns/ext/port-props/#>.
 @prefix foaf:   <http://xmlns.com/foaf/0.1/>.
@@ -10,6 +11,8 @@
 
 <http://moddevices.com/plugins/mod-devel/HarmonizerCS>
 a lv2:Plugin, lv2:SpectralPlugin;
+
+lv2:requiredFeature bsize:fixedBlockLength, bsize:powerOf2BlockLength;
 
 doap:name "HarmonizerCS";
 
