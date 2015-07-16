@@ -13,7 +13,7 @@ using namespace std;
 class PitchDetection
 {
 public:
-    PitchDetection(uint32_t n_samples, int nBuffers, double SampleRate);
+    PitchDetection(uint32_t n_samples, int nBuffers, double SampleRate, const char* wisdomFile);
     ~PitchDetection();
     void PreProcessing(int nBuffers, float *in);
     void FindNote();

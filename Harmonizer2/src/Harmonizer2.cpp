@@ -17,18 +17,22 @@ enum {IN, OUT_CLEAN, OUT_1, OUT_2, TONE, SCALE, INTERVAL_1, INTERVAL_2, MODE, LO
 class Harmonizer2
 {
 public:
-    Harmonizer2(uint32_t n_samples, int nBuffers, int nBuffers2, double samplerate){Construct(n_samples, nBuffers, nBuffers2, samplerate);}
+    Harmonizer2(uint32_t n_samples, int nBuffers, int nBuffers2, double samplerate, const std::string& wfile)
+    {
+        wisdomFile = wfile;
+        Construct(n_samples, nBuffers, nBuffers2, samplerate, wfile.c_str());
+    }
     ~Harmonizer2(){Destruct();}
-    void Construct(uint32_t n_samples, int nBuffers, int nBuffers2, double samplerate)
+    void Construct(uint32_t n_samples, int nBuffers, int nBuffers2, double samplerate, const char* wisdomFile)
     {
         this->nBuffers = nBuffers;
         this->nBuffers2 = nBuffers2;
         SampleRate = samplerate;
 
-        obja = new PSAnalysis(n_samples, nBuffers);
-        objs_1 = new PSSinthesis(obja);
-        objs_2 = new PSSinthesis(obja);
-        objpd = new PitchDetection(n_samples, nBuffers2, samplerate);
+        obja = new PSAnalysis(n_samples, nBuffers, wisdomFile);
+        objs_1 = new PSSinthesis(obja, wisdomFile);
+        objs_2 = new PSSinthesis(obja, wisdomFile);
+        objpd = new PitchDetection(n_samples, nBuffers2, samplerate, wisdomFile);
         objgc = new GainClass(n_samples);
         objg1 = new GainClass(n_samples);
         objg2 = new GainClass(n_samples);
@@ -50,7 +54,7 @@ public:
     void Realloc(uint32_t n_samples, int nBuffers, int nBuffers2)
     {
         Destruct();
-        Construct(n_samples, nBuffers, nBuffers2, SampleRate);
+        Construct(n_samples, nBuffers, nBuffers2, SampleRate, wisdomFile.c_str());
     }
 
     static LV2_Handle instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features);
@@ -74,9 +78,9 @@ public:
     int nBuffers2;
     int cont;
     double SampleRate;
-	   
     double s_1;
     double s_2;
+    std::string wisdomFile;
 };
 
 /**********************************************************************************************************************************************************/
@@ -105,7 +109,9 @@ const LV2_Descriptor* lv2_descriptor(uint32_t index)
 
 LV2_Handle Harmonizer2::instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features)
 {
-    Harmonizer2 *plugin = new Harmonizer2(N_SAMPLES_DEFAULT, 32, 16, samplerate);
+    std::string wisdomFile = bundle_path;
+    wisdomFile += "/harmonizer.wisdom";
+    Harmonizer2 *plugin = new Harmonizer2(N_SAMPLES_DEFAULT, 32, 16, samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
 

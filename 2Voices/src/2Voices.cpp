@@ -15,16 +15,20 @@ enum {IN, OUT_1, OUT_2, STEP_1, STEP_2, GAIN_1, GAIN_2, PLUGIN_PORT_COUNT};
 class TwoVoices
 {
 public:
-    TwoVoices(uint32_t n_samples, int nBuffers, double samplerate){Construct(n_samples, nBuffers, samplerate);}
+    TwoVoices(uint32_t n_samples, int nBuffers, double samplerate, const std::string& wfile)
+    {
+        wisdomFile = wfile;
+        Construct(n_samples, nBuffers, samplerate, wfile.c_str());
+    }
     ~TwoVoices(){Destruct();}
-    void Construct(uint32_t n_samples, int nBuffers, double samplerate)
+    void Construct(uint32_t n_samples, int nBuffers, double samplerate, const char* wisdomFile)
     {
         this->nBuffers = nBuffers;
         SampleRate = samplerate;
 
-        obja = new PSAnalysis(n_samples, nBuffers);
-        objs_1 = new PSSinthesis(obja);
-        objs_2 = new PSSinthesis(obja);
+        obja = new PSAnalysis(n_samples, nBuffers, wisdomFile);
+        objs_1 = new PSSinthesis(obja, wisdomFile);
+        objs_2 = new PSSinthesis(obja, wisdomFile);
         objg1 = new GainClass(n_samples);
         objg2 = new GainClass(n_samples);
 
@@ -36,12 +40,12 @@ public:
         delete objs_1;
         delete objs_2;
         delete objg1;
-        delete objg2;   
+        delete objg2;
     }
     void Realloc(uint32_t n_samples, int nBuffers)
     {
         Destruct();
-        Construct(n_samples, nBuffers, SampleRate);
+        Construct(n_samples, nBuffers, SampleRate, wisdomFile.c_str());
     }
 
     static LV2_Handle instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features);
@@ -62,6 +66,7 @@ public:
     int nBuffers;
     int cont;
     double SampleRate;
+    std::string wisdomFile;
 };
 
 /**********************************************************************************************************************************************************/
@@ -90,7 +95,9 @@ const LV2_Descriptor* lv2_descriptor(uint32_t index)
 
 LV2_Handle TwoVoices::instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features)
 {
-    TwoVoices *plugin = new TwoVoices(N_SAMPLES_DEFAULT, 32, samplerate);	
+    std::string wisdomFile = bundle_path;
+    wisdomFile += "/harmonizer.wisdom";
+    TwoVoices *plugin = new TwoVoices(N_SAMPLES_DEFAULT, 32, samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
 

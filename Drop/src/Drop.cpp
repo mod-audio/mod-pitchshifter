@@ -15,15 +15,19 @@ enum {IN, OUT, STEP, GAIN, PLUGIN_PORT_COUNT};
 class Drop
 {
 public:
-    Drop(uint32_t n_samples, int nBuffers, double samplerate){Construct(n_samples, nBuffers, samplerate);}
+    Drop(uint32_t n_samples, int nBuffers, double samplerate, const std::string& wfile)
+    {
+        wisdomFile = wfile;
+        Construct(n_samples, nBuffers, samplerate, wfile.c_str());
+    }
     ~Drop(){Destruct();}
-    void Construct(uint32_t n_samples, int nBuffers, double samplerate)
+    void Construct(uint32_t n_samples, int nBuffers, double samplerate, const char* wisdomFile)
     {
     	this->nBuffers = nBuffers;
         SampleRate = samplerate;
 
-        obja = new PSAnalysis(n_samples, nBuffers);
-        objs = new PSSinthesis(obja);
+        obja = new PSAnalysis(n_samples, nBuffers, wisdomFile);
+        objs = new PSSinthesis(obja, wisdomFile);
         objg = new GainClass(n_samples);
 
         cont = 0;
@@ -37,7 +41,7 @@ public:
     void Realloc(uint32_t n_samples, int nBuffers)
     {
     	Destruct();
-    	Construct(n_samples, nBuffers, SampleRate);
+    	Construct(n_samples, nBuffers, SampleRate, wisdomFile.c_str());
     }
 
     static LV2_Handle instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features);
@@ -56,6 +60,7 @@ public:
     int nBuffers;
     int cont;
     double SampleRate;
+    std::string wisdomFile;
 };
 
 /**********************************************************************************************************************************************************/
@@ -84,7 +89,9 @@ const LV2_Descriptor* lv2_descriptor(uint32_t index)
 
 LV2_Handle Drop::instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features)
 {
-    Drop *plugin = new Drop(N_SAMPLES_DEFAULT, 16, samplerate);
+    std::string wisdomFile = bundle_path;
+    wisdomFile += "/harmonizer.wisdom";
+    Drop *plugin = new Drop(N_SAMPLES_DEFAULT, 16, samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
 

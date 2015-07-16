@@ -14,7 +14,7 @@ using namespace std;
 class PSAnalysis
 {
 public:
-    PSAnalysis(uint32_t n_samples, int nBuffers);
+    PSAnalysis(uint32_t n_samples, int nBuffers, const char* wisdomFile);
     ~PSAnalysis();
     void PreAnalysis(int nBuffers, float *in);
     void Analysis();
@@ -46,7 +46,7 @@ public:
 class PSSinthesis
 {
 public:
-    PSSinthesis(PSAnalysis *obj);
+    PSSinthesis(PSAnalysis *obj, const char* wisdomFile);
     ~PSSinthesis();
     void PreSinthesis();
     void Sinthesis(double s);
