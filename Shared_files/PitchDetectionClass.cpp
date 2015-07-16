@@ -46,8 +46,8 @@ PitchDetection::~PitchDetection() //Destructor
 	F.clear();
 	AUTO.clear();
 	
-	fftwf_destroy_plan(p);
-	fftwf_destroy_plan(p2);
+	if (p) fftwf_destroy_plan(p);
+	if (p2) fftwf_destroy_plan(p2);
 }
 
 void PitchDetection::PreProcessing(int nBuffers, float *in)
@@ -69,7 +69,7 @@ void PitchDetection::FindNote()
 		frames[N+i] = 0;
 	}
 	
-	fftwf_execute(p);
+	if (p) fftwf_execute(p);
 	
 	for (int i=0; i<(N + 1); i++)
 	{
@@ -84,7 +84,7 @@ void PitchDetection::FindNote()
 		fXs[i][1] = imag(Xs(i));
 	}
 	
-	fftwf_execute(p2);
+	if (p2) fftwf_execute(p2);
 	
 	for (int i=0; i<N; i++)
 	{

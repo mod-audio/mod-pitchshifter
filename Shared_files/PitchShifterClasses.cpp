@@ -33,7 +33,7 @@ PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers, const char* wisdomFile)
 
 PSAnalysis::~PSAnalysis() //Destrutor
 {
-	fftwf_destroy_plan(p);
+	if (p) fftwf_destroy_plan(p);
 	delete[] b;
 	delete[] frames;
 	fftwf_free(frames2);
@@ -74,7 +74,7 @@ void PSAnalysis::Analysis()
 		frames2[i] = frames[i]*w(i)/norm;
 	
 	/*Analysis*/
-	fftwf_execute(p);
+	if (p) fftwf_execute(p);
 	
 	/*Processing*/
 	
@@ -127,7 +127,7 @@ PSSinthesis::~PSSinthesis() //Destrutor
 	Xs.clear();
 	Phi.clear();
 	PhiPrevious.clear();
-	fftwf_destroy_plan(p2);
+	if (p2) fftwf_destroy_plan(p2);
 }
 
 void PSSinthesis::PreSinthesis()
@@ -169,7 +169,7 @@ void PSSinthesis::Sinthesis(double s)
 	}
 	
 	/*Synthesis*/
-	fftwf_execute(p2);
+	if (p2) fftwf_execute(p2);
 	
 	double norm = N*sqrt( N/(2.0*hops[Qcolumn-1]) );
 
