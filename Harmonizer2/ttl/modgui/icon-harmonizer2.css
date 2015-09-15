@@ -14,6 +14,7 @@
         position:absolute;
         right:0;
         top:0;
+        z-index: 0;
     }
     .mod-harmonizer2-2 .mod-pedal-input {
         top:124px;
@@ -89,8 +90,10 @@
         height: 33px;
     }
     .mod-harmonizer2 .mod-control.type {
-        margin: 38px 107px 12px 107px;
-        clear: both;
+        position: absolute;
+        top: 71px;
+        left: 93px;
+        z-index: 2;
     }
 
     .mod-harmonizer2 .mod-control.type .mod-control-image {
@@ -138,7 +141,10 @@
     .mod-harmonizer2 .mod-control.scale{
         width: 200px;
         height: 30px;
-        margin: 25px 0 0 89px;
+        position: absolute;
+        top: 109px;
+        left: 85px;
+        z-index: 2;
     }
     .mod-harmonizer2  .mod-enumerated {
         position: absolute;
