@@ -26,10 +26,17 @@
     .mod-harmonizer2-2 .mod-pedal-output .mod-output {
         margin-bottom: 109px;
     }
-    .mod-harmonizer2 .mod-control-group{
-        margin: 105px 0 -32px 11px !important;
-        height: 100px;
+    .mod-harmonizer2 .mod-control-group {
+        position: absolute;
+        z-index: 1;
+        top: 105px;
+        left: 20px;
+        height: 45px;
         width: 300px;
+    }
+    .mod-harmonizer2 .mod-control-group.bottom {
+        top: 278px;
+        left: 11px;
     }
     .mod-harmonizer2 .mod-knob {
         width: 60px;
@@ -52,6 +59,9 @@
         position: relative;
         float: left;
         cursor: pointer;
+    }
+    .mod-harmonizer2 .mod-slider {
+        float: left;
     }
     .mod-harmonizer2 .mod-slider.tone {
         margin: 0 -2px 0 10px;
@@ -95,13 +105,13 @@
         background-position:top center;
         background-repeat:no-repeat;
         background-size:auto 132px;
-        bottom: 28px;
         cursor:pointer;
         height:66px;
         width: 66px;
         margin: auto;
-        margin-top:30px;
-        position:relative !important;
+        position: absolute;
+        bottom: 15px;
+        left: 115px;
     }
 
     .mod-harmonizer2 .mod-control.low {
@@ -174,8 +184,9 @@
     .mod-harmonizer2 .mod-light {
         height: 32px;
         width: 32px;
-        margin: auto;
-        position: relative !important
+        position: absolute !important;
+        top: 370px;
+        left: 132px;
     }
     .mod-harmonizer2 .mod-light.off {
         background-image:url(/resources/red-light-off.png{{{ns}}});
