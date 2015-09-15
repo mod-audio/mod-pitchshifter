@@ -14,6 +14,7 @@
         position:absolute;
         right:0;
         top:0;
+        z-index: 0;
     }
     .mod-harmonizercs-2 .mod-pedal-input {
         top:124px;
@@ -55,9 +56,10 @@
         z-index: 100;
     }
     .mod-harmonizercs .mod-control-group-left {
-        margin: 4.8em 0 0 1.9em;
         width: 100px;
-        float: left;
+        position: absolute;
+        left: 24px;
+        top: 65px;
     }
 
     .mod-harmonizercs .mod-slider.tone .mod-slider-image {
@@ -71,7 +73,7 @@
         height: 33px;
         z-index: 100;
         float: none;
-        margin-bottom: 6.6em;
+        margin-bottom: 76px;
     }
     .mod-harmonizercs .mod-slider.wet .mod-slider-image, .mod-harmonizercs .mod-slider.tonic .mod-slider-image {
         background-size: auto 33px;
@@ -93,9 +95,11 @@
     }
     .mod-harmonizercs .mod-control-group-right {
         width: 550px;
-        margin-top: 36px;
         height: 263px;
-        float: right;
+        position: absolute;
+        z-index: 2;
+        left: 152px;
+        top: 36px;
     }
     .mod-harmonizercs .mod-control-group-right .mod-slider {
         z-index: 100;
@@ -121,8 +125,10 @@
     }
     .mod-harmonizercs .mod-control-group-bottom {
         width: 180px;
-        float: left;
-        margin: 9px 0 0 31px;
+        position: absolute;
+        z-index: 2;
+        top: 310px;
+        left: 31px;
     }
     .mod-harmonizercs .mod-control-group-bottom .mod-slider .mod-slider-image {
         background: url(/resources/slider-serial-whammy.png{{{ns}}}) no-repeat;
