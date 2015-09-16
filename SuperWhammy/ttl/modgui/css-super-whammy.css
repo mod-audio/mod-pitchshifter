@@ -14,15 +14,20 @@
         position:absolute;
         right:0;
         top:0;
+        z-index: 0;
     }
     .mod-swhammy .mod-control-group-1 {
-        margin: 3em 0 0 30px;
-        width: 90px;
-        height: 300px;
-        float: left;
+        position: absolute;
+        z-index: 2;
+        top: 43px;
+        left: 36px;
     }
     .mod-swhammy .mod-control-group-2 {
-        margin: 9.6em 0 0 126px;
+        position: absolute;
+        z-index: 2;
+        top: 136px;
+        left: 132px;
+        width: 200px;
     }
     .mod-swhammy .mod-control-group-1 .mod-slider {
         position: absolute;
@@ -32,9 +37,9 @@
     }
     .mod-swhammy .mod-knob {
         position: absolute;
-        bottom: 50px;
-        margin-left: 20px;
-        z-index: 100;
+        top: 225px;
+        left: 143px;
+        z-index: 2;
         cursor: pointer;
     }
     .mod-swhammy .mod-knob-image {
@@ -45,7 +50,8 @@
     .mod-swhammy .mod-control-group-2 .mod-slider {
         z-index: 100;
         width: 87px;
-        margin-right: 10px;
+        margin-right: 13px;
+        float: left;
     }
     .mod-swhammy .mod-control-group-1 .mod-slider .mod-slider-image {
         background: url(/resources/slider-whammy.png{{{ns}}}) no-repeat;
@@ -63,18 +69,13 @@
         width: 30px;
         height: 73px;
         position: absolute;
-        margin: 45px 85px;
-        z-index: 1000;
+        top: 210px;
+        left: 260px;
+        z-index: 2;
         cursor: pointer;
     }
     .mod-swhammy .toggle.off {
         background-position: center bottom
-    }
-    .on-off {
-        position: absolute;
-        bottom: 45px;
-        right: 40px;
-        z-index: 100
     }
     .mod-swhammy .mod-footswitch {
         background-image:url(/resources/footswitch.png{{{ns}}});
@@ -84,8 +85,10 @@
         cursor:pointer;
         height:66px;
         width: 66px;
-        margin: auto;
-        z-index: 100;
+        position: absolute;
+        bottom: 25px;
+        left: 142px;
+        z-index: 2;
     }
     .mod-swhammy .mod-footswitch.on {
         background-position-y: top !important
@@ -93,9 +96,10 @@
     .mod-swhammy .mod-light {
         height: 32px;
         width: 32px;
-        margin: auto;
-        right: 0;
-        left: 0;
+        position: absolute;
+        bottom: 45px;
+        left: 260px;
+        z-index: 2;
     }
     .mod-swhammy .mod-light.off {
       background-image:url(/resources/red-light-off.png{{{ns}}});

@@ -12,15 +12,13 @@
         <div class="mod-slider digi">
             <div class="mod-slider-image" mod-role="input-control-port" mod-port-symbol="Last"></div>
         </div>
-        <div class="toggle active" mod-role="input-control-port" mod-port-symbol="Clean" mod-widget="switch">
     </div>
+    <div class="toggle active" mod-role="input-control-port" mod-port-symbol="Clean" mod-widget="switch"></div>
     <div class="mod-knob">
         <div class="mod-knob-image" mod-role="input-control-port" mod-port-symbol="Gain"></div>
     </div>
-    <div class="on-off">
-        <div class="mod-light on" mod-role="bypass-light"></div>
-        <div class="mod-footswitch" mod-role="bypass"></div>  
-    </div>
+    <div class="mod-light on" mod-role="bypass-light"></div>
+    <div class="mod-footswitch" mod-role="bypass"></div>  
     <div class="mod-pedal-input">
         {{#effect.ports.audio.input}}
         <div class="mod-input mod-input-disconnected" title="{{name}}" mod-role="input-audio-port" mod-port-symbol="{{symbol}}">
