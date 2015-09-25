@@ -9,7 +9,7 @@
 /**********************************************************************************************************************************************************/
 
 #define PLUGIN_URI "http://moddevices.com/plugins/mod-devel/Harmonizer2"
-#define N_SAMPLES_DEFAULT 64
+#define N_SAMPLES_DEFAULT 256
 enum {IN, OUT_CLEAN, OUT_1, OUT_2, TONE, SCALE, INTERVAL_1, INTERVAL_2, MODE, LOWNOTE, GAIN_CLEAN, GAIN_1, GAIN_2, PLUGIN_PORT_COUNT};
 
 /**********************************************************************************************************************************************************/
