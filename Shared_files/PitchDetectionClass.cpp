@@ -32,8 +32,9 @@ PitchDetection::PitchDetection(uint32_t n_samples, int nBuffers, double SampleRa
 	}
 	else
 	{
-		p = p2 = NULL;
-		printf("PitchDetection: failed to import wisdom file '%s'\n", wisdomFile);
+		p  = fftwf_plan_dft_r2c_1d(2*N, frames, fXa, FFTW_ESTIMATE);
+		p2 = fftwf_plan_dft_c2r_1d(2*N, fXs, q, FFTW_ESTIMATE);
+		printf("PitchDetection: failed to import wisdom file '%s', using estimate instead\n", wisdomFile);
 	}
 }
 

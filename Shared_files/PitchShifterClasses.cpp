@@ -33,8 +33,8 @@ PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers, const char* wisdomFile)
 	}
 	else
 	{
-		p = NULL;
-		printf("PSAnalysis: failed to import wisdom file '%s'\n", wisdomFile);
+		p = fftwf_plan_dft_r2c_1d(N, frames2, fXa, FFTW_ESTIMATE);
+		printf("PSAnalysis: failed to import wisdom file '%s', using estimate instead\n", wisdomFile);
 	}
 }
 
@@ -126,8 +126,8 @@ PSSinthesis::PSSinthesis(PSAnalysis *obj, const char* wisdomFile) //Construtor
 	}
 	else
 	{
-		p2 = NULL;
-		printf("PSSinthesis: failed to import wisdom file '%s'\n", wisdomFile);
+		p2 = fftwf_plan_dft_c2r_1d(N, fXs, q, FFTW_ESTIMATE);
+		printf("PSSinthesis: failed to import wisdom file '%s', using estimate instead\n", wisdomFile);
 	}
 }
 
