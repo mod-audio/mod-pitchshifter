@@ -9,7 +9,7 @@
 /**********************************************************************************************************************************************************/
 
 #define PLUGIN_URI "http://moddevices.com/plugins/mod-devel/HarmonizerCS"
-#define N_SAMPLES_DEFAULT 256
+#define N_SAMPLES_DEFAULT 128
 enum {IN, OUT_1, OUT_2, TONE, STEP_0, STEP_1, STEP_2, STEP_3, STEP_4, STEP_5, STEP_6, STEP_7, STEP_8, STEP_9, STEP_10, STEP_11, LOWNOTE, GAIN_1, GAIN_2, PLUGIN_PORT_COUNT};
 
 /**********************************************************************************************************************************************************/
