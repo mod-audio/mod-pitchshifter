@@ -91,7 +91,7 @@ LV2_Handle Drop::instantiate(const LV2_Descriptor* descriptor, double samplerate
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    Drop *plugin = new Drop(N_SAMPLES_DEFAULT, 16, samplerate, wisdomFile);
+    Drop *plugin = new Drop(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT,16,8,4,3), samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
 

@@ -97,7 +97,7 @@ LV2_Handle TwoVoices::instantiate(const LV2_Descriptor* descriptor, double sampl
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    TwoVoices *plugin = new TwoVoices(N_SAMPLES_DEFAULT, 32, samplerate, wisdomFile);
+    TwoVoices *plugin = new TwoVoices(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT,32,16,8,4), samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
 

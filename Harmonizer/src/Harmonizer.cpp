@@ -103,7 +103,7 @@ LV2_Handle Harmonizer::instantiate(const LV2_Descriptor* descriptor, double samp
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    Harmonizer *plugin = new Harmonizer(N_SAMPLES_DEFAULT, 32, 16, samplerate, wisdomFile);
+    Harmonizer *plugin = new Harmonizer(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT,32,16,8,4), nBuffersSW(N_SAMPLES_DEFAULT,16,8,4,2), samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
 

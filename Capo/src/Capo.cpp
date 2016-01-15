@@ -91,7 +91,7 @@ LV2_Handle Capo::instantiate(const LV2_Descriptor* descriptor, double samplerate
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    Capo *plugin = new Capo(N_SAMPLES_DEFAULT, 32, samplerate, wisdomFile);
+    Capo *plugin = new Capo(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT,32,16,8,4), samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
 

@@ -91,7 +91,7 @@ LV2_Handle SuperCapo::instantiate(const LV2_Descriptor* descriptor, double sampl
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    SuperCapo *plugin = new SuperCapo(N_SAMPLES_DEFAULT, 38, samplerate, wisdomFile);
+    SuperCapo *plugin = new SuperCapo(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT,38,20,12,8), samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
 
