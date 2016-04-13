@@ -91,7 +91,7 @@ LV2_Handle SuperWhammy::instantiate(const LV2_Descriptor* descriptor, double sam
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    SuperWhammy *plugin = new SuperWhammy(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT,34,18,10,8), samplerate, wisdomFile);
+    SuperWhammy *plugin = new SuperWhammy(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT*2,34,18,12,8), samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
 
@@ -129,7 +129,7 @@ void SuperWhammy::run(LV2_Handle instance, uint32_t n_samples)
     
     if ( (plugin->obja)->hopa != (int)n_samples )
     {
-        plugin->Realloc(n_samples, nBuffersSW(n_samples,34,18,10,8));
+        plugin->Realloc(n_samples, nBuffersSW(n_samples*2,34,18,12,8));
 		return;
 	}
 
