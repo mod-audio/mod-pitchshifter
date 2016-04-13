@@ -29,7 +29,8 @@ PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers, const char* wisdomFile)
 
 	if (fftwf_import_wisdom_from_filename(wisdomFile) != 0)
 	{
-		p = fftwf_plan_dft_r2c_1d(N, frames2, fXa, FFTW_WISDOM_ONLY);
+		p = fftwf_plan_dft_r2c_1d(N, frames2, fXa, FFTW_WISDOM_ONLY|FFTW_ESTIMATE);
+		printf("PSAnalysis: using wisdom file\n");
 	}
 	else
 	{
@@ -122,7 +123,8 @@ PSSinthesis::PSSinthesis(PSAnalysis *obj, const char* wisdomFile) //Construtor
 
 	if (fftwf_import_wisdom_from_filename(wisdomFile) != 0)
 	{
-		p2 = fftwf_plan_dft_c2r_1d(N, fXs, q, FFTW_WISDOM_ONLY);
+		p2 = fftwf_plan_dft_c2r_1d(N, fXs, q, FFTW_WISDOM_ONLY|FFTW_ESTIMATE);
+		printf("PSSinthesis: using wisdom file\n");
 	}
 	else
 	{

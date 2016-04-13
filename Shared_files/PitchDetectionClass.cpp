@@ -27,8 +27,9 @@ PitchDetection::PitchDetection(uint32_t n_samples, int nBuffers, double SampleRa
 
 	if (fftwf_import_wisdom_from_filename(wisdomFile) != 0)
 	{
-		p  = fftwf_plan_dft_r2c_1d(2*N, frames, fXa, FFTW_WISDOM_ONLY);
-		p2 = fftwf_plan_dft_c2r_1d(2*N, fXs, q, FFTW_WISDOM_ONLY);
+		p  = fftwf_plan_dft_r2c_1d(2*N, frames, fXa, FFTW_WISDOM_ONLY|FFTW_ESTIMATE);
+		p2 = fftwf_plan_dft_c2r_1d(2*N, fXs, q, FFTW_WISDOM_ONLY|FFTW_ESTIMATE);
+		printf("PitchDetection: using wisdom file\n");
 	}
 	else
 	{
