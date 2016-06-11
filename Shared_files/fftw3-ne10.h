@@ -37,7 +37,7 @@ static inline
 int fftwf_import_wisdom_from_filename(const char* filename)
 {
     printf("NE10 fftwf_import_wisdom_from_filename called\n");
-    return 0; (void) filename;
+    return 1; (void) filename;
 }
 
 static inline
