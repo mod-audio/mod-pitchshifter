@@ -3,8 +3,8 @@
 CXX ?= g++
 
 # flags
-CXXFLAGS += -O3 -ffast-math -Wall -fPIC -DPIC $(shell pkg-config --cflags fftw3f) -I. -I../Shared_files
-LDFLAGS += -shared -Wl,-O1 -Wl,--as-needed -Wl,--no-undefined -Wl,--strip-all $(shell pkg-config --libs fftw3f) -larmadillo -lm
+CXXFLAGS += -O3 -ffast-math -Wall -fPIC -DPIC -I. -I../Shared_files
+LDFLAGS += -shared -Wl,-O1 -Wl,--as-needed -Wl,--no-undefined -Wl,--strip-all -larmadillo -lNE10 -lm
 
 ifneq ($(NOOPT),true)
 CXXFLAGS += -mtune=generic -msse -msse2 -mfpmath=sse

@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <cmath>
 #include <complex>
-#include <fftw3.h>
+#include "fftw3-ne10.h"
 #include <armadillo>
 #include "Exp.h"
 #include "angle.h"
