@@ -91,7 +91,7 @@ LV2_Handle Capo::instantiate(const LV2_Descriptor* descriptor, double samplerate
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    Capo *plugin = new Capo(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT,16,8,4,3), samplerate, wisdomFile);
+    Capo *plugin = new Capo(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT,32,16,8,4), samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
 
@@ -126,7 +126,7 @@ void Capo::run(LV2_Handle instance, uint32_t n_samples)
     
     if ( (plugin->obja)->hopa != (int)n_samples )
     {
-        plugin->Realloc(n_samples, nBuffersSW(n_samples,16,8,4,3));
+        plugin->Realloc(n_samples, nBuffersSW(n_samples,32,16,8,4));
         return;
     }
 
