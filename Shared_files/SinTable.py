@@ -25,9 +25,9 @@ with open('Sin.h', 'w') as f:
         '',
     ]).format(**locals()))
 
-    f.write('const double Sin[] = {')
+    f.write('const float Sin[] = {')
 
     for i in range(N):
-        f.write('' + str(mp.sin(i*dx + inicio)) + ',\n')
+        f.write(('%.50f' % mp.sin(i*dx + inicio)) + ',\n')
 
     f.write('\n};')

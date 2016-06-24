@@ -29,13 +29,13 @@ with open('Exponencial.h', 'w') as f:
         '',
     ]).format(**locals()))
 
-    f.write('const complex<double> Exponencial[] = {')
+    f.write('const complex<float> Exponencial[] = {')
 
     for i in range(N):
         value = mp.cos(i*dx + inicio)
         value2 = mp.sin(i*dx + inicio)
-        v = "%.50e" % value
-        v2 = "%.50e" % value2
-        f.write('complex<double>(' + v + ',' + v2 + '),\n')
+        v = "%.50f" % value
+        v2 = "%.50f" % value2
+        f.write('complex<float>(' + v + ',' + v2 + '),\n')
 
     f.write('\n};')
