@@ -25,9 +25,9 @@ with open('Cos.h', 'w') as f:
         '',
     ]).format(**locals()))
 
-    f.write('const double Cos[] = {')
+    f.write('const float Cos[] = {')
 
     for i in range(N):
-        f.write('' + str(mp.cos(i*dx + inicio)) + ',\n')
+        f.write(('%.50f' % mp.cos(i*dx + inicio)) + ',\n')
 
     f.write('\n};')

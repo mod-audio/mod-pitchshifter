@@ -3,7 +3,7 @@
 CXX ?= g++
 
 # flags
-CXXFLAGS += -O3 -ffast-math -Wall -fPIC -DPIC -I. -I../Shared_files
+CXXFLAGS += -O3 -ffast-math -fsingle-precision-constant -Wall -fPIC -DPIC -I. -I../Shared_files
 LDFLAGS += -shared -Wl,-O1 -Wl,--as-needed -Wl,--no-undefined -Wl,--strip-all -larmadillo -lNE10 -lm
 
 ifneq ($(NOOPT),true)

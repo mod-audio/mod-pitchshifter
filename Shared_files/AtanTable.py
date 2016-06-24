@@ -26,9 +26,9 @@ with open('arc.h', 'w') as f:
         '',
     ]).format(**locals()))
 
-    f.write('const double Arctg[] = {')
+    f.write('const float Arctg[] = {')
 
     for i in range(N):
-        f.write('' + str(mp.atan(i * dx)) + ',\n')
+        f.write(('%.50f' % mp.atan(i * dx)) + ',\n')
 
     f.write('\n};')
