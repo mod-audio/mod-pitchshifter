@@ -8,7 +8,11 @@
 
 #define PLUGIN_URI "http://moddevices.com/plugins/mod-devel/2Voices"
 #define N_SAMPLES_DEFAULT 128
-enum {IN, OUT_1, OUT_2, STEP_1, STEP_2, GAIN_1, GAIN_2, PLUGIN_PORT_COUNT};
+#define FIDELITY0 6,3,2,1
+#define FIDELITY1 12,6,3,2
+#define FIDELITY2 16,8,4,2
+#define FIDELITY3 20,10,5,3
+enum {IN, OUT_1, OUT_2, STEP_1, STEP_2, GAIN_1, GAIN_2, FIDELITY, PLUGIN_PORT_COUNT};
 
 /**********************************************************************************************************************************************************/
 
@@ -46,6 +50,43 @@ public:
     {
         Destruct();
         Construct(n_samples, nBuffers, SampleRate, wisdomFile.c_str());
+    }
+
+    void SetFidelity(int fidelity, uint32_t n_samples)
+    {
+        switch (fidelity)
+        {
+        case 0: 
+            if ((nBuffers) != nBuffersSW(n_samples,FIDELITY0))
+            {
+                Realloc(n_samples, nBuffersSW(n_samples,FIDELITY0));
+                return;
+            }
+            break;
+        case 1:
+            if ((nBuffers) != nBuffersSW(n_samples,FIDELITY1))
+            {
+                Realloc(n_samples, nBuffersSW(n_samples,FIDELITY1));
+                return;
+            }
+            break;
+        case 2:
+            if ((nBuffers) != nBuffersSW(n_samples,FIDELITY2))
+            {
+                Realloc(n_samples, nBuffersSW(n_samples,FIDELITY2));
+                return;
+            }
+            break;
+        case 3:
+            if ((nBuffers) != nBuffersSW(n_samples,FIDELITY3))
+            {
+                Realloc(n_samples, nBuffersSW(n_samples,FIDELITY3));
+                return;
+            }
+            break;
+        default:
+            break;
+        }
     }
 
     static LV2_Handle instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features);
@@ -97,7 +138,7 @@ LV2_Handle TwoVoices::instantiate(const LV2_Descriptor* descriptor, double sampl
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    TwoVoices *plugin = new TwoVoices(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT,16,8,4,3), samplerate, wisdomFile);
+    TwoVoices *plugin = new TwoVoices(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT,FIDELITY1), samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
 
@@ -125,24 +166,22 @@ void TwoVoices::run(LV2_Handle instance, uint32_t n_samples)
     TwoVoices *plugin;
     plugin = (TwoVoices *) instance;
 
-    float *in     = plugin->ports[IN];
-    float *out_1  = plugin->ports[OUT_1];
-    float *out_2  = plugin->ports[OUT_2];
-    double s_1    = (double)(*(plugin->ports[STEP_1]));
-    double s_2    = (double)(*(plugin->ports[STEP_2]));
-    double gain_1 = (double)(*(plugin->ports[GAIN_1]));
-    double gain_2 = (double)(*(plugin->ports[GAIN_2]));
+    float *in       = plugin->ports[IN];
+    float *out_1    = plugin->ports[OUT_1];
+    float *out_2    = plugin->ports[OUT_2];
+    double s_1      = (double)(*(plugin->ports[STEP_1]));
+    double s_2      = (double)(*(plugin->ports[STEP_2]));
+    double gain_1   = (double)(*(plugin->ports[GAIN_1]));
+    double gain_2   = (double)(*(plugin->ports[GAIN_2]));
+    int    fidelity = (int)(*(plugin->ports[FIDELITY]));
+
+    plugin->SetFidelity(fidelity, n_samples);
     
     if ( (plugin->obja)->hopa != (int)n_samples )
     {
-        plugin->Realloc(n_samples, nBuffersSW(n_samples,16,8,4,3));
+        plugin->Realloc(n_samples, nBuffersSW(n_samples,FIDELITY1));
         return;
 	}
-
-    float sum_abs = 0;
-
-    for (uint32_t i=0; i<n_samples; i++)
-        sum_abs = sum_abs + abs(in[i]);
     
     if (InputAbsSum(in, n_samples) == 0)
     {

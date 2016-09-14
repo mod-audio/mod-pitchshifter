@@ -10,7 +10,11 @@
 
 #define PLUGIN_URI "http://moddevices.com/plugins/mod-devel/HarmonizerCS"
 #define N_SAMPLES_DEFAULT 128
-enum {IN, OUT_1, OUT_2, TONE, STEP_0, STEP_1, STEP_2, STEP_3, STEP_4, STEP_5, STEP_6, STEP_7, STEP_8, STEP_9, STEP_10, STEP_11, LOWNOTE, GAIN_1, GAIN_2, PLUGIN_PORT_COUNT};
+#define FIDELITY0 4,2,1,1
+#define FIDELITY1 8,4,2,1
+#define FIDELITY2 12,6,3,2
+#define FIDELITYPD 8,4,2,1
+enum {IN, OUT_1, OUT_2, TONE, STEP_0, STEP_1, STEP_2, STEP_3, STEP_4, STEP_5, STEP_6, STEP_7, STEP_8, STEP_9, STEP_10, STEP_11, LOWNOTE, GAIN_1, GAIN_2, FIDELITY, PLUGIN_PORT_COUNT};
 
 /**********************************************************************************************************************************************************/
 
@@ -50,6 +54,36 @@ public:
     {
         Destruct();
         Construct(n_samples, nBuffers, nBuffers2, SampleRate, wisdomFile.c_str());
+    }
+
+    void SetFidelity(int fidelity, uint32_t n_samples)
+    {
+        switch (fidelity)
+        {
+        case 0: 
+            if ((nBuffers) != nBuffersSW(n_samples,FIDELITY0))
+            {
+                Realloc(n_samples, nBuffersSW(n_samples,FIDELITY0), nBuffersSW(n_samples,FIDELITYPD));
+                return;
+            }
+            break;
+        case 1:
+            if ((nBuffers) != nBuffersSW(n_samples,FIDELITY1))
+            {
+                Realloc(n_samples, nBuffersSW(n_samples,FIDELITY1), nBuffersSW(n_samples,FIDELITYPD));
+                return;
+            }
+            break;
+        case 2:
+            if ((nBuffers) != nBuffersSW(n_samples,FIDELITY2))
+            {
+                Realloc(n_samples, nBuffersSW(n_samples,FIDELITY2), nBuffersSW(n_samples,FIDELITYPD));
+                return;
+            }
+            break;
+        default:
+            break;
+        }
     }
 
     static LV2_Handle instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features);
@@ -103,7 +137,7 @@ LV2_Handle HarmonizerCS::instantiate(const LV2_Descriptor* descriptor, double sa
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    HarmonizerCS *plugin = new HarmonizerCS(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT,16,8,4,3), nBuffersSW(N_SAMPLES_DEFAULT*2,16,8,4,2), samplerate, wisdomFile);
+    HarmonizerCS *plugin = new HarmonizerCS(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT,8,4,2,1), nBuffersSW(N_SAMPLES_DEFAULT,8,4,2,1), samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
 
@@ -150,12 +184,15 @@ void HarmonizerCS::run(LV2_Handle instance, uint32_t n_samples)
     int s_11      = (int)(*(plugin->ports[STEP_11]));
     double gain_1 = (double)(*(plugin->ports[GAIN_1]));
     double gain_2 = (double)(*(plugin->ports[GAIN_2]));
-
+    int  fidelity = (int)(*(plugin->ports[FIDELITY]));
+    
+    plugin->SetFidelity(fidelity, n_samples);
+    
     if ( (plugin->obja)->hopa != (int)n_samples )
     {
-        plugin->Realloc(n_samples, nBuffersSW(n_samples,16,8,4,3), nBuffersSW(n_samples*2,16,8,4,2));
+        plugin->Realloc(n_samples, nBuffersSW(n_samples,FIDELITY1), nBuffersSW(n_samples,FIDELITYPD));
         return;
-	}
+    }
 	
 	if (InputAbsSum(in, n_samples) == 0)
 	{

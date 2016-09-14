@@ -8,7 +8,11 @@
 
 #define PLUGIN_URI "http://moddevices.com/plugins/mod-devel/SuperWhammy"
 #define N_SAMPLES_DEFAULT 128
-enum {IN, OUT, STEP, FIRST, LAST, CLEAN, GAIN, PLUGIN_PORT_COUNT};
+#define FIDELITY0 6,3,2,1
+#define FIDELITY1 12,6,3,2
+#define FIDELITY2 16,8,4,2
+#define FIDELITY3 20,10,5,3
+enum {IN, OUT, STEP, FIRST, LAST, CLEAN, GAIN, FIDELITY, PLUGIN_PORT_COUNT};
 
 /**********************************************************************************************************************************************************/
 
@@ -42,6 +46,43 @@ public:
     {
     	Destruct();
     	Construct(n_samples, nBuffers, SampleRate, wisdomFile.c_str());
+    }
+
+    void SetFidelity(int fidelity, uint32_t n_samples)
+    {
+        switch (fidelity)
+        {
+        case 0: 
+            if ((nBuffers) != nBuffersSW(n_samples,FIDELITY0))
+            {
+                Realloc(n_samples, nBuffersSW(n_samples,FIDELITY0));
+                return;
+            }
+            break;
+        case 1:
+            if ((nBuffers) != nBuffersSW(n_samples,FIDELITY1))
+            {
+                Realloc(n_samples, nBuffersSW(n_samples,FIDELITY1));
+                return;
+            }
+            break;
+        case 2:
+            if ((nBuffers) != nBuffersSW(n_samples,FIDELITY2))
+            {
+                Realloc(n_samples, nBuffersSW(n_samples,FIDELITY2));
+                return;
+            }
+            break;
+        case 3:
+            if ((nBuffers) != nBuffersSW(n_samples,FIDELITY3))
+            {
+                Realloc(n_samples, nBuffersSW(n_samples,FIDELITY3));
+                return;
+            }
+            break;
+        default:
+            break;
+        }
     }
 
     static LV2_Handle instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features);
@@ -91,7 +132,7 @@ LV2_Handle SuperWhammy::instantiate(const LV2_Descriptor* descriptor, double sam
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    SuperWhammy *plugin = new SuperWhammy(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT*2,34,18,12,8), samplerate, wisdomFile);
+    SuperWhammy *plugin = new SuperWhammy(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT,FIDELITY1), samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
 
@@ -119,17 +160,21 @@ void SuperWhammy::run(LV2_Handle instance, uint32_t n_samples)
     SuperWhammy *plugin;
     plugin = (SuperWhammy *) instance;
 
-    float *in   = plugin->ports[IN];
-    float *out  = plugin->ports[OUT];
-    double s    = (double)(*(plugin->ports[STEP]));
-    double gain = (double)(*(plugin->ports[GAIN]));
-    double a    = (double)(*(plugin->ports[FIRST]));
-    double b    = (double)(*(plugin->ports[LAST]));
-    int c       = (int)(*(plugin->ports[CLEAN]));
+    float *in       = plugin->ports[IN];
+    float *out      = plugin->ports[OUT];
+    double s        = (double)(*(plugin->ports[STEP]));
+    double gain     = (double)(*(plugin->ports[GAIN]));
+    double a        = (double)(*(plugin->ports[FIRST]));
+    double b        = (double)(*(plugin->ports[LAST]));
+    int    c        = (int)(*(plugin->ports[CLEAN]));
+    int    fidelity = (int)(*(plugin->ports[FIDELITY]));
+
+    plugin->SetFidelity(fidelity, n_samples);
+    
     
     if ( (plugin->obja)->hopa != (int)n_samples )
     {
-        plugin->Realloc(n_samples, nBuffersSW(n_samples*2,34,18,12,8));
+        plugin->Realloc(n_samples, nBuffersSW(n_samples,FIDELITY1));
 		return;
 	}
 

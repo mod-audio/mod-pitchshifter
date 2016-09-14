@@ -34,10 +34,19 @@ mod:label "Harmonizer";
 doap:license "GPL";
 
 rdfs:comment """
-A pitch shifter that can shift an input pitch from 12 semitones down to 24 semitones up.
-"First" and "Last" determine the range of variation where the "Step" parameter will work.
-"First" doesn't need to be necessarily smaller than "Last".
-"Clean" parameter allows you to hear the bypass sound summed with the pitch shifted signal and "Gain" it's the effect gain, does not affect the clean signal.
+It’s a (relatively) simple harmonizer plugin that allows you to set the scale(*) to either Major, Minor, or Minor Harmonic, and then shift up a +3rd or +6th, or down a -3rd or -6th in that scale. Like with nearly all harmonizers, you will have to play in the correct key (which can also be configured).
+
+The “Mode” switch has three settings, in the first setting, it will mute the harmonized note when playing outside the scale. In the second setting, it will play the harmonized note, regardless of whether it is in the scale or not. In the third (“Bend”) setting, it behaves like the second setting, while also allowing you to bend notes, allowing for smooth transitions between harmonized notes. 
+
+All plugins in the MOD-pitchshifter family have an option to set the fidelity of the plugin. As you lower the fidelity, the sound will become less pristine, but the plugin will also use less processing. The opposite holds true for increasing the fidelity, this will grant you a clearer pitch-shifted signal at the cost of significantly more processing being used. 
+
+*The Lo-Fi setting is reminiscent of bit-crushed sounds, if you are looking for those synthesizer-like basslines, or dirty octave-up sounds, this is your setting!
+*The Hi-Fi setting is great if you are looking to emulate (for example) something like a 12-string guitar, be sure to mind that CPU-meter in the bottom-right of the screen though! 
+*The settings in between are created to let you make the perfect trade-off between quality and performance. 
+
+A hint for making the right decision: the more you shift the pitch up, the higher you will need to set the Fidelity to get a clear sound. 
+
+(*) The scale can be set by pressing the gear at the top-right corner of the plugin, in a future release, the interface will support doing this without entering the settings. 
 """;
 
 lv2:port
@@ -46,28 +55,28 @@ lv2:port
     lv2:index 0;
     lv2:symbol "In";
     lv2:name "In";
-    lv2:shortname "In";
+    lv2:shortName "In";
 ],
 [
     a lv2:AudioPort, lv2:OutputPort;
     lv2:index 1;
     lv2:symbol "Out1";
     lv2:name "Out 1";
-    lv2:shortname "Out 1";
+    lv2:shortName "Out 1";
 ],
 [
     a lv2:AudioPort, lv2:OutputPort;
     lv2:index 2;
     lv2:symbol "Out2";
     lv2:name "Out 2";
-    lv2:shortname "Out 2";
+    lv2:shortName "Out 2";
 ],
 [
     a lv2:ControlPort, lv2:InputPort;
     lv2:index 3;
     lv2:symbol "Tone";
     lv2:name "Tone";
-    lv2:shortname "Tone";
+    lv2:shortName "Tone";
     lv2:default 0;
     lv2:minimum 0;
     lv2:maximum 11;
@@ -90,7 +99,7 @@ lv2:port
     lv2:index 4;
     lv2:symbol "Scale";
     lv2:name "Scale";
-    lv2:shortname "Scale";
+    lv2:shortName "Scale";
     lv2:default 0;
     lv2:minimum 0;
     lv2:maximum 2;
@@ -104,7 +113,7 @@ lv2:port
     lv2:index 5;
     lv2:symbol "Interval";
     lv2:name "Interval";
-    lv2:shortname "Interval";
+    lv2:shortName "Interval";
     lv2:default 0;
     lv2:minimum 0;
     lv2:maximum 9;
@@ -119,7 +128,7 @@ lv2:port
     lv2:index 6;
     lv2:symbol "Mode";
     lv2:name "Mode";
-    lv2:shortname "Mode";
+    lv2:shortName "Mode";
     lv2:default 0;
     lv2:minimum 0;
     lv2:maximum 2;
@@ -133,7 +142,7 @@ lv2:port
     lv2:index 7;
     lv2:symbol "LowestNoteToChangeThePitch";
     lv2:name "Lowest note to change the pitch";
-    lv2:shortname "Lowest Wet";
+    lv2:shortName "Lowest Wet";
     lv2:default 0;
     lv2:minimum 0;
     lv2:maximum 14;
@@ -159,7 +168,7 @@ lv2:port
     lv2:index 8;
     lv2:symbol "Gain1";
     lv2:name "Gain 1";
-    lv2:shortname "Gain 1";
+    lv2:shortName "Gain 1";
     lv2:default 0.0;
     lv2:minimum -20.0;
     lv2:maximum 20.0;
@@ -170,11 +179,25 @@ lv2:port
     lv2:index 9;
     lv2:symbol "Gain2";
     lv2:name "Gain 2";
-    lv2:shortname "Gain 2";
+    lv2:shortName "Gain 2";
     lv2:default 3.0;
     lv2:minimum -20.0;
     lv2:maximum 20.0;
     units:unit units:db;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 10;
+    lv2:symbol "Fidelity";
+    lv2:name "Fidelity";
+    lv2:shortname "Fidelity";
+    lv2:default 1;
+    lv2:minimum 0;
+    lv2:maximum 2;
+    lv2:portProperty lv2:integer, lv2:enumeration;
+    lv2:scalePoint [rdfs:label "Lo-Fi"; rdf:value 0];
+    lv2:scalePoint [rdfs:label "Normal"; rdf:value 1];
+    lv2:scalePoint [rdfs:label "Hi-Fi"; rdf:value 2];
 ];
 
 modgui:gui [

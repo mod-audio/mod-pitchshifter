@@ -16,7 +16,7 @@
     }
     .mod-capo .mod-knob {
         position: absolute;
-        margin: 84px 36px;
+        margin: 84px 26px;
         z-index: 100
     }
     .mod-capo .mod-knob .mod-knob-image {

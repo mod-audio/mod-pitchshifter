@@ -85,12 +85,13 @@ void PSAnalysis::Analysis()
 	if (p) fftwf_execute(p);
 	
 	/*Processing*/
-	
 	for (int i=0; i<(N/2 + 1); i++)
 	{
 		Xa(i) = cx_float(fXa[i][0], fXa[i][1]);
-		Xa_arg(i) = angle(Xa(i));
+		angle(Xa(i), &Xa_arg(i));
+		//Xa_arg(i) = angle(Xa(i));
 	}
+
 	d_phi = Xa_arg - XaPrevious_arg;
 	d_phi_prime = d_phi - ((2*M_PI * hopa) / N) * I;
 	AUX = floor((d_phi_prime + M_PI) / (2*M_PI));
@@ -153,6 +154,8 @@ void PSSinthesis::PreSinthesis()
 
 void PSSinthesis::Sinthesis(double s)
 {
+    //Sinthesis, t1
+    
 	hops[Qcolumn-1] = round(hopa*(pow(2,(s/12))));
 	
 	//Some declaration
@@ -169,23 +172,45 @@ void PSSinthesis::Sinthesis(double s)
 	
 	ysaida2 = &ysaida[L-N];
 
+	//Sinthesis, t2
+
 	// We can divide the code in two here
 
+	//Sinthesis: //t2-t3 -> //t1-t2: t1 = getticks();
+	//step 2, t1
+
 	Phi = PhiPrevious + (hops[Qcolumn-1])*omega_true_sobre_fs[0] ;
-	for (int i=0; i<(N/2 + 1); i++)
-		Xs(i) = ExponencialComplexa(Phi(i));
+
+	//Sinthesis: //t2-t3 -> //t1-t2: t2 = getticks();
+	
+	int expCompEnd = N/2 + 1;
+	for (int i=0; i<expCompEnd; i++) {
+		ExponencialComplexa(Phi(i), &Xs(i));	
+		//Xs(i) = ExponencialComplexa(Phi(i));	
+	}
+
+	//Sinthesis: //t2-t3 -> //t1-t2: t3 = getticks();
+
 	Xs = Xa_abs[0] % Xs;
 	PhiPrevious = Phi;
 	
-	
+	//Sinthesis: //t2-t3 -> //t1-t2: t4 = getticks();
+	//step 2, t2
+
 	for (int i=0; i<(N/2 + 1); i++)
 	{
 	    fXs[i][0] = real(Xs(i));
 	    fXs[i][1] = imag(Xs(i));
 	}
-	
+
+	//step 2, t3
+
+	//Sinthesis, t3
+
 	/*Synthesis*/
 	if (p2) fftwf_execute(p2);
+
+	//Sinthesis, t4
 	
 	double norm = N*sqrt( N/(2.0*hops[Qcolumn-1]) );
 
@@ -204,6 +229,8 @@ void PSSinthesis::Sinthesis(double s)
 		for (int i=L-N; i<L; i++)
 			ysaida[i] = ysaida[i] + q[i-(L-N)];
 	}
+
+	//Sinthesis, t5
 	//Linear interpolation
 	r = hops[Qcolumn-1]/(1.0*hopa);
 
@@ -214,12 +241,18 @@ void PSSinthesis::Sinthesis(double s)
 		n2 = ceil(n3);
 		yshift[n] = ysaida2[n1] + (ysaida2[n2]-ysaida2[n1])*(n3 - n1);
 	}
+
+	//Sinthesis, t6
 	
 	//Shift ysaida hops[0] left
 	for (int i=0; i<L-hops[0]; i++)
 		ysaida[i] = ysaida[i+hops[0]];
 	for (int i=L-hops[0]; i<L; i++)
 		ysaida[i] = 0;
+
+	//Sinthesis, t7
+
+	
 }
 
 int nBuffersSW(uint32_t n_samples, int c64, int c128, int c256, int c_default)
@@ -251,3 +284,4 @@ float InputAbsSum(float *in, uint32_t n_samples)
 
 	return sum_abs;
 }
+

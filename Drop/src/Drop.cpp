@@ -8,7 +8,10 @@
 
 #define PLUGIN_URI "http://moddevices.com/plugins/mod-devel/Drop"
 #define N_SAMPLES_DEFAULT 128
-enum {IN, OUT, STEP, GAIN, PLUGIN_PORT_COUNT};
+#define FIDELITY0 4,2,1,1
+#define FIDELITY1 8,4,2,1
+#define FIDELITY2 16,8,4,2
+enum {IN, OUT, STEP, GAIN, FIDELITY, PLUGIN_PORT_COUNT};
 
 /**********************************************************************************************************************************************************/
 
@@ -44,6 +47,36 @@ public:
     	Construct(n_samples, nBuffers, SampleRate, wisdomFile.c_str());
     }
 
+    void SetFidelity(int fidelity, uint32_t n_samples)
+    {
+        switch (fidelity)
+        {
+        case 0: 
+            if ((nBuffers) != nBuffersSW(n_samples,FIDELITY0))
+            {
+                Realloc(n_samples, nBuffersSW(n_samples,FIDELITY0));
+                return;
+            }
+            break;
+        case 1:
+            if ((nBuffers) != nBuffersSW(n_samples,FIDELITY1))
+            {
+                Realloc(n_samples, nBuffersSW(n_samples,FIDELITY1));
+                return;
+            }
+            break;
+        case 2:
+            if ((nBuffers) != nBuffersSW(n_samples,FIDELITY2))
+            {
+                Realloc(n_samples, nBuffersSW(n_samples,FIDELITY2));
+                return;
+            }
+            break;
+        default:
+            break;
+        }
+    }
+
     static LV2_Handle instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features);
     static void activate(LV2_Handle instance);
     static void deactivate(LV2_Handle instance);
@@ -61,6 +94,8 @@ public:
     int cont;
     double SampleRate;
     std::string wisdomFile;
+
+    
 };
 
 /**********************************************************************************************************************************************************/
@@ -91,7 +126,8 @@ LV2_Handle Drop::instantiate(const LV2_Descriptor* descriptor, double samplerate
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    Drop *plugin = new Drop(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT,16,8,4,3), samplerate, wisdomFile);
+    Drop *plugin = new Drop(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT,FIDELITY1), samplerate, wisdomFile);
+
     return (LV2_Handle)plugin;
 }
 
@@ -114,19 +150,23 @@ void Drop::connect_port(LV2_Handle instance, uint32_t port, void *data)
 
 /**********************************************************************************************************************************************************/
 
+
 void Drop::run(LV2_Handle instance, uint32_t n_samples)
 {
     Drop *plugin;
     plugin = (Drop *) instance;
 
-    float *in   = plugin->ports[IN];
-	float *out  = plugin->ports[OUT];
-	double s    = (double)(*(plugin->ports[STEP]));
-	double gain = (double)(*(plugin->ports[GAIN]));
+    float *in       = plugin->ports[IN];
+	float *out      = plugin->ports[OUT];
+	double s        = (double)(*(plugin->ports[STEP]));
+	double gain     = (double)(*(plugin->ports[GAIN]));
+    int    fidelity = (int)(*(plugin->ports[FIDELITY]));
     
+    plugin->SetFidelity(fidelity, n_samples);
+
     if ( (plugin->obja)->hopa != (int)n_samples )
     {
-        plugin->Realloc(n_samples, nBuffersSW(n_samples,16,8,4,3));
+        plugin->Realloc(n_samples, nBuffersSW(n_samples,FIDELITY1));
 		return;
 	}
 
@@ -139,7 +179,7 @@ void Drop::run(LV2_Handle instance, uint32_t n_samples)
     (plugin->objg)->SetGaindB(gain);
     (plugin->obja)->PreAnalysis(plugin->nBuffers, in);
     (plugin->objs)->PreSinthesis();
-    	
+
 	if (plugin->cont < plugin->nBuffers-1)
 		plugin->cont = plugin->cont + 1;
 	else

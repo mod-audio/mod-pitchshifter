@@ -5,6 +5,7 @@
 @prefix lv2:    <http://lv2plug.in/ns/lv2core#>.
 @prefix mod:    <http://moddevices.com/ns/mod#>.
 @prefix modgui: <http://moddevices.com/ns/modgui#>.
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix units:  <http://lv2plug.in/ns/extensions/units#>.
 
@@ -33,8 +34,15 @@ mod:label "Super Capo";
 doap:license "GPL";
 
 rdfs:comment """
-It's a pitch shifter which can rise the pitch until 24 semitones (steps).
-Because it's more limited than Super Whammy it uses less processing, but still more than Capo.
+It’s a pitchshifter that can raise the pitch with a maximum of +24 semitones (steps). It has a bigger range than the Capo, but it also uses more processing. If +12 semitones up are enough for you, consider using the regular Capo plugin. 
+
+All plugins in the MOD-pitchshifter family have an option to set the fidelity of the plugin. As you lower the fidelity, the sound will become less pristine, but the plugin will also use less processing. The opposite holds true for increasing the fidelity, this will grant you a clearer pitch-shifted signal at the cost of significantly more processing being used. 
+
+*The Lo-Fi setting is reminiscent of bit-crushed sounds, if you are looking for those synthesizer-like basslines, or dirty octave-up sounds, this is your setting!
+*The Hi-Fi setting is great if you are looking to emulate (for example) something like a 12-string guitar, be sure to mind that CPU-meter in the bottom-right of the screen though! 
+*The settings in between are created to let you make the perfect trade-off between quality and performance. 
+
+A hint for making the right decision: the more you shift the pitch up, the higher you will need to set the Fidelity to get a clear sound. 
 """;
 
 lv2:port
@@ -43,21 +51,21 @@ lv2:port
     lv2:index 0;
     lv2:symbol "In";
     lv2:name "In";
-    lv2:shortname "In";
+    lv2:shortName "In";
 ],
 [
     a lv2:AudioPort, lv2:OutputPort;
     lv2:index 1;
     lv2:symbol "Out";
     lv2:name "Out";
-    lv2:shortname "Out";
+    lv2:shortName "Out";
 ],
 [
     a lv2:ControlPort, lv2:InputPort;
     lv2:index 2;
     lv2:symbol "Step";
     lv2:name "Step";
-    lv2:shortname "Step";
+    lv2:shortName "Step";
     lv2:portProperty lv2:integer;
     lv2:default 0;
     lv2:minimum 0;
@@ -68,11 +76,25 @@ lv2:port
     lv2:index 3;
     lv2:symbol "Gain";
     lv2:name "Gain";
-    lv2:shortname "Gain";
+    lv2:shortName "Gain";
     lv2:default 3.0;
     lv2:minimum -20.0;
     lv2:maximum 20.0;
     units:unit units:db;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 4;
+    lv2:symbol "Fidelity";
+    lv2:name "Fidelity";
+    lv2:shortname "Fidelity";
+    lv2:default 1;
+    lv2:minimum 0;
+    lv2:maximum 2;
+    lv2:portProperty lv2:integer, lv2:enumeration;
+    lv2:scalePoint [rdfs:label "Lo-Fi"; rdf:value 0];
+    lv2:scalePoint [rdfs:label "Normal"; rdf:value 1];
+    lv2:scalePoint [rdfs:label "Hi-Fi"; rdf:value 2];
 ];
 
 modgui:gui [

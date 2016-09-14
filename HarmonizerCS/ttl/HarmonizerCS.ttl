@@ -34,10 +34,15 @@ mod:label "HarmonizerCS";
 doap:license "GPL";
 
 rdfs:comment """
-A pitch shifter that can shift an input pitch from 12 semitones down to 24 semitones up.
-"First" and "Last" determine the range of variation where the "Step" parameter will work.
-"First" doesn't need to be necessarily smaller than "Last".
-"Clean" parameter allows you to hear the bypass sound summed with the pitch shifted signal and "Gain" it's the effect gain, does not affect the clean signal.
+It’s a custom-scale harmonizer plugin that allows you to create your own scale by moving up and down the sliders. With the slider all the way up, the harmonizer will shift the pitch up by +12 semitones. With the slider all the way down, the harmonizer will shift the pitch down by -12 semitones. Like with nearly all harmonizers, you will have to play in the correct key (which can also be configured).  
+
+All plugins in the MOD-pitchshifter family have an option to set the fidelity of the plugin. As you lower the fidelity, the sound will become less pristine, but the plugin will also use less processing. The opposite holds true for increasing the fidelity, this will grant you a clearer pitch-shifted signal at the cost of significantly more processing being used. 
+
+*The Lo-Fi setting is reminiscent of bit-crushed sounds, if you are looking for those synthesizer-like basslines, or dirty octave-up sounds, this is your setting!
+*The Hi-Fi setting is great if you are looking to emulate (for example) something like a 12-string guitar, be sure to mind that CPU-meter in the bottom-right of the screen though! 
+*The settings in between are created to let you make the perfect trade-off between quality and performance. 
+
+A hint for making the right decision: the more you shift the pitch up, the higher you will need to set the Fidelity to get a clear sound. 
 """;
 
 lv2:port
@@ -264,6 +269,20 @@ lv2:port
     lv2:minimum -20.0;
     lv2:maximum 20.0;
     units:unit units:db;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 19;
+    lv2:symbol "Fidelity";
+    lv2:name "Fidelity";
+    lv2:shortname "Fidelity";
+    lv2:default 1;
+    lv2:minimum 0;
+    lv2:maximum 2;
+    lv2:portProperty lv2:integer, lv2:enumeration;
+    lv2:scalePoint [rdfs:label "Lo-Fi"; rdf:value 0];
+    lv2:scalePoint [rdfs:label "Normal"; rdf:value 1];
+    lv2:scalePoint [rdfs:label "Hi-Fi"; rdf:value 2];
 ];
 
 modgui:gui [

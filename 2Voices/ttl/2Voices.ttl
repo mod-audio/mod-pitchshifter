@@ -4,6 +4,7 @@
 @prefix foaf:  <http://xmlns.com/foaf/0.1/>.
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#>.
 @prefix mod:   <http://moddevices.com/ns/mod#>.
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix units: <http://lv2plug.in/ns/extensions/units#>.
 
@@ -35,8 +36,17 @@ lv2:minorVersion 0;
 lv2:microVersion 4;
 
 rdfs:comment """
-It's a pitch shifter which can rise the pitch until 4 semitones (steps).
-Despite being more limited than Super Whammy it uses less processing.
+If a MOD Drop and Mod SuperCapo had a baby, it would be the MOD 2Voices! It sports two outputs with independent pitch-shift controls. The pitch of the input signal can be shifted anywhere between -12 semitones down, and +24 semitones up. 
+
+Using a 2Voices plugin rather than both a Drop and a SuperCapo lowers the CPU load on the device.   
+
+All plugins in the MOD-pitchshifter family have an option to set the fidelity of the plugin. As you lower the fidelity, the sound will become less pristine, but the plugin will also use less processing. The opposite holds true for increasing the fidelity, this will grant you a clearer pitch-shifted signal at the cost of significantly more processing being used. 
+
+*The Lo-Fi setting is reminiscent of bit-crushed sounds, if you are looking for those synthesizer-like basslines, or dirty octave-up sounds, this is your setting!
+*The Hi-Fi setting is great if you are looking to emulate (for example) something like a 12-string guitar, be sure to mind that CPU-meter in the bottom-right of the screen though! 
+*The settings in between are created to let you make the perfect trade-off between quality and performance. 
+
+A hint for making the right decision: the more you shift the pitch up, the higher you will need to set the Fidelity to get a clear sound. 
 """;
 
 lv2:port
@@ -45,28 +55,28 @@ lv2:port
     lv2:index 0;
     lv2:symbol "In";
     lv2:name "In";
-    lv2:shortname "In";
+    lv2:shortName "In";
 ],
 [
     a lv2:AudioPort, lv2:OutputPort;
     lv2:index 1;
     lv2:symbol "Out1";
     lv2:name "Out 1";
-    lv2:shortname "Out 1";
+    lv2:shortName "Out 1";
 ],
 [
     a lv2:AudioPort, lv2:OutputPort;
     lv2:index 2;
     lv2:symbol "Out2";
     lv2:name "Out 2";
-    lv2:shortname "Out 2";
+    lv2:shortName "Out 2";
 ],
 [
     a lv2:ControlPort, lv2:InputPort;
     lv2:index 3;
     lv2:symbol "Step1";
     lv2:name "Step 1";
-    lv2:shortname "Step 1";
+    lv2:shortName "Step 1";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 24;
@@ -77,7 +87,7 @@ lv2:port
     lv2:index 4;
     lv2:symbol "Step2";
     lv2:name "Step 2";
-    lv2:shortname "Step 2";
+    lv2:shortName "Step 2";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 24;
@@ -88,7 +98,7 @@ lv2:port
     lv2:index 5;
     lv2:symbol "Gain_1";
     lv2:name "Gain 1";
-    lv2:shortname "Gain 1";
+    lv2:shortName "Gain 1";
     lv2:default 3.0;
     lv2:minimum -20.0;
     lv2:maximum 20.0;
@@ -99,9 +109,24 @@ lv2:port
     lv2:index 6;
     lv2:symbol "Gain_2";
     lv2:name "Gain 2";
-    lv2:shortname "Gain 2";
+    lv2:shortName "Gain 2";
     lv2:default 3.0;
     lv2:minimum -20.0;
     lv2:maximum 20.0;
     units:unit units:db;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 7;
+    lv2:symbol "Fidelity";
+    lv2:name "Fidelity";
+    lv2:shortname "Fidelity";
+    lv2:default 1;
+    lv2:minimum 0;
+    lv2:maximum 3;
+    lv2:portProperty lv2:integer, lv2:enumeration;
+    lv2:scalePoint [rdfs:label "Lo-Fi"; rdf:value 0];
+    lv2:scalePoint [rdfs:label "Medium"; rdf:value 1];
+    lv2:scalePoint [rdfs:label "High"; rdf:value 2];
+    lv2:scalePoint [rdfs:label "Hi-Fi"; rdf:value 3];
 ].

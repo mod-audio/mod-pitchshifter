@@ -1,5 +1,5 @@
 
-all: Shared_files/arc.h Shared_files/Exponencial.h Shared_files/Cos.h Shared_files/Sin.h Shared_files/Sin.h Shared_files/harmonizer.wisdom
+all: Shared_files/harmonizer.wisdom
 	$(MAKE) -C 2Voices
 	$(MAKE) -C Capo
 	$(MAKE) -C Drop
@@ -29,27 +29,7 @@ clean:
 	$(MAKE) -C Harmonizer2 clean
 	$(MAKE) -C HarmonizerCS clean
 	rm -f Shared_files/*.o
-	rm -f Shared_files/arc.h
-	rm -f Shared_files/Exponencial.h
-	rm -f Shared_files/Cos.h
-	rm -f Shared_files/Sin.h
 	rm -f Shared_files/harmonizer.wisdom
-
-Shared_files/arc.h:
-	@echo "Generating arc.h file, this might take a while..."
-	cd Shared_files && ./AtanTable.py
-
-Shared_files/Exponencial.h:
-	@echo "Generating Exponencial.h file, this might take a while..."
-	cd Shared_files && ./CxExpTable.py # 1000
-
-Shared_files/Cos.h:
-	@echo "Generating Cos.h file, this might take a while..."
-	cd Shared_files && ./CosTable.py
-
-Shared_files/Sin.h:
-	@echo "Generating Sin.h file, this might take a while..."
-	cd Shared_files && ./SinTable.py
 
 Shared_files/harmonizer.wisdom:
 	@echo "Generating harmonizer.wisdom file, this might take a while..."

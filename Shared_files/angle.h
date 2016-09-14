@@ -1,7 +1,8 @@
 #include <complex>
 #include <cmath>
 
+#define THREEPIOVERFOUR 2.35619449019234492884
+
 using namespace std;
 
-double angle( complex<double> z);
-double arctg( double x);
+void angle( complex<double> z, double * target);

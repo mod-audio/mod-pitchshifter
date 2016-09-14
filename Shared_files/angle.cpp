@@ -1,72 +1,38 @@
 #include <complex>
 #include <cmath>
 #include "angle.h"
-#include "arc.h"
 
 using namespace std;
 
-double arctg( double x)
-{
-	int flag = 1;
-	
-	if (x < 0)
-	{
-		flag = -1;
-		x = -x;
-	}
-	
-	int n = round((x-ATAN_inicio)*ATAN_Idx);
-		
-	if( x > ATAN_fim)
-	{
-		return flag*M_PI/2;
-	}
-	else
-	{
-		return Arctg[n]*flag;
-	}	
-}
-
-double angle( complex<double> z)
+void angle( complex<double> z, double * target)
 {
 	double x = real(z);
 	double y = imag(z);
-	double Angle = 0;
+	double angle = 0;
 
-	if (x != 0 || y != 0)
+	double abs_y = abs(y)+1e-10; //to prevent 0/0
+
+	if (x>=0)
 	{
-		if( (x == 0)&&(y > 0) )
-		{
-			Angle = M_PI/2;
-		}
-		else
-		{
-			if( (x == 0)&&(y < 0) )
-			{
-				Angle = -M_PI/2;
-			}
-			else
-			{
-				if (x > 0)
-				{
-					Angle = arctg(y/x);
-				}
-				else
-				{
-					if ( y>0 )
-					{
-						Angle = arctg(y/x) + M_PI;
-					}
-					else
-					{
-						if ( y<0 )
-						{
-							Angle = arctg(y/x) - M_PI;
-						}
-					}
-				}
-			}
-		}
+		double r = (x - abs_y) / (x + abs_y);
+		angle = M_PI_4 - M_PI_4 * r;
 	}
-	return Angle;
+	else
+	{
+		double r = (x + abs_y) / (abs_y - x);
+		angle = THREEPIOVERFOUR - M_PI_4 * r;
+	}
+	if (y<0)
+	{
+		*target = -angle;
+		return;
+	}
+	else
+	{
+		*target = angle;
+		return;
+	}
+	
+	*target = angle;
+	return;
 }

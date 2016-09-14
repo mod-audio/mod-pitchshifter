@@ -1,22 +1,27 @@
 #include <complex>
 #include <cmath>
-#include "Sin.h"
-#include "Cos.h"
+#include "Exp.h"
 
 using namespace std;
 
-complex<double> ExponencialComplexa( double x)
+void ExponencialComplexa( double x, complex<double> * target)
 {	
-	double aux;
+	double k;
+
+	k = ((x + M_PI) * ONEOVERTWOPI);
+	x = x - ((int)(k)) * TWOPI; 
 	
-	if ( (x>SIN_fim)||(x<SIN_inicio))
+	//calculate sin(x) using parabola approximation
+	double sin = FOUROVERPI * x + NEGFOUROVERPISQ * x * abs(x);
+
+	//calculate cos(x) using parabola approximation on conditioned x
+	x = x + M_PI_2;
+	if (x > M_PI)
 	{
-		aux = ((x +M_PI)/(2*M_PI));
-        aux = floor(aux);
-        x = x-aux*(2*M_PI);
+		x = x - TWOPI;
 	}
-	
-	int n;
-	n = round((x-SIN_inicio)*SIN_Idx);
-	return complex<double>(Cos[n],Sin[n]);
+	double cos = FOUROVERPI * x + NEGFOUROVERPISQ * x * abs(x);
+
+	*target = complex<double>(cos, sin);
 }
+
