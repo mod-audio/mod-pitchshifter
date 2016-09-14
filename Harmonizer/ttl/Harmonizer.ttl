@@ -36,7 +36,7 @@ doap:license "GPL";
 rdfs:comment """
 It’s a (relatively) simple harmonizer plugin that allows you to set the scale(*) to either Major, Minor, or Minor Harmonic, and then shift up a +3rd or +6th, or down a -3rd or -6th in that scale. Like with nearly all harmonizers, you will have to play in the correct key (which can also be configured).
 
-The “Mode” switch has three settings, in the first setting, it will mute the harmonized note when playing outside the scale. In the second setting, it will play the harmonized note, regardless of whether it is in the scale or not. In the third (“Bend”) setting, it behaves like the second setting, while also allowing you to bend notes, allowing for smooth transitions between harmonized notes. 
+The “Mode” switch has three settings, in the first setting, it will mute the harmonized note when playing outside the scale. In the second setting, it will play the harmonized note, regardless of whether it is within the scale or not. In the third (“Bend”) setting, it behaves like the second setting, while also allowing you to bend notes, allowing for smooth transitions between harmonized notes. 
 
 All plugins in the MOD-pitchshifter family have an option to set the fidelity of the plugin. As you lower the fidelity, the sound will become less pristine, but the plugin will also use less processing. The opposite holds true for increasing the fidelity, this will grant you a clearer pitch-shifted signal at the cost of significantly more processing being used. 
 
@@ -46,7 +46,7 @@ All plugins in the MOD-pitchshifter family have an option to set the fidelity of
 
 A hint for making the right decision: the more you shift the pitch up, the higher you will need to set the Fidelity to get a clear sound. 
 
-(*) The scale can be set by pressing the gear at the top-right corner of the plugin, in a future release, the interface will support doing this without entering the settings. 
+(*) The scale can be set by pressing the gear at the top-right corner of the plugin, in a future release, the interface will support doing this without entering the settings.  
 """;
 
 lv2:port
@@ -190,7 +190,7 @@ lv2:port
     lv2:index 10;
     lv2:symbol "Fidelity";
     lv2:name "Fidelity";
-    lv2:shortname "Fidelity";
+    lv2:shortName "Fidelity";
     lv2:default 1;
     lv2:minimum 0;
     lv2:maximum 2;

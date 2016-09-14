@@ -34,7 +34,7 @@ mod:label "HarmonizerCS";
 doap:license "GPL";
 
 rdfs:comment """
-It’s a custom-scale harmonizer plugin that allows you to create your own scale by moving up and down the sliders. With the slider all the way up, the harmonizer will shift the pitch up by +12 semitones. With the slider all the way down, the harmonizer will shift the pitch down by -12 semitones. Like with nearly all harmonizers, you will have to play in the correct key (which can also be configured).  
+It’s a custom-scale harmonizer plugin that allows you to create your own scale by moving up and down the sliders. With the slider all the way up, the harmonizer will shift the pitch up by +12 semitones. With the slider all the way down, the harmonizer will shift the pitch down by -12 semitones. Like with nearly all harmonizers, you will have to play in the correct key (which can also be configured). 
 
 All plugins in the MOD-pitchshifter family have an option to set the fidelity of the plugin. As you lower the fidelity, the sound will become less pristine, but the plugin will also use less processing. The opposite holds true for increasing the fidelity, this will grant you a clearer pitch-shifted signal at the cost of significantly more processing being used. 
 
@@ -51,28 +51,28 @@ lv2:port
     lv2:index 0;
     lv2:symbol "In";
     lv2:name "In";
-    lv2:shortname "In";
+    lv2:shortName "In";
 ],
 [
     a lv2:AudioPort, lv2:OutputPort;
     lv2:index 1;
     lv2:symbol "Out1";
     lv2:name "Out 1";
-    lv2:shortname "Out 1";
+    lv2:shortName "Out 1";
 ],
 [
     a lv2:AudioPort, lv2:OutputPort;
     lv2:index 2;
     lv2:symbol "Out2";
     lv2:name "Out 2";
-    lv2:shortname "Out 2";
+    lv2:shortName "Out 2";
 ],
 [
     a lv2:ControlPort, lv2:InputPort;
     lv2:index 3;
     lv2:symbol "Tone";
     lv2:name "Tone";
-    lv2:shortname "Tone";
+    lv2:shortName "Tone";
     lv2:default 0;
     lv2:minimum 0;
     lv2:maximum 11;
@@ -95,7 +95,7 @@ lv2:port
     lv2:index 4;
     lv2:symbol "Step_0";
     lv2:name "Tonic";
-    lv2:shortname "Tonic";
+    lv2:shortName "Tonic";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -106,7 +106,7 @@ lv2:port
     lv2:index 5;
     lv2:symbol "Step_1";
     lv2:name "Minor 2nd";
-    lv2:shortname "Minor 2nd";
+    lv2:shortName "Minor 2nd";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -117,7 +117,7 @@ lv2:port
     lv2:index 6;
     lv2:symbol "Step_2";
     lv2:name "Major 2nd";
-    lv2:shortname "Major 2nd";
+    lv2:shortName "Major 2nd";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -128,7 +128,7 @@ lv2:port
     lv2:index 7;
     lv2:symbol "Step_3";
     lv2:name "Minor 3rd";
-    lv2:shortname "Minor 3rd";
+    lv2:shortName "Minor 3rd";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -139,7 +139,7 @@ lv2:port
     lv2:index 8;
     lv2:symbol "Step_4";
     lv2:name "Major 3rd";
-    lv2:shortname "Major 3rd";
+    lv2:shortName "Major 3rd";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -150,7 +150,7 @@ lv2:port
     lv2:index 9;
     lv2:symbol "Step_5";
     lv2:name "Perfect 4th";
-    lv2:shortname "Perfect 4th";
+    lv2:shortName "Perfect 4th";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -161,7 +161,7 @@ lv2:port
     lv2:index 10;
     lv2:symbol "Step_6";
     lv2:name "Diminished 5th";
-    lv2:shortname "Diminished 5th";
+    lv2:shortName "Diminished 5th";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -172,7 +172,7 @@ lv2:port
     lv2:index 11;
     lv2:symbol "Step_7";
     lv2:name "Perfect 5th";
-    lv2:shortname "Perfect 5th";
+    lv2:shortName "Perfect 5th";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -183,7 +183,7 @@ lv2:port
     lv2:index 12;
     lv2:symbol "Step_8";
     lv2:name "Minor 6th";
-    lv2:shortname "Minor 6th";
+    lv2:shortName "Minor 6th";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -194,7 +194,7 @@ lv2:port
     lv2:index 13;
     lv2:symbol "Step_9";
     lv2:name "Major 6th";
-    lv2:shortname "Major 6th";
+    lv2:shortName "Major 6th";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -205,7 +205,7 @@ lv2:port
     lv2:index 14;
     lv2:symbol "Step_10";
     lv2:name "Minor 7th";
-    lv2:shortname "Minor 7th";
+    lv2:shortName "Minor 7th";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -216,7 +216,7 @@ lv2:port
     lv2:index 15;
     lv2:symbol "Step_11";
     lv2:name "Major 7th";
-    lv2:shortname "Major 7th";
+    lv2:shortName "Major 7th";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 12;
@@ -227,7 +227,7 @@ lv2:port
     lv2:index 16;
     lv2:symbol "LowestNoteToChangeThePitch";
     lv2:name "Lowest note to change the pitch";
-    lv2:shortname "Lowest Wet";
+    lv2:shortName "Lowest Wet";
     lv2:default 0;
     lv2:minimum 0;
     lv2:maximum 14;
@@ -253,7 +253,7 @@ lv2:port
     lv2:index 17;
     lv2:symbol "Gain1";
     lv2:name "Gain 1";
-    lv2:shortname "Gain 1";
+    lv2:shortName "Gain 1";
     lv2:default 0.0;
     lv2:minimum -20.0;
     lv2:maximum 20.0;
@@ -264,7 +264,7 @@ lv2:port
     lv2:index 18;
     lv2:symbol "Gain2";
     lv2:name "Gain 2";
-    lv2:shortname "Gain 2";
+    lv2:shortName "Gain 2";
     lv2:default 3.0;
     lv2:minimum -20.0;
     lv2:maximum 20.0;
@@ -275,7 +275,7 @@ lv2:port
     lv2:index 19;
     lv2:symbol "Fidelity";
     lv2:name "Fidelity";
-    lv2:shortname "Fidelity";
+    lv2:shortName "Fidelity";
     lv2:default 1;
     lv2:minimum 0;
     lv2:maximum 2;

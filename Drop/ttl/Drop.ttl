@@ -37,7 +37,7 @@ lv2:minorVersion 0;
 lv2:microVersion 2;
 
 rdfs:comment """
-It’s a pitchshifter that can drop the pitch to a maximum of -12 semitones (steps). 
+It’s a pitch-shifter that can drop the pitch to a maximum of -12 semitones (steps).
 
 All plugins in the MOD-pitchshifter family have an option to set the fidelity of the plugin. As you lower the fidelity, the sound will become less pristine, but the plugin will also use less processing. The opposite holds true for increasing the fidelity, this will grant you a clearer pitch-shifted signal at the cost of significantly more processing being used. 
 
@@ -54,21 +54,21 @@ lv2:port
     lv2:index 0;
     lv2:symbol "In";
     lv2:name "In";
-    lv2:shortname "In";
+    lv2:shortName "In";
 ],
 [
     a lv2:AudioPort, lv2:OutputPort;
     lv2:index 1;
     lv2:symbol "Out";
     lv2:name "Out";
-    lv2:shortname "Out";
+    lv2:shortName "Out";
 ],
 [
     a lv2:ControlPort, lv2:InputPort;
     lv2:index 2;
     lv2:symbol "Step";
     lv2:name "Step";
-    lv2:shortname "Step";
+    lv2:shortName "Step";
     lv2:default 0;
     lv2:minimum -12;
     lv2:maximum 0;
@@ -79,7 +79,7 @@ lv2:port
     lv2:index 3;
     lv2:symbol "Gain";
     lv2:name "Gain";
-    lv2:shortname "Gain";
+    lv2:shortName "Gain";
     lv2:default 3.0;
     lv2:minimum -20.0;
     lv2:maximum 20.0;
@@ -90,7 +90,7 @@ lv2:port
     lv2:index 4;
     lv2:symbol "Fidelity";
     lv2:name "Fidelity";
-    lv2:shortname "Fidelity";
+    lv2:shortName "Fidelity";
     lv2:default 1;
     lv2:minimum 0;
     lv2:maximum 2;

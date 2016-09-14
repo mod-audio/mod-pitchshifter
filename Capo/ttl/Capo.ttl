@@ -37,7 +37,7 @@ lv2:minorVersion 0;
 lv2:microVersion 4;
 
 rdfs:comment """
-It’s a pitchshifter that can raise the pitch with a maximum of +12 semitones (steps). It is more limited than the SuperCapo, but it also uses less processing, allowing you to use the resources for more other plugins! 
+It’s a pitch-shifter that can raise the pitch with a maximum of +12 semitones (steps). It is more limited than the SuperCapo, but it also uses less processing power, allowing you to use the resources for other plugins!
 
 All plugins in the MOD-pitchshifter family have an option to set the fidelity of the plugin. As you lower the fidelity, the sound will become less pristine, but the plugin will also use less processing. The opposite holds true for increasing the fidelity, this will grant you a clearer pitch-shifted signal at the cost of significantly more processing being used. 
 
@@ -90,7 +90,7 @@ lv2:port
     lv2:index 4;
     lv2:symbol "Fidelity";
     lv2:name "Fidelity";
-    lv2:shortname "Fidelity";
+    lv2:shortName "Fidelity";
     lv2:default 1;
     lv2:minimum 0;
     lv2:maximum 2;
