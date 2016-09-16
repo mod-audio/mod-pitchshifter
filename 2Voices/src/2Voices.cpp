@@ -54,39 +54,28 @@ public:
 
     void SetFidelity(int fidelity, uint32_t n_samples)
     {
+        int bufsize;
+
         switch (fidelity)
         {
-        case 0: 
-            if ((nBuffers) != nBuffersSW(n_samples,FIDELITY0))
-            {
-                Realloc(n_samples, nBuffersSW(n_samples,FIDELITY0));
-                return;
-            }
+        case 0:
+            bufsize = nBuffersSW(n_samples,FIDELITY0);
             break;
         case 1:
-            if ((nBuffers) != nBuffersSW(n_samples,FIDELITY1))
-            {
-                Realloc(n_samples, nBuffersSW(n_samples,FIDELITY1));
-                return;
-            }
+            bufsize = nBuffersSW(n_samples,FIDELITY1);
             break;
         case 2:
-            if ((nBuffers) != nBuffersSW(n_samples,FIDELITY2))
-            {
-                Realloc(n_samples, nBuffersSW(n_samples,FIDELITY2));
-                return;
-            }
+            bufsize = nBuffersSW(n_samples,FIDELITY2);
             break;
         case 3:
-            if ((nBuffers) != nBuffersSW(n_samples,FIDELITY3))
-            {
-                Realloc(n_samples, nBuffersSW(n_samples,FIDELITY3));
-                return;
-            }
+            bufsize = nBuffersSW(n_samples,FIDELITY3);
             break;
         default:
-            break;
+            return;
         }
+
+        if (nBuffers != bufsize || obja->hopa != (int)n_samples)
+            Realloc(n_samples, bufsize);
     }
 
     static LV2_Handle instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features);
@@ -176,13 +165,7 @@ void TwoVoices::run(LV2_Handle instance, uint32_t n_samples)
     int    fidelity = (int)(*(plugin->ports[FIDELITY])+0.5f);
 
     plugin->SetFidelity(fidelity, n_samples);
-    
-    if ( (plugin->obja)->hopa != (int)n_samples )
-    {
-        plugin->Realloc(n_samples, nBuffersSW(n_samples,FIDELITY1));
-        return;
-	}
-    
+
     if (InputAbsSum(in, n_samples) == 0)
     {
         fill_n(out_1,n_samples,0);
