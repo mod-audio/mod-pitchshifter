@@ -1,4 +1,7 @@
 #include "PitchShifterClasses.h"
+#ifdef __ARM_NEON__
+#include <arm_neon.h>
+#endif
 
 PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers, const char* wisdomFile) //Construtor
 {
@@ -277,11 +280,29 @@ int nBuffersSW(uint32_t n_samples, int c64, int c128, int c256, int c_default)
 
 float InputAbsSum(float *in, uint32_t n_samples)
 {
+	/* needs performance testing first. should be worth it by a tiny margin.. */
+#if 0 //def __ARM_NEON__
+	float32x4_t acc = vdupq_n_f32(0.0f);
+	float32x4_t vec;
+
+	for (; n_samples != 0; n_samples -= 4)
+	{
+		vec = vld1q_f32(in);
+		acc = vaddq_f32(acc, vabsq_f32(vec));
+		in += 4;
+	}
+
+	float32_t arr[4];
+	vst1q_f32(arr, acc);
+
+	return arr[0] + arr[1] + arr[2] + arr[3];
+#else
 	float sum_abs = 0;
 
 	for (uint32_t i=0; i<n_samples; i++)
 		sum_abs = sum_abs + abs(in[i]);
 
 	return sum_abs;
+#endif
 }
 
