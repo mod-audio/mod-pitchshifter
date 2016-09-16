@@ -168,23 +168,23 @@ void HarmonizerCS::run(LV2_Handle instance, uint32_t n_samples)
     float *in     = plugin->ports[IN];
     float *out_1  = plugin->ports[OUT_1];
     float *out_2  = plugin->ports[OUT_2];
-    int Tone      = (int)(*(plugin->ports[TONE]));
-    int LowNote   = (int)(*(plugin->ports[LOWNOTE]));
-    int s_0       = (int)(*(plugin->ports[STEP_0]));
-    int s_1       = (int)(*(plugin->ports[STEP_1]));
-    int s_2       = (int)(*(plugin->ports[STEP_2]));
-    int s_3       = (int)(*(plugin->ports[STEP_3]));
-    int s_4       = (int)(*(plugin->ports[STEP_4]));
-    int s_5       = (int)(*(plugin->ports[STEP_5]));
-    int s_6       = (int)(*(plugin->ports[STEP_6]));
-    int s_7       = (int)(*(plugin->ports[STEP_7]));
-    int s_8       = (int)(*(plugin->ports[STEP_8]));
-    int s_9       = (int)(*(plugin->ports[STEP_9]));
-    int s_10      = (int)(*(plugin->ports[STEP_10]));
-    int s_11      = (int)(*(plugin->ports[STEP_11]));
+    int Tone      = (int)(*(plugin->ports[TONE])+0.5f);
+    int LowNote   = (int)(*(plugin->ports[LOWNOTE])+0.5f);
+    int s_0       = (int)(*(plugin->ports[STEP_0])+0.5f);
+    int s_1       = (int)(*(plugin->ports[STEP_1])+0.5f);
+    int s_2       = (int)(*(plugin->ports[STEP_2])+0.5f);
+    int s_3       = (int)(*(plugin->ports[STEP_3])+0.5f);
+    int s_4       = (int)(*(plugin->ports[STEP_4])+0.5f);
+    int s_5       = (int)(*(plugin->ports[STEP_5])+0.5f);
+    int s_6       = (int)(*(plugin->ports[STEP_6])+0.5f);
+    int s_7       = (int)(*(plugin->ports[STEP_7])+0.5f);
+    int s_8       = (int)(*(plugin->ports[STEP_8])+0.5f);
+    int s_9       = (int)(*(plugin->ports[STEP_9])+0.5f);
+    int s_10      = (int)(*(plugin->ports[STEP_10])+0.5f);
+    int s_11      = (int)(*(plugin->ports[STEP_11])+0.5f);
     double gain_1 = (double)(*(plugin->ports[GAIN_1]));
     double gain_2 = (double)(*(plugin->ports[GAIN_2]));
-    int  fidelity = (int)(*(plugin->ports[FIDELITY]));
+    int  fidelity = (int)(*(plugin->ports[FIDELITY])+0.5f);
     
     plugin->SetFidelity(fidelity, n_samples);
     

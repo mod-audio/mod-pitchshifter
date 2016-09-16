@@ -177,16 +177,16 @@ void Harmonizer2::run(LV2_Handle instance, uint32_t n_samples)
     float *out_clean  = plugin->ports[OUT_CLEAN];
     float *out_1      = plugin->ports[OUT_1];
     float *out_2      = plugin->ports[OUT_2];
-    int Tone          = (int)(*(plugin->ports[TONE]));
-    int Scale         = (int)(*(plugin->ports[SCALE]));
-    int Interval_1    = (int)(*(plugin->ports[INTERVAL_1]));
-    int Interval_2    = (int)(*(plugin->ports[INTERVAL_2]));
-    int Mode          = (int)(*(plugin->ports[MODE]));
-    int LowNote       = (int)(*(plugin->ports[LOWNOTE]));
+    int Tone          = (int)(*(plugin->ports[TONE])+0.5f);
+    int Scale         = (int)(*(plugin->ports[SCALE])+0.5f);
+    int Interval_1    = (int)(*(plugin->ports[INTERVAL_1])+0.5f);
+    int Interval_2    = (int)(*(plugin->ports[INTERVAL_2])+0.5f);
+    int Mode          = (int)(*(plugin->ports[MODE])+0.5f);
+    int LowNote       = (int)(*(plugin->ports[LOWNOTE])+0.5f);
     double gain_clean = (double)(*(plugin->ports[GAIN_CLEAN]));
     double gain_1     = (double)(*(plugin->ports[GAIN_1]));
     double gain_2     = (double)(*(plugin->ports[GAIN_2]));
-    int    fidelity   = (int)(*(plugin->ports[FIDELITY]));
+    int    fidelity   = (int)(*(plugin->ports[FIDELITY])+0.5f);
     
     plugin->SetFidelity(fidelity, n_samples);
     
