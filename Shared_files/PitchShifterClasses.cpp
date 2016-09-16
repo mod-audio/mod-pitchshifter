@@ -220,10 +220,10 @@ void PSSinthesis::Sinthesis(double s)
 	for (int i=0; i<N; i++)
 		q[i] = q[i]*w[0](i)/norm;
 	
-	if (first == true)
+	if (first)
 	{
 		first = false;
-		fill_n(ysaida,L-N,0);
+		memset(ysaida,0,sizeof(double)*(L-N));
 		for (int i=L-N; i<L; i++)
 			ysaida[i] = q[i-(L-N)];
 	}

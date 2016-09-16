@@ -174,8 +174,8 @@ void Harmonizer::run(LV2_Handle instance, uint32_t n_samples)
 
 	if (InputAbsSum(in, n_samples) == 0)
 	{
-        fill_n(out_1,n_samples,0);
-        fill_n(out_2,n_samples,0);
+        memset(out_1,0,sizeof(float)*n_samples);
+        memset(out_2,0,sizeof(float)*n_samples);
         return;
 	}
 

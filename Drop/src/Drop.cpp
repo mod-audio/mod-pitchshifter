@@ -159,7 +159,7 @@ void Drop::run(LV2_Handle instance, uint32_t n_samples)
 
 	if (InputAbsSum(in, n_samples) == 0)
 	{
-		fill_n(out,n_samples,0);
+		memset(out,0,sizeof(float)*n_samples);
 		return;
 	}
 
