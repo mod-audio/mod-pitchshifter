@@ -279,7 +279,7 @@ lv2:port
     lv2:default 1;
     lv2:minimum 0;
     lv2:maximum 2;
-    lv2:portProperty lv2:integer, lv2:enumeration;
+    lv2:portProperty lv2:integer, lv2:enumeration, <http://lv2plug.in/ns/ext/port-props/port-props.html#expensive>;
     lv2:scalePoint [rdfs:label "Lo-Fi"; rdf:value 0];
     lv2:scalePoint [rdfs:label "Normal"; rdf:value 1];
     lv2:scalePoint [rdfs:label "Hi-Fi"; rdf:value 2];
