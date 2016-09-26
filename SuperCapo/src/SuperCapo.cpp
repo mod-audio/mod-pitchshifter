@@ -7,7 +7,6 @@
 /**********************************************************************************************************************************************************/
 
 #define PLUGIN_URI "http://moddevices.com/plugins/mod-devel/SuperCapo"
-#define N_SAMPLES_DEFAULT 128
 #define FIDELITY0 8,4,2,1
 #define FIDELITY1 16,8,4,2
 #define FIDELITY2 24,12,6,3
@@ -117,7 +116,8 @@ LV2_Handle SuperCapo::instantiate(const LV2_Descriptor* descriptor, double sampl
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    SuperCapo *plugin = new SuperCapo(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT,FIDELITY1), samplerate, wisdomFile);
+    const uint32_t n_samples = GetBufferSize(features);
+    SuperCapo *plugin = new SuperCapo(n_samples, nBuffersSW(n_samples,FIDELITY1), samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
 

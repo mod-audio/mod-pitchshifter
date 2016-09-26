@@ -9,7 +9,6 @@
 /**********************************************************************************************************************************************************/
 
 #define PLUGIN_URI "http://moddevices.com/plugins/mod-devel/Harmonizer2"
-#define N_SAMPLES_DEFAULT 128
 #define FIDELITY0 4,2,1,1
 #define FIDELITY1 8,4,2,1
 #define FIDELITY2 12,6,3,2
@@ -138,7 +137,8 @@ LV2_Handle Harmonizer2::instantiate(const LV2_Descriptor* descriptor, double sam
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    Harmonizer2 *plugin = new Harmonizer2(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT,8,4,2,1), nBuffersSW(N_SAMPLES_DEFAULT,8,4,2,1), samplerate, wisdomFile);
+    const uint32_t n_samples = GetBufferSize(features);
+    Harmonizer2 *plugin = new Harmonizer2(n_samples, nBuffersSW(n_samples,8,4,2,1), nBuffersSW(n_samples,8,4,2,1), samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
 

@@ -3,6 +3,13 @@
 #include <arm_neon.h>
 #endif
 
+// for GetBufferSize
+#include <lv2/lv2plug.in/ns/ext/atom/atom.h>
+#include <lv2/lv2plug.in/ns/ext/buf-size/buf-size.h>
+#include <lv2/lv2plug.in/ns/ext/options/options.h>
+
+#define N_SAMPLES_DEFAULT 128
+
 PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers, const char* wisdomFile) //Construtor
 {
 	Qcolumn = nBuffers;
@@ -301,3 +308,35 @@ float InputAbsSum(float *in, uint32_t n_samples)
 #endif
 }
 
+uint32_t GetBufferSize(const LV2_Feature* const* features)
+{
+    uint32_t n_samples = N_SAMPLES_DEFAULT;
+
+    const LV2_Options_Option* options = NULL;
+    const LV2_URID_Map*       uridMap = NULL;
+
+    for (int i=0; features[i] != NULL; ++i)
+    {
+        if (std::strcmp(features[i]->URI, LV2_OPTIONS__options) == 0)
+            options = (const LV2_Options_Option*)features[i]->data;
+        else if (std::strcmp(features[i]->URI, LV2_URID__map) == 0)
+            uridMap = (const LV2_URID_Map*)features[i]->data;
+    }
+
+    if (options == NULL || uridMap == NULL)
+        return n_samples;
+
+    for (int i=0; options[i].key != 0; ++i)
+    {
+        if (options[i].key != uridMap->map(uridMap->handle, LV2_BUF_SIZE__maxBlockLength))
+            continue;
+        if (options[i].type == uridMap->map(uridMap->handle, LV2_ATOM__Int))
+            continue;
+
+        const int value(*(const int*)options[i].value);
+        n_samples = value;
+        break;
+    }
+
+    return n_samples;
+}

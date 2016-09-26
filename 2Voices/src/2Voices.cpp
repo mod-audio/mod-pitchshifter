@@ -7,7 +7,6 @@
 /**********************************************************************************************************************************************************/
 
 #define PLUGIN_URI "http://moddevices.com/plugins/mod-devel/2Voices"
-#define N_SAMPLES_DEFAULT 128
 #define FIDELITY0 6,3,2,1
 #define FIDELITY1 12,6,3,2
 #define FIDELITY2 16,8,4,2
@@ -127,7 +126,8 @@ LV2_Handle TwoVoices::instantiate(const LV2_Descriptor* descriptor, double sampl
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    TwoVoices *plugin = new TwoVoices(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT,FIDELITY1), samplerate, wisdomFile);
+    const uint32_t n_samples = GetBufferSize(features);
+    TwoVoices *plugin = new TwoVoices(n_samples, nBuffersSW(n_samples,FIDELITY1), samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
 

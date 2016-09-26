@@ -7,7 +7,6 @@
 /**********************************************************************************************************************************************************/
 
 #define PLUGIN_URI "http://moddevices.com/plugins/mod-devel/Capo"
-#define N_SAMPLES_DEFAULT 128
 #define FIDELITY0 4,2,1,1
 #define FIDELITY1 12,6,3,2
 #define FIDELITY2 20,10,5,3
@@ -117,7 +116,8 @@ LV2_Handle Capo::instantiate(const LV2_Descriptor* descriptor, double samplerate
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    Capo *plugin = new Capo(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT,FIDELITY1), samplerate, wisdomFile);
+    const uint32_t n_samples = GetBufferSize(features);
+    Capo *plugin = new Capo(n_samples, nBuffersSW(n_samples,FIDELITY1), samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
 

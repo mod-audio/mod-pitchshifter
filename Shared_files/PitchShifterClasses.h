@@ -7,6 +7,7 @@
 #include "Exp.h"
 #include "angle.h"
 #include "window.h"
+#include <lv2/lv2plug.in/ns/lv2core/lv2.h>
 
 using namespace arma;
 using namespace std;
@@ -73,3 +74,4 @@ public:
 
 int nBuffersSW(uint32_t n_samples, int c64, int c128, int c256, int c_default);
 float InputAbsSum(float *in, uint32_t n_samples);
+uint32_t GetBufferSize(const LV2_Feature* const* features);

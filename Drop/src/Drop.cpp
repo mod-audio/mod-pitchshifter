@@ -7,7 +7,6 @@
 /**********************************************************************************************************************************************************/
 
 #define PLUGIN_URI "http://moddevices.com/plugins/mod-devel/Drop"
-#define N_SAMPLES_DEFAULT 128
 #define FIDELITY0 4,2,1,1
 #define FIDELITY1 8,4,2,1
 #define FIDELITY2 16,8,4,2
@@ -119,8 +118,8 @@ LV2_Handle Drop::instantiate(const LV2_Descriptor* descriptor, double samplerate
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    Drop *plugin = new Drop(N_SAMPLES_DEFAULT, nBuffersSW(N_SAMPLES_DEFAULT,FIDELITY1), samplerate, wisdomFile);
-
+    const uint32_t n_samples = GetBufferSize(features);
+    Drop *plugin = new Drop(n_samples, nBuffersSW(n_samples,FIDELITY1), samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
 
