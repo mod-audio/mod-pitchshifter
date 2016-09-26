@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <cmath>
-#include <lv2.h>
 #include "PitchShifterClasses.h"
 #include "GainClass.h"
 
