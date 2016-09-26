@@ -1,5 +1,7 @@
 *.so
 *.o
+.kdev_include_paths
+debian
 Shared_files/Exponencial.h
 Shared_files/arc.h
 Shared_files/Cos.h
