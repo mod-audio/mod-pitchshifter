@@ -10,6 +10,7 @@
 #define FIDELITY1 12,6,3,2
 #define FIDELITY2 16,8,4,2
 #define FIDELITY3 20,10,5,3
+#define SMOOTH_DURATION 0.1
 enum {IN, OUT, STEP, FIRST, LAST, CLEAN, GAIN, FIDELITY, PLUGIN_PORT_COUNT};
 
 /**********************************************************************************************************************************************************/
@@ -27,6 +28,8 @@ public:
     {
     	this->nBuffers = nBuffers;
         SampleRate = samplerate;
+
+        current_s = 0.0;
 
         obja = new PSAnalysis(n_samples, nBuffers, wisdomFile);
         objs = new PSSinthesis(obja, wisdomFile);
@@ -88,6 +91,7 @@ public:
     int nBuffers;
     int cont;
     double SampleRate;
+    double current_s;
     std::string wisdomFile;
 };
 
@@ -165,11 +169,15 @@ void SuperWhammy::run(LV2_Handle instance, uint32_t n_samples)
         return;
     }
 
-    double s_ = a + s*(b-a);
-	(plugin->objg)->SetGaindB(gain);    
+    double buffer_duration = n_samples/((double) plugin->SampleRate);
+    double alpha = std::pow(0.01, buffer_duration/SMOOTH_DURATION);
+    plugin->current_s = alpha*plugin->current_s + (1-alpha)*s;
+
+    double s_ = a + plugin->current_s*(b-a);
+	(plugin->objg)->SetGaindB(gain);
     (plugin->obja)->PreAnalysis(plugin->nBuffers, in);
     (plugin->objs)->PreSinthesis();
-	
+
 	if (plugin->cont < plugin->nBuffers-1)
 		plugin->cont = plugin->cont + 1;
 	else
@@ -178,7 +186,7 @@ void SuperWhammy::run(LV2_Handle instance, uint32_t n_samples)
         (plugin->objs)->Sinthesis(s_);
         (plugin->objg)->SimpleGain((plugin->objs)->yshift, out);
         if (c == 1) for (uint32_t i = 0; i<n_samples; i++) out[i] += (plugin->obja)->frames[i];
-	}	
+	}
 }
 
 /**********************************************************************************************************************************************************/
