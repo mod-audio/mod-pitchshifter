@@ -1,0 +1,57 @@
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix pset:  <http://lv2plug.in/ns/ext/presets#> .
+@prefix state: <http://lv2plug.in/ns/ext/state#> .
+
+<default-preset>
+	a pset:Preset ;
+	lv2:appliesTo <http://moddevices.com/plugins/mod-devel/HarmonizerCS> ;
+	lv2:port [
+		lv2:symbol "Gain1" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "Gain2" ;
+		pset:value 3.0
+	] , [
+		lv2:symbol "LowestNoteToChangeThePitch" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "Step_0" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "Step_1" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "Step_10" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "Step_11" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "Step_2" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "Step_3" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "Step_4" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "Step_5" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "Step_6" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "Step_7" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "Step_8" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "Step_9" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "Tone" ;
+		pset:value 0.0
+	] .
+

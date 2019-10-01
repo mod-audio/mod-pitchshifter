@@ -1,0 +1,36 @@
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix pset:  <http://lv2plug.in/ns/ext/presets#> .
+@prefix state: <http://lv2plug.in/ns/ext/state#> .
+
+<default-preset>
+	a pset:Preset ;
+	lv2:appliesTo <http://moddevices.com/plugins/mod-devel/Harmonizer2> ;
+	lv2:port [
+		lv2:symbol "Gain1" ;
+		pset:value 3.0
+	] , [
+		lv2:symbol "Gain2" ;
+		pset:value 3.0
+	] , [
+		lv2:symbol "Gain_clean" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "Interval_1" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "Interval_2" ;
+		pset:value 2.0
+	] , [
+		lv2:symbol "LowestNoteToChangeThePitch" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "Mode" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "Scale" ;
+		pset:value 0.0
+	] , [
+		lv2:symbol "Tone" ;
+		pset:value 0.0
+	] .
+

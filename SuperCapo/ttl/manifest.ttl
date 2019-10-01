@@ -4,3 +4,10 @@
 <http://moddevices.com/plugins/mod-devel/SuperCapo> a lv2:Plugin;
     lv2:binary <mod-supercapo.so>;
     rdfs:seeAlso <SuperCapo.ttl>.
+
+
+<default-preset>
+    a <http://lv2plug.in/ns/ext/presets#Preset> ;
+    <http://lv2plug.in/ns/lv2core#appliesTo> <http://moddevices.com/plugins/mod-devel/SuperCapo> ;
+    <http://www.w3.org/2000/01/rdf-schema#label> "Default" ;
+    <http://www.w3.org/2000/01/rdf-schema#seeAlso> <default-preset.ttl> .

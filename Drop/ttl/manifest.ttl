@@ -5,3 +5,10 @@
     lv2:binary <mod-drop.so> ;
     rdfs:seeAlso <Drop.ttl>.
 
+
+
+<default-preset>
+    a <http://lv2plug.in/ns/ext/presets#Preset> ;
+    <http://lv2plug.in/ns/lv2core#appliesTo> <http://moddevices.com/plugins/mod-devel/Drop> ;
+    <http://www.w3.org/2000/01/rdf-schema#label> "Default" ;
+    <http://www.w3.org/2000/01/rdf-schema#seeAlso> <default-preset.ttl> .
