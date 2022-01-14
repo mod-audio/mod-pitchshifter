@@ -37,10 +37,15 @@ PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers, const char* wisdomFile)
 	w.zeros(N); hann(N,&w); 
 	I.zeros(N/2 + 1); I = linspace(0, N/2, N/2 + 1);
 
-	if (fftwf_import_wisdom_from_filename(wisdomFile) != 0)
+	if (fftwf_import_system_wisdom() != 0)
 	{
 		p = fftwf_plan_dft_r2c_1d(N, frames2, fXa, FFTW_WISDOM_ONLY|FFTW_ESTIMATE);
-		printf("PSAnalysis: using wisdom file\n");
+		printf("PSAnalysis: using system wisdom file\n");
+	}
+	else if (fftwf_import_wisdom_from_filename(wisdomFile) != 0)
+	{
+		p = fftwf_plan_dft_r2c_1d(N, frames2, fXa, FFTW_WISDOM_ONLY|FFTW_ESTIMATE);
+		printf("PSAnalysis: using plugin-provided wisdom file\n");
 	}
 	else
 	{
@@ -132,10 +137,15 @@ PSSinthesis::PSSinthesis(PSAnalysis *obj, const char* wisdomFile) //Construtor
 	Phi.zeros(N/2 + 1);
 	PhiPrevious.zeros(N/2 + 1);
 
-	if (fftwf_import_wisdom_from_filename(wisdomFile) != 0)
+	if (fftwf_import_system_wisdom() != 0)
 	{
 		p2 = fftwf_plan_dft_c2r_1d(N, fXs, q, FFTW_WISDOM_ONLY|FFTW_ESTIMATE);
-		printf("PSSinthesis: using wisdom file\n");
+		printf("PSSinthesis: using system wisdom file\n");
+	}
+	else if (fftwf_import_wisdom_from_filename(wisdomFile) != 0)
+	{
+		p2 = fftwf_plan_dft_c2r_1d(N, fXs, q, FFTW_WISDOM_ONLY|FFTW_ESTIMATE);
+		printf("PSSinthesis: using plugin-provided wisdom file\n");
 	}
 	else
 	{
