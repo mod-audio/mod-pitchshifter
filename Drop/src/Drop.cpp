@@ -85,8 +85,6 @@ public:
     int cont;
     double SampleRate;
     std::string wisdomFile;
-
-    
 };
 
 /**********************************************************************************************************************************************************/
@@ -148,38 +146,38 @@ void Drop::run(LV2_Handle instance, uint32_t n_samples)
     plugin = (Drop *) instance;
 
     float *in       = plugin->ports[IN];
-	float *out      = plugin->ports[OUT];
-	double s        = (double)(*(plugin->ports[STEP]));
-	double gain     = (double)(*(plugin->ports[GAIN]));
+    float *out      = plugin->ports[OUT];
+    double s        = (double)(*(plugin->ports[STEP]));
+    double gain     = (double)(*(plugin->ports[GAIN]));
     int    fidelity = (int)(*(plugin->ports[FIDELITY])+0.5f);
-    
+
     plugin->SetFidelity(fidelity, n_samples);
 
-	if (InputAbsSum(in, n_samples) == 0)
-	{
-		memset(out,0,sizeof(float)*n_samples);
-		return;
-	}
+    if (InputAbsSum(in, n_samples) == 0)
+    {
+        memset(out,0,sizeof(float)*n_samples);
+        return;
+    }
 
     (plugin->objg)->SetGaindB(gain);
     (plugin->obja)->PreAnalysis(plugin->nBuffers, in);
     (plugin->objs)->PreSinthesis();
 
-	if (plugin->cont < plugin->nBuffers-1)
-		plugin->cont = plugin->cont + 1;
-	else
-	{
-    	(plugin->obja)->Analysis();
+    if (plugin->cont < plugin->nBuffers-1)
+        plugin->cont = plugin->cont + 1;
+    else
+    {
+        (plugin->obja)->Analysis();
         (plugin->objs)->Sinthesis(s);
         (plugin->objg)->SimpleGain((plugin->objs)->yshift, out);
-	}
+    }
 }
 
 /**********************************************************************************************************************************************************/
 
 void Drop::cleanup(LV2_Handle instance)
 {
-	delete ((Drop *) instance);
+    delete ((Drop *) instance);
 }
 
 /**********************************************************************************************************************************************************/

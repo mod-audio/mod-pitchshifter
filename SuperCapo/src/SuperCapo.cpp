@@ -142,8 +142,6 @@ void SuperCapo::connect_port(LV2_Handle instance, uint32_t port, void *data)
 
 void SuperCapo::run(LV2_Handle instance, uint32_t n_samples)
 {
-    
-
     SuperCapo *plugin;
     plugin = (SuperCapo *) instance;
 
@@ -152,10 +150,10 @@ void SuperCapo::run(LV2_Handle instance, uint32_t n_samples)
     double s        = (double)(*(plugin->ports[STEP]));
     double gain     = (double)(*(plugin->ports[GAIN]));
     int    fidelity = (int)(*(plugin->ports[FIDELITY])+0.5f);
-    
+
     plugin->SetFidelity(fidelity, n_samples);
 
-    if (InputAbsSum(in, n_samples) < 0)
+    if (InputAbsSum(in, n_samples) == 0)
     {
         memset(out,0,sizeof(float)*n_samples);
         return;
@@ -164,7 +162,7 @@ void SuperCapo::run(LV2_Handle instance, uint32_t n_samples)
     (plugin->objg)->SetGaindB(gain);
     (plugin->obja)->PreAnalysis(plugin->nBuffers, in);
     (plugin->objs)->PreSinthesis();
-        
+
     if (plugin->cont < plugin->nBuffers-1)
         plugin->cont = plugin->cont + 1;
     else
@@ -173,8 +171,6 @@ void SuperCapo::run(LV2_Handle instance, uint32_t n_samples)
         (plugin->objs)->Sinthesis(s);
         (plugin->objg)->SimpleGain((plugin->objs)->yshift, out);
     }
-
-    
 }
 
 /**********************************************************************************************************************************************************/
@@ -190,4 +186,3 @@ const void* SuperCapo::extension_data(const char* uri)
 {
     return NULL;
 }
-
