@@ -6,7 +6,7 @@
 /**********************************************************************************************************************************************************/
 
 #define PLUGIN_URI "http://moddevices.com/plugins/mod-devel/Capo"
-#define FIDELITY0 4,2,1,1
+#define FIDELITY0 6,3,2,1
 #define FIDELITY1 12,6,3,2
 #define FIDELITY2 20,10,5,3
 enum {IN, OUT, STEP, GAIN, FIDELITY, PLUGIN_PORT_COUNT};
