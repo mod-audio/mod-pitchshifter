@@ -12,7 +12,10 @@
 <http://moddevices.com/plugins/mod-devel/Drop>
 a lv2:Plugin, lv2:SpectralPlugin;
 
-lv2:requiredFeature bsize:fixedBlockLength, bsize:powerOf2BlockLength;
+lv2:requiredFeature bsize:fixedBlockLength, bsize:powerOf2BlockLength,
+       bsize:boundedBlockLength ;
+bsize:minBlockLength 64 ;
+bsize:maxBlockLength 8192 ;
 
 doap:name "Drop";
 
