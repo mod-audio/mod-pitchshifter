@@ -1,33 +1,33 @@
 
 all: Shared_files/harmonizer.wisdom
-	$(MAKE) -C 2Voices
-	$(MAKE) -C Capo
-	$(MAKE) -C Drop
-	$(MAKE) -C SuperCapo
-	$(MAKE) -C SuperWhammy
-	$(MAKE) -C Harmonizer
-	$(MAKE) -C Harmonizer2
-	$(MAKE) -C HarmonizerCS
+	$(MAKE) -C Gx2Voices
+	$(MAKE) -C GxCapo
+	$(MAKE) -C GxDrop
+	$(MAKE) -C GxSuperCapo
+	$(MAKE) -C GxSuperWhammy
+	$(MAKE) -C GxHarmonizer
+	$(MAKE) -C GxHarmonizer2
+	$(MAKE) -C GxHarmonizerCS
 
 install: all
-	$(MAKE) -C 2Voices install
-	$(MAKE) -C Capo install
-	$(MAKE) -C Drop install
-	$(MAKE) -C SuperCapo install
-	$(MAKE) -C SuperWhammy install
-	$(MAKE) -C Harmonizer install
-	$(MAKE) -C Harmonizer2 install
-	$(MAKE) -C HarmonizerCS install
+	$(MAKE) -C Gx2Voices install
+	$(MAKE) -C GxCapo install
+	$(MAKE) -C GxDrop install
+	$(MAKE) -C GxSuperCapo install
+	$(MAKE) -C GxSuperWhammy install
+	$(MAKE) -C GxHarmonizer install
+	$(MAKE) -C GxHarmonizer2 install
+	$(MAKE) -C GxHarmonizerCS install
 
 clean:
-	$(MAKE) -C 2Voices clean
-	$(MAKE) -C Capo clean
-	$(MAKE) -C Drop clean
-	$(MAKE) -C SuperCapo clean
-	$(MAKE) -C SuperWhammy clean
-	$(MAKE) -C Harmonizer clean
-	$(MAKE) -C Harmonizer2 clean
-	$(MAKE) -C HarmonizerCS clean
+	$(MAKE) -C Gx2Voices clean
+	$(MAKE) -C GxCapo clean
+	$(MAKE) -C GxDrop clean
+	$(MAKE) -C GxSuperCapo clean
+	$(MAKE) -C GxSuperWhammy clean
+	$(MAKE) -C GxHarmonizer clean
+	$(MAKE) -C GxHarmonizer2 clean
+	$(MAKE) -C GxHarmonizerCS clean
 	rm -f Shared_files/*.o
 	rm -f Shared_files/harmonizer.wisdom
 

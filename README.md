@@ -1,6 +1,9 @@
 mod-pitchshifter
 ================
 
+This version has been modified to work fine with a fixed buffer on Guitarix.
+See https://linuxmusicians.com/viewtopic.php?f=48&t=21938
+
 Pitch Shifter lv2 effects
 
 These effects are supposed to work well with the
