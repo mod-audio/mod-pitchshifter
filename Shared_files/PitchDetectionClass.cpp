@@ -1,12 +1,12 @@
 #include "PitchDetectionClass.h"
 
-PitchDetection::PitchDetection(uint32_t n_samples, int nBuffers, double SampleRate, const char* wisdomFile) //Constructor
+PitchDetection::PitchDetection(uint32_t n_samples, int nBuffers, double SampleRate, bool haveWisdom) //Constructor
 {
 	hopa = n_samples;
 	N = nBuffers*n_samples;
 	fs = SampleRate;
 
-	frames = fftwf_alloc_real(2*N); memset(frames, 0, 2*N );
+	frames = fftwf_alloc_real(2*N); memset(frames, 0, sizeof(float)*2*N); // was 2*N bytes: most of the frame started as garbage
 	b = new float*[hopa];
 
 	for (int i=0 ; i< nBuffers; i++)
@@ -25,24 +25,20 @@ PitchDetection::PitchDetection(uint32_t n_samples, int nBuffers, double SampleRa
 	F.zeros(N);
 	AUTO.zeros(N);
 
-	if (fftwf_import_system_wisdom() != 0)
-	{
-		p  = fftwf_plan_dft_r2c_1d(2*N, frames, fXa, FFTW_WISDOM_ONLY|FFTW_ESTIMATE);
-		p2 = fftwf_plan_dft_c2r_1d(2*N, fXs, q, FFTW_WISDOM_ONLY|FFTW_ESTIMATE);
-		printf("PitchDetection: using system wisdom file\n");
-	}
-	else if (fftwf_import_wisdom_from_filename(wisdomFile) != 0)
-	{
-		p  = fftwf_plan_dft_r2c_1d(2*N, frames, fXa, FFTW_WISDOM_ONLY|FFTW_ESTIMATE);
-		p2 = fftwf_plan_dft_c2r_1d(2*N, fXs, q, FFTW_WISDOM_ONLY|FFTW_ESTIMATE);
-		printf("PitchDetection: using plugin-provided wisdom file\n");
-	}
-	else
-	{
-		p  = fftwf_plan_dft_r2c_1d(2*N, frames, fXa, FFTW_ESTIMATE);
-		p2 = fftwf_plan_dft_c2r_1d(2*N, fXs, q, FFTW_ESTIMATE);
-		printf("PitchDetection: failed to import wisdom file '%s', using estimate instead\n", wisdomFile);
-	}
+	f = 0;
+	note = 0;
+	oitava = 0;
+
+	p  = PlanR2C(2*N, frames, fXa, haveWisdom);
+	p2 = PlanC2R(2*N, fXs, q, haveWisdom);
+}
+
+void PitchDetection::Reset()
+{
+	memset(frames, 0, sizeof(float)*2*N);
+	f = 0;
+	note = 0;
+	oitava = 0;
 }
 
 PitchDetection::~PitchDetection() //Destructor
@@ -65,7 +61,7 @@ PitchDetection::~PitchDetection() //Destructor
 	if (p2) fftwf_destroy_plan(p2);
 }
 
-void PitchDetection::PreProcessing(int nBuffers, float *in)
+void PitchDetection::PreProcessing(int nBuffers, const float *in)
 {
 	for (int i=0; i<hopa; i++)
 	{

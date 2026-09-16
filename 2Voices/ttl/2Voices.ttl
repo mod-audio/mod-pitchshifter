@@ -33,7 +33,7 @@ mod:label "2Voices";
 doap:license "GPL";
 
 lv2:minorVersion 0;
-lv2:microVersion 4;
+lv2:microVersion 6;
 
 rdfs:comment """
 If a MOD Drop and Mod SuperCapo had a baby, it would be the MOD 2Voices! It sports two outputs with independent pitch-shift controls. The pitch of the input signal can be shifted anywhere between -12 semitones down, and +24 semitones up. 
