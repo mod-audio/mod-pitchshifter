@@ -3,6 +3,9 @@
 #include "PitchShifterClasses.h"
 #include "GainClass.h"
 
+#undef IN
+#undef OUT
+
 /**********************************************************************************************************************************************************/
 
 #define PLUGIN_URI "http://moddevices.com/plugins/mod-devel/SuperCapo"

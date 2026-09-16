@@ -3,6 +3,8 @@
 #include "PitchShifterClasses.h"
 #include "GainClass.h"
 
+#undef IN
+
 /**********************************************************************************************************************************************************/
 
 #define PLUGIN_URI "http://moddevices.com/plugins/mod-devel/2Voices"

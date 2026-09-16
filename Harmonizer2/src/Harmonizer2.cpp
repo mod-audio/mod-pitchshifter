@@ -5,6 +5,8 @@
 #include "HarmonizerLib.h"
 #include "GainClass.h"
 
+#undef IN
+
 /**********************************************************************************************************************************************************/
 
 #define PLUGIN_URI "http://moddevices.com/plugins/mod-devel/Harmonizer2"
