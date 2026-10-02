@@ -7,3 +7,7 @@ Shared_files/arc.h
 Shared_files/Cos.h
 Shared_files/Sin.h
 Shared_files/harmonizer.wisdom
+PolyOctaver/test/engine_test
+PolyOctaver/test/baseline_test
+PolyOctaver/test/plugin_smoke
+PolyOctaver/test/swell_test

@@ -1,0 +1,182 @@
+@prefix doap:  <http://usefulinc.com/ns/doap#>.
+@prefix epp:   <http://lv2plug.in/ns/ext/port-props#>.
+@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#>.
+@prefix mod:   <http://moddevices.com/ns/mod#>.
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix units: <http://lv2plug.in/ns/extensions/units#>.
+
+<http://moddevices.com/plugins/mod-devel/PolyOctaver>
+a lv2:Plugin, lv2:PitchPlugin;
+
+lv2:optionalFeature lv2:hardRTCapable;
+
+doap:name "Poly Octaver";
+
+doap:maintainer [
+    foaf:name "MOD Team";
+    foaf:homepage <http://moddevices.com>;
+    foaf:mbox <mailto:devel@moddevices.com>;
+];
+
+mod:brand "MOD";
+mod:label "Poly Octaver";
+
+doap:license "GPL";
+
+lv2:minorVersion 0;
+lv2:microVersion 2;
+
+rdfs:comment """
+A polyphonic octave generator: two octaves down, one octave down, one octave up and two octaves up, each with its own level, mixed with the dry signal. It tracks full chords, not just single notes.
+
+Set only Sub 1 and Up 1 next to the dry signal for the classic organ-like sound, add Up 2 for a twelve-string shimmer, or turn the dry signal down and use the sub octaves for bass lines.
+
+*Attack fades every new note or chord in over the set time, for swells and bowed sounds. At 0 it is off.
+*Filter is a low-pass on the octave voices, with Resonance to make it peak at the cutoff. Turn Filter down to take the edge off the upper octaves.
+*Detune spreads the upper octaves: Up 1 goes sharp and Up 2 flat by the set amount, for a chorus or twelve-string shimmer. The sub octaves stay in tune.
+*Dry FX sends the dry signal through Attack, Filter and Detune as well. Without it the dry signal is never touched and never delayed; with it and Detune up, the dry signal arrives together with the octaves.
+*Tracking sets how quickly the octaves follow your playing. Fast answers in 8 ms, Balanced in 13 ms, Clean in 19 ms. The slower settings separate the notes of dense chords more cleanly.
+""";
+
+lv2:port
+[
+    a lv2:AudioPort, lv2:InputPort;
+    lv2:index 0;
+    lv2:symbol "In";
+    lv2:name "In";
+    lv2:shortName "In";
+],
+[
+    a lv2:AudioPort, lv2:OutputPort;
+    lv2:index 1;
+    lv2:symbol "Out";
+    lv2:name "Out";
+    lv2:shortName "Out";
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 2;
+    lv2:symbol "Dry";
+    lv2:name "Dry";
+    lv2:shortName "Dry";
+    lv2:default 100;
+    lv2:minimum 0;
+    lv2:maximum 100;
+    units:unit units:pc;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 3;
+    lv2:symbol "Sub2";
+    lv2:name "Sub 2";
+    lv2:shortName "Sub 2";
+    lv2:default 0;
+    lv2:minimum 0;
+    lv2:maximum 100;
+    units:unit units:pc;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 4;
+    lv2:symbol "Sub1";
+    lv2:name "Sub 1";
+    lv2:shortName "Sub 1";
+    lv2:default 70;
+    lv2:minimum 0;
+    lv2:maximum 100;
+    units:unit units:pc;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 5;
+    lv2:symbol "Up1";
+    lv2:name "Up 1";
+    lv2:shortName "Up 1";
+    lv2:default 70;
+    lv2:minimum 0;
+    lv2:maximum 100;
+    units:unit units:pc;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 6;
+    lv2:symbol "Up2";
+    lv2:name "Up 2";
+    lv2:shortName "Up 2";
+    lv2:default 0;
+    lv2:minimum 0;
+    lv2:maximum 100;
+    units:unit units:pc;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 7;
+    lv2:symbol "Attack";
+    lv2:name "Attack";
+    lv2:shortName "Attack";
+    lv2:default 0;
+    lv2:minimum 0;
+    lv2:maximum 2000;
+    units:unit units:ms;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 8;
+    lv2:symbol "Filter";
+    lv2:name "Filter";
+    lv2:shortName "Filter";
+    lv2:default 20000;
+    lv2:minimum 200;
+    lv2:maximum 20000;
+    lv2:portProperty epp:logarithmic;
+    units:unit units:hz;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 9;
+    lv2:symbol "Resonance";
+    lv2:name "Resonance";
+    lv2:shortName "Resonance";
+    lv2:default 0.7;
+    lv2:minimum 0.7;
+    lv2:maximum 8;
+    lv2:portProperty epp:logarithmic;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 10;
+    lv2:symbol "Detune";
+    lv2:name "Detune";
+    lv2:shortName "Detune";
+    lv2:default 0;
+    lv2:minimum 0;
+    lv2:maximum 30;
+    units:unit units:cent;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 11;
+    lv2:symbol "DryFX";
+    lv2:name "Dry FX";
+    lv2:shortName "Dry FX";
+    lv2:default 0;
+    lv2:minimum 0;
+    lv2:maximum 1;
+    lv2:portProperty lv2:integer, lv2:toggled;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 12;
+    lv2:symbol "Tracking";
+    lv2:name "Tracking";
+    lv2:shortName "Tracking";
+    lv2:default 1;
+    lv2:minimum 0;
+    lv2:maximum 2;
+    lv2:portProperty lv2:integer, lv2:enumeration;
+    lv2:scalePoint [rdfs:label "Fast"; rdf:value 0];
+    lv2:scalePoint [rdfs:label "Balanced"; rdf:value 1];
+    lv2:scalePoint [rdfs:label "Clean"; rdf:value 2];
+].
