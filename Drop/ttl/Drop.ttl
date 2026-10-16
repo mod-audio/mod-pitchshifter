@@ -34,7 +34,7 @@ mod:label "Drop";
 doap:license "GPL";
 
 lv2:minorVersion 0;
-lv2:microVersion 2;
+lv2:microVersion 4;
 
 rdfs:comment """
 It’s a pitch-shifter that can drop the pitch to a maximum of -12 semitones (steps).

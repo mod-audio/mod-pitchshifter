@@ -8,9 +8,13 @@
 #include <lv2/lv2plug.in/ns/ext/buf-size/buf-size.h>
 #include <lv2/lv2plug.in/ns/ext/options/options.h>
 
+#ifndef LV2_BUF_SIZE__nominalBlockLength
+#define LV2_BUF_SIZE__nominalBlockLength LV2_BUF_SIZE_PREFIX "nominalBlockLength"
+#endif
+
 #define N_SAMPLES_DEFAULT 128
 
-PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers, const char* wisdomFile) //Construtor
+PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers, bool haveWisdom) //Construtor
 {
 	Qcolumn = nBuffers;
 	hopa = n_samples;
@@ -37,21 +41,14 @@ PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers, const char* wisdomFile)
 	w.zeros(N); hann(N,&w); 
 	I.zeros(N/2 + 1); I = linspace(0, N/2, N/2 + 1);
 
-	if (fftwf_import_system_wisdom() != 0)
-	{
-		p = fftwf_plan_dft_r2c_1d(N, frames2, fXa, FFTW_WISDOM_ONLY|FFTW_ESTIMATE);
-		printf("PSAnalysis: using system wisdom file\n");
-	}
-	else if (fftwf_import_wisdom_from_filename(wisdomFile) != 0)
-	{
-		p = fftwf_plan_dft_r2c_1d(N, frames2, fXa, FFTW_WISDOM_ONLY|FFTW_ESTIMATE);
-		printf("PSAnalysis: using plugin-provided wisdom file\n");
-	}
-	else
-	{
-		p = fftwf_plan_dft_r2c_1d(N, frames2, fXa, FFTW_ESTIMATE);
-		printf("PSAnalysis: failed to import wisdom file '%s', using estimate instead\n", wisdomFile);
-	}
+	p = PlanR2C(N, frames2, fXa, haveWisdom);
+}
+
+void PSAnalysis::Reset()
+{
+	fill_n(frames,N,0);
+	XaPrevious.zeros();
+	XaPrevious_arg.zeros();
 }
 
 PSAnalysis::~PSAnalysis() //Destrutor
@@ -75,7 +72,7 @@ PSAnalysis::~PSAnalysis() //Destrutor
 	I.clear();
 }
 
-void PSAnalysis::PreAnalysis(int nBuffers, float *in)
+void PSAnalysis::PreAnalysis(int nBuffers, const float *in)
 {
 	for (int i=0; i<hopa; i++)
 	{
@@ -118,7 +115,7 @@ void PSAnalysis::Analysis()
 	XaPrevious_arg = Xa_arg;
 }
 
-PSSinthesis::PSSinthesis(PSAnalysis *obj, const char* wisdomFile) //Construtor
+PSSinthesis::PSSinthesis(PSAnalysis *obj, bool haveWisdom) //Construtor
 {
 	Qcolumn = obj->Qcolumn;
 	hopa = obj->hopa;
@@ -137,21 +134,16 @@ PSSinthesis::PSSinthesis(PSAnalysis *obj, const char* wisdomFile) //Construtor
 	Phi.zeros(N/2 + 1);
 	PhiPrevious.zeros(N/2 + 1);
 
-	if (fftwf_import_system_wisdom() != 0)
-	{
-		p2 = fftwf_plan_dft_c2r_1d(N, fXs, q, FFTW_WISDOM_ONLY|FFTW_ESTIMATE);
-		printf("PSSinthesis: using system wisdom file\n");
-	}
-	else if (fftwf_import_wisdom_from_filename(wisdomFile) != 0)
-	{
-		p2 = fftwf_plan_dft_c2r_1d(N, fXs, q, FFTW_WISDOM_ONLY|FFTW_ESTIMATE);
-		printf("PSSinthesis: using plugin-provided wisdom file\n");
-	}
-	else
-	{
-		p2 = fftwf_plan_dft_c2r_1d(N, fXs, q, FFTW_ESTIMATE);
-		printf("PSSinthesis: failed to import wisdom file '%s', using estimate instead\n", wisdomFile);
-	}
+	p2 = PlanC2R(N, fXs, q, haveWisdom);
+}
+
+void PSSinthesis::Reset()
+{
+	first = true;
+	fill_n(hops,Qcolumn,hopa);
+	fill_n(ysaida,2*N + 4*(Qcolumn-1)*hopa,0);
+	fill_n(yshift,hopa,0);
+	PhiPrevious.zeros();
 }
 
 PSSinthesis::~PSSinthesis() //Destrutor
@@ -290,7 +282,7 @@ int nBuffersSW(uint32_t n_samples, int c64, int c128, int c256, int c_default)
 	}
 }
 
-float InputAbsSum(float *in, uint32_t n_samples)
+float InputAbsSum(const float *in, uint32_t n_samples)
 {
 	/* needs performance testing first. should be worth it by a tiny margin.. */
 #if 0 //def __ARM_NEON__
@@ -336,17 +328,32 @@ uint32_t GetBufferSize(const LV2_Feature* const* features)
     if (options == NULL || uridMap == NULL)
         return n_samples;
 
+    const LV2_URID keyNominal = uridMap->map(uridMap->handle, LV2_BUF_SIZE__nominalBlockLength);
+    const LV2_URID keyMax     = uridMap->map(uridMap->handle, LV2_BUF_SIZE__maxBlockLength);
+    const LV2_URID typeInt    = uridMap->map(uridMap->handle, LV2_ATOM__Int);
+
+    uint32_t nominal = 0, maximum = 0;
+
     for (int i=0; options[i].key != 0; ++i)
     {
-        if (options[i].key != uridMap->map(uridMap->handle, LV2_BUF_SIZE__maxBlockLength))
-            continue;
-        if (options[i].type == uridMap->map(uridMap->handle, LV2_ATOM__Int))
+        // the old code skipped exactly the atom:Int typed entries, so it always fell back to 128
+        if (options[i].type != typeInt || options[i].value == NULL)
             continue;
 
-        const int value(*(const int*)options[i].value);
-        n_samples = value;
-        break;
+        const int32_t value = *(const int32_t*)options[i].value;
+        if (value <= 0)
+            continue;
+
+        if (options[i].key == keyNominal)
+            nominal = (uint32_t)value;
+        else if (options[i].key == keyMax)
+            maximum = (uint32_t)value;
     }
+
+    if (nominal != 0)
+        n_samples = nominal;
+    else if (maximum != 0)
+        n_samples = maximum;
 
     return n_samples;
 }

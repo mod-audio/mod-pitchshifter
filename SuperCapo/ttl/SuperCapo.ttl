@@ -31,6 +31,9 @@ doap:maintainer [
 mod:brand "MOD";
 mod:label "Super Capo";
 
+lv2:minorVersion 0;
+lv2:microVersion 2;
+
 doap:license "GPL";
 
 rdfs:comment """

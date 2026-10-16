@@ -1,5 +1,9 @@
+#ifndef MOD_PITCHSHIFTERCLASSES_H
+#define MOD_PITCHSHIFTERCLASSES_H
+
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 #include <cmath>
 #include <complex>
 #include <fftw3.h>
@@ -7,6 +11,7 @@
 #include "Exp.h"
 #include "angle.h"
 #include "window.h"
+#include "Wisdom.h"
 #include <lv2/lv2plug.in/ns/lv2core/lv2.h>
 
 using namespace arma;
@@ -15,9 +20,10 @@ using namespace std;
 class PSAnalysis
 {
 public:
-    PSAnalysis(uint32_t n_samples, int nBuffers, const char* wisdomFile);
+    PSAnalysis(uint32_t n_samples, int nBuffers, bool haveWisdom);
     ~PSAnalysis();
-    void PreAnalysis(int nBuffers, float *in);
+    void Reset(); // clear the history; real-time safe
+    void PreAnalysis(int nBuffers, const float *in);
     void Analysis();
 
     int N; //Size of the frame
@@ -47,8 +53,9 @@ public:
 class PSSinthesis
 {
 public:
-    PSSinthesis(PSAnalysis *obj, const char* wisdomFile);
+    PSSinthesis(PSAnalysis *obj, bool haveWisdom);
     ~PSSinthesis();
+    void Reset(); // clear the history; real-time safe
     void PreSinthesis();
     void Sinthesis(double s);
 
@@ -73,5 +80,10 @@ public:
 };
 
 int nBuffersSW(uint32_t n_samples, int c64, int c128, int c256, int c_default);
-float InputAbsSum(float *in, uint32_t n_samples);
+float InputAbsSum(const float *in, uint32_t n_samples);
+
+/* The block length the host will run us with: bufsz:nominalBlockLength if the
+ * host provides it, else bufsz:maxBlockLength, else 128. */
 uint32_t GetBufferSize(const LV2_Feature* const* features);
+
+#endif
