@@ -1,16 +1,11 @@
-#ifndef MOD_PITCHDETECTIONCLASS_H
-#define MOD_PITCHDETECTIONCLASS_H
-
 #include <stdlib.h>
 #include <stdint.h>
-#include <string.h>
 #include <cmath>
 #include <complex>
 #include <fftw3.h>
 #include <armadillo>
 #include "Exp.h"
 #include "angle.h"
-#include "Wisdom.h"
 
 using namespace arma;
 using namespace std;
@@ -18,10 +13,9 @@ using namespace std;
 class PitchDetection
 {
 public:
-    PitchDetection(uint32_t n_samples, int nBuffers, double SampleRate, bool haveWisdom);
+    PitchDetection(uint32_t n_samples, int nBuffers, double SampleRate, const char* wisdomFile);
     ~PitchDetection();
-    void Reset(); // clear the history; real-time safe
-    void PreProcessing(int nBuffers, const float *in);
+    void PreProcessing(int nBuffers, float *in);
     void FindNote();
 
     int N; //Size of the frame
@@ -52,5 +46,3 @@ public:
 	int Mode;
 	int LowNote;
 };
-
-#endif

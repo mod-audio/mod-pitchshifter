@@ -1,13 +1,7 @@
 #include <stdlib.h>
-#include <string.h>
-#include <string>
 #include <cmath>
 #include "PitchShifterClasses.h"
 #include "GainClass.h"
-#include "BlockAdapter.h"
-
-#undef IN
-#undef OUT
 
 /**********************************************************************************************************************************************************/
 
@@ -19,103 +13,66 @@
 #define SMOOTH_DURATION 0.1
 enum {IN, OUT, STEP, FIRST, LAST, CLEAN, GAIN, FIDELITY, PLUGIN_PORT_COUNT};
 
-#define NFIDELITY 4
-
 /**********************************************************************************************************************************************************/
 
 class SuperWhammy
 {
 public:
-    SuperWhammy(uint32_t n_samples, double samplerate, const std::string& wfile)
+    SuperWhammy(uint32_t n_samples, int nBuffers, double samplerate, const std::string& wfile)
     {
-        hop = n_samples;
+        wisdomFile = wfile;
+        Construct(n_samples, nBuffers, samplerate, wfile.c_str());
+    }
+    ~SuperWhammy(){Destruct();}
+    void Construct(uint32_t n_samples, int nBuffers, double samplerate, const char* wisdomFile)
+    {
+    	this->nBuffers = nBuffers;
         SampleRate = samplerate;
+
         current_s = 0.0;
 
-        // Everything that depends on the fidelity is built here, once, for every
-        // fidelity: selecting one later is a pointer swap, safe on the audio thread.
-        const bool haveWisdom = ImportWisdom(wfile.c_str());
-        for (int f = 0; f < NFIDELITY; f++)
-        {
-            obja_all[f] = new PSAnalysis(n_samples, nBuffersFor(f, n_samples), haveWisdom);
-            objs_all[f] = new PSSinthesis(obja_all[f], haveWisdom);
-        }
+        obja = new PSAnalysis(n_samples, nBuffers, wisdomFile);
+        objs = new PSSinthesis(obja, wisdomFile);
         objg = new GainClass(n_samples);
-        adapter = new BlockAdapter(n_samples, 1);
 
-        fidelity = -1;
-        SelectFidelity(1);
-    }
-    ~SuperWhammy()
-    {
-        for (int f = 0; f < NFIDELITY; f++)
-        {
-            delete obja_all[f];
-            delete objs_all[f];
-        }
-        delete objg;
-        delete adapter;
-    }
-
-    static int nBuffersFor(int fidelity, uint32_t n_samples)
-    {
-        switch (fidelity)
-        {
-        case 0:  return nBuffersSW(n_samples,FIDELITY0);
-        case 1:  return nBuffersSW(n_samples,FIDELITY1);
-        case 2:  return nBuffersSW(n_samples,FIDELITY2);
-        case 3:  return nBuffersSW(n_samples,FIDELITY3);
-        default: return nBuffersSW(n_samples,FIDELITY1);
-        }
-    }
-
-    // Switch to the pre-built engine for fidelity `f`; out-of-range values keep the
-    // current one. Only pointer swaps and history resets: no allocation, no FFTW planning.
-    void SelectFidelity(int f)
-    {
-        if (f < 0 || f >= NFIDELITY || f == fidelity)
-            return;
-
-        fidelity = f;
-        obja = obja_all[f];
-        objs = objs_all[f];
-        nBuffers = obja->Qcolumn;
-
-        obja->Reset();
-        objs->Reset();
         cont = 0;
     }
-
-    // One hop of audio: `in` and the outputs hold exactly `hop` samples.
-    void Process(const float *in, float *out, double s, double gain, double a, double b, int c)
+    void Destruct()
     {
-        if (InputAbsSum(in, hop) == 0)
+    	delete obja;
+        delete objs;
+        delete objg;
+    }
+    void Realloc(uint32_t n_samples, int nBuffers)
+    {
+    	Destruct();
+    	Construct(n_samples, nBuffers, SampleRate, wisdomFile.c_str());
+    }
+
+    void SetFidelity(int fidelity, uint32_t n_samples)
+    {
+        int bufsize;
+
+        switch (fidelity)
         {
-            memset(out,0,sizeof(float)*hop);
+        case 0: 
+            bufsize = nBuffersSW(n_samples,FIDELITY0);
+            break;
+        case 1:
+            bufsize = nBuffersSW(n_samples,FIDELITY1);
+            break;
+        case 2:
+            bufsize = nBuffersSW(n_samples,FIDELITY2);
+            break;
+        case 3:
+            bufsize = nBuffersSW(n_samples,FIDELITY3);
+            break;
+        default:
             return;
         }
 
-        double buffer_duration = hop/((double) SampleRate);
-        double alpha = std::pow(0.01, buffer_duration/SMOOTH_DURATION);
-        current_s = alpha*current_s + (1-alpha)*s;
-
-        double s_ = a + current_s*(b-a);
-        objg->SetGaindB(gain);
-        obja->PreAnalysis(nBuffers, in);
-        objs->PreSinthesis();
-
-        if (cont < nBuffers-1)
-        {
-            cont = cont + 1;
-            memset(out,0,sizeof(float)*hop);
-        }
-        else
-        {
-            obja->Analysis();
-            objs->Sinthesis(s_);
-            objg->SimpleGain(objs->yshift, out);
-            if (c == 1) for (uint32_t i = 0; i<hop; i++) out[i] += obja->frames[i];
-        }
+        if (nBuffers != bufsize || obja->hopa != (int)n_samples)
+            Realloc(n_samples, bufsize);
     }
 
     static LV2_Handle instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features);
@@ -126,20 +83,16 @@ public:
     static void cleanup(LV2_Handle instance);
     static const void* extension_data(const char* uri);
     float *ports[PLUGIN_PORT_COUNT];
-
-    PSAnalysis *obja_all[NFIDELITY];
+    
     PSAnalysis *obja;
-    PSSinthesis *objs_all[NFIDELITY];
     PSSinthesis *objs;
     GainClass *objg;
-    BlockAdapter *adapter;
 
     int nBuffers;
     int cont;
-    int fidelity;
-    uint32_t hop;
     double SampleRate;
     double current_s;
+    std::string wisdomFile;
 };
 
 /**********************************************************************************************************************************************************/
@@ -171,7 +124,7 @@ LV2_Handle SuperWhammy::instantiate(const LV2_Descriptor* descriptor, double sam
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
     const uint32_t n_samples = GetBufferSize(features);
-    SuperWhammy *plugin = new SuperWhammy(n_samples, samplerate, wisdomFile);
+    SuperWhammy *plugin = new SuperWhammy(n_samples, nBuffersSW(n_samples,FIDELITY1), samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
 
@@ -199,22 +152,41 @@ void SuperWhammy::run(LV2_Handle instance, uint32_t n_samples)
     SuperWhammy *plugin;
     plugin = (SuperWhammy *) instance;
 
-    const float *in       = plugin->ports[IN];
-    float       *out      = plugin->ports[OUT];
-    double       s        = (double)(*(plugin->ports[STEP]));
-    double       gain     = (double)(*(plugin->ports[GAIN]));
-    double       a        = (double)(*(plugin->ports[FIRST]));
-    double       b        = (double)(*(plugin->ports[LAST]));
-    int          c        = (int)(*(plugin->ports[CLEAN])+0.5f);
-    int          fidelity = (int)(*(plugin->ports[FIDELITY])+0.5f);
+    float *in       = plugin->ports[IN];
+    float *out      = plugin->ports[OUT];
+    double s        = (double)(*(plugin->ports[STEP]));
+    double gain     = (double)(*(plugin->ports[GAIN]));
+    double a        = (double)(*(plugin->ports[FIRST]));
+    double b        = (double)(*(plugin->ports[LAST]));
+    int    c        = (int)(*(plugin->ports[CLEAN])+0.5f);
+    int    fidelity = (int)(*(plugin->ports[FIDELITY])+0.5f);
 
-    plugin->SelectFidelity(fidelity);
+    plugin->SetFidelity(fidelity, n_samples);
 
-    float* const outs[1] = { out };
-    plugin->adapter->Run(in, outs, n_samples, [&](const float *hin, float* const* houts)
+    if (InputAbsSum(in, n_samples) == 0)
     {
-        plugin->Process(hin, houts[0], s, gain, a, b, c);
-    });
+        memset(out,0,sizeof(float)*n_samples);
+        return;
+    }
+
+    double buffer_duration = n_samples/((double) plugin->SampleRate);
+    double alpha = std::pow(0.01, buffer_duration/SMOOTH_DURATION);
+    plugin->current_s = alpha*plugin->current_s + (1-alpha)*s;
+
+    double s_ = a + plugin->current_s*(b-a);
+	(plugin->objg)->SetGaindB(gain);
+    (plugin->obja)->PreAnalysis(plugin->nBuffers, in);
+    (plugin->objs)->PreSinthesis();
+
+	if (plugin->cont < plugin->nBuffers-1)
+		plugin->cont = plugin->cont + 1;
+	else
+	{
+        (plugin->obja)->Analysis();
+        (plugin->objs)->Sinthesis(s_);
+        (plugin->objg)->SimpleGain((plugin->objs)->yshift, out);
+        if (c == 1) for (uint32_t i = 0; i<n_samples; i++) out[i] += (plugin->obja)->frames[i];
+	}
 }
 
 /**********************************************************************************************************************************************************/
