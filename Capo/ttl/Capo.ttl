@@ -34,7 +34,7 @@ mod:label "Capo";
 doap:license "GPL";
 
 lv2:minorVersion 0;
-lv2:microVersion 6;
+lv2:microVersion 4;
 
 rdfs:comment """
 It’s a pitch-shifter that can raise the pitch with a maximum of +12 semitones (steps). It is more limited than the SuperCapo, but it also uses less processing power, allowing you to use the resources for other plugins!
