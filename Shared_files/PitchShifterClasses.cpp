@@ -340,8 +340,8 @@ uint32_t GetBufferSize(const LV2_Feature* const* features)
     {
         if (options[i].key != uridMap->map(uridMap->handle, LV2_BUF_SIZE__maxBlockLength))
             continue;
-        if (options[i].type == uridMap->map(uridMap->handle, LV2_ATOM__Int))
-            continue;
+        if (options[i].type != uridMap->map(uridMap->handle, LV2_ATOM__Int))
+            continue;  // Skip if not an Int type
 
         const int value(*(const int*)options[i].value);
         n_samples = value;

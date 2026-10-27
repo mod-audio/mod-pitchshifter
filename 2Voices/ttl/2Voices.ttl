@@ -11,7 +11,7 @@
 <http://moddevices.com/plugins/mod-devel/2Voices>
 a lv2:Plugin, lv2:SpectralPlugin;
 
-lv2:requiredFeature bsize:fixedBlockLength, bsize:powerOf2BlockLength;
+lv2:optionalFeature bsize:fixedBlockLength, bsize:powerOf2BlockLength;
 
 doap:name "2Voices";
 
