@@ -1,39 +1,22 @@
+# Builds the eight pitch shifter plugins. Shared_files/harmonizer.wisdom (FFTW plans for the frame
+# sizes the plugins use) is generated here when missing; builders copy a per-device file in first.
 
-all: Shared_files/harmonizer.wisdom
-	$(MAKE) -C 2Voices
-	$(MAKE) -C Capo
-	$(MAKE) -C Drop
-	$(MAKE) -C SuperCapo
-	$(MAKE) -C SuperWhammy
-	$(MAKE) -C Harmonizer
-	$(MAKE) -C Harmonizer2
-	$(MAKE) -C HarmonizerCS
+PLUGINS = 2Voices Capo Drop SuperCapo SuperWhammy Harmonizer Harmonizer2 HarmonizerCS
+WISDOM  = Shared_files/harmonizer.wisdom
+SIZES   = 128 192 256 384 512 640 768 1024 1280 1536 2048 2176 2304 2432 2560 3072 4096
+
+.PHONY: all install clean
+
+all: $(WISDOM)
+	for p in $(PLUGINS); do $(MAKE) -C $$p || exit 1; done
 
 install: all
-	$(MAKE) -C 2Voices install
-	$(MAKE) -C Capo install
-	$(MAKE) -C Drop install
-	$(MAKE) -C SuperCapo install
-	$(MAKE) -C SuperWhammy install
-	$(MAKE) -C Harmonizer install
-	$(MAKE) -C Harmonizer2 install
-	$(MAKE) -C HarmonizerCS install
+	for p in $(PLUGINS); do $(MAKE) -C $$p install || exit 1; done
 
 clean:
-	$(MAKE) -C 2Voices clean
-	$(MAKE) -C Capo clean
-	$(MAKE) -C Drop clean
-	$(MAKE) -C SuperCapo clean
-	$(MAKE) -C SuperWhammy clean
-	$(MAKE) -C Harmonizer clean
-	$(MAKE) -C Harmonizer2 clean
-	$(MAKE) -C HarmonizerCS clean
-	rm -f Shared_files/*.o
-	rm -f Shared_files/harmonizer.wisdom
+	for p in $(PLUGINS); do $(MAKE) -C $$p clean || exit 1; done
+	rm -f Shared_files/*.o $(WISDOM)
 
-Shared_files/harmonizer.wisdom:
-	@echo "Generating harmonizer.wisdom file, this might take a while..."
-	fftwf-wisdom -v -n -x -o $@ \
-	rof128 rob128 rof192 rob192 rof256 rob256 rof384 rob384 rof512 rob512 rof640 rob640 rof768 rob768 \
-	rof1024 rob1024 rof1280 rob1280 rof1536 rob1536 rof2048 rob2048 rof2176 rob2176 rof2304 rob2304 \
-	rof2432 rob2432 rof2560 rob2560 rof3072 rob3072 rof4096 rob4096
+$(WISDOM):
+	@echo "Generating $@ (this takes a while)"
+	fftwf-wisdom -v -n -x -o $@ $(foreach n,$(SIZES),rof$(n) rob$(n))
