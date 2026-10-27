@@ -80,15 +80,17 @@ public:
         obja->Reset();
         objs->Reset();
         cont = 0;
+        adapter->Cancel();
     }
 
-    // One hop of audio: `in` and the outputs hold exactly `hop` samples.
-    void Process(const float *in, float *out, double s, double gain)
+    // The two steps of one hop (see BlockAdapter.h); `in` and the outputs hold exactly `hop` samples.
+    // Analyse returns true when Synthesise must still produce the output.
+    bool Analyse(const float *in, float *out, double s, double gain)
     {
         if (InputAbsSum(in, hop) == 0)
         {
             memset(out,0,sizeof(float)*hop);
-            return;
+            return false;
         }
 
         objg->SetGaindB(gain);
@@ -99,13 +101,18 @@ public:
         {
             cont = cont + 1;
             memset(out,0,sizeof(float)*hop);
+            return false;
         }
-        else
-        {
-            obja->Analysis();
-            objs->Sinthesis(s);
-            objg->SimpleGain(objs->yshift, out);
-        }
+
+        obja->Analysis();
+        step = s;
+        return true;
+    }
+
+    void Synthesise(float *out)
+    {
+        objs->Sinthesis(step);
+        objg->SimpleGain(objs->yshift, out);
     }
 
     static LV2_Handle instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features);
@@ -123,6 +130,8 @@ public:
     PSSinthesis *objs;
     GainClass *objg;
     BlockAdapter *adapter;
+
+    double step;
 
     int nBuffers;
     int cont;
@@ -159,7 +168,7 @@ LV2_Handle Capo::instantiate(const LV2_Descriptor* descriptor, double samplerate
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    const uint32_t n_samples = GetBufferSize(features);
+    const uint32_t n_samples = EngineHop(GetBufferSize(features));
     Capo *plugin = new Capo(n_samples, samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
@@ -197,10 +206,9 @@ void Capo::run(LV2_Handle instance, uint32_t n_samples)
     plugin->SelectFidelity(fidelity);
 
     float* const outs[1] = { out };
-    plugin->adapter->Run(in, outs, n_samples, [&](const float *hin, float* const* houts)
-    {
-        plugin->Process(hin, houts[0], s, gain);
-    });
+    plugin->adapter->Run(in, outs, n_samples,
+        [&](const float *hin, float* const* houts) { return plugin->Analyse(hin, houts[0], s, gain); },
+        [&](float* const* houts) { plugin->Synthesise(houts[0]); });
 }
 
 /**********************************************************************************************************************************************************/

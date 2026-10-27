@@ -96,17 +96,19 @@ public:
         objs_2->Reset();
         objpd->Reset();
         cont = 0;
+        adapter->Cancel();
     }
 
-    // One hop of audio: `in` and the outputs hold exactly `hop` samples.
-    void Process(const float *in, float *out_clean, float *out_1, float *out_2, int Tone, int Scale, int Interval_1, int Interval_2, int Mode, int LowNote, double gain_clean, double gain_1, double gain_2)
+    // The two steps of one hop (see BlockAdapter.h); `in` and the outputs hold exactly `hop` samples.
+    // Analyse returns true when Synthesise must still produce the output.
+    bool Analyse(const float *in, float *out_clean, float *out_1, float *out_2, int Tone, int Scale, int Interval_1, int Interval_2, int Mode, int LowNote, double gain_clean, double gain_1, double gain_2)
     {
         if (InputAbsSum(in, hop) == 0)
         {
             memset(out_clean,0,sizeof(float)*hop);
             memset(out_1,0,sizeof(float)*hop);
             memset(out_2,0,sizeof(float)*hop);
-            return;
+            return false;
         }
 
         objgc->SetGaindB(gain_clean);
@@ -124,19 +126,23 @@ public:
             memset(out_clean,0,sizeof(float)*hop);
             memset(out_1,0,sizeof(float)*hop);
             memset(out_2,0,sizeof(float)*hop);
+            return false;
         }
-        else
-        {
-            objpd->FindNote();
-            FindStep(objpd->note, objpd->oitava, Tone, Scale, Interval_1, Mode, LowNote, &s_1);
-            FindStep(objpd->note, objpd->oitava, Tone, Scale, Interval_2, Mode, LowNote, &s_2);
-            obja->Analysis();
-            objs_1->Sinthesis(s_1);
-            objs_2->Sinthesis(s_2);
-            objgc->SimpleGain(obja->frames, out_clean);
-            objg1->SimpleGain(objs_1->yshift, out_1);
-            objg2->SimpleGain(objs_2->yshift, out_2);
-        }
+
+        objpd->FindNote();
+        FindStep(objpd->note, objpd->oitava, Tone, Scale, Interval_1, Mode, LowNote, &s_1);
+        FindStep(objpd->note, objpd->oitava, Tone, Scale, Interval_2, Mode, LowNote, &s_2);
+        return true;
+    }
+
+    void Synthesise(float *out_clean, float *out_1, float *out_2)
+    {
+        obja->Analysis();
+        objs_1->Sinthesis(s_1);
+        objs_2->Sinthesis(s_2);
+        objgc->SimpleGain(obja->frames, out_clean);
+        objg1->SimpleGain(objs_1->yshift, out_1);
+        objg2->SimpleGain(objs_2->yshift, out_2);
     }
 
     static LV2_Handle instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features);
@@ -198,7 +204,7 @@ LV2_Handle Harmonizer2::instantiate(const LV2_Descriptor* descriptor, double sam
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    const uint32_t n_samples = GetBufferSize(features);
+    const uint32_t n_samples = EngineHop(GetBufferSize(features));
     Harmonizer2 *plugin = new Harmonizer2(n_samples, samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
@@ -245,10 +251,9 @@ void Harmonizer2::run(LV2_Handle instance, uint32_t n_samples)
     plugin->SelectFidelity(fidelity);
 
     float* const outs[3] = { out_clean, out_1, out_2 };
-    plugin->adapter->Run(in, outs, n_samples, [&](const float *hin, float* const* houts)
-    {
-        plugin->Process(hin, houts[0], houts[1], houts[2], Tone, Scale, Interval_1, Interval_2, Mode, LowNote, gain_clean, gain_1, gain_2);
-    });
+    plugin->adapter->Run(in, outs, n_samples,
+        [&](const float *hin, float* const* houts) { return plugin->Analyse(hin, houts[0], houts[1], houts[2], Tone, Scale, Interval_1, Interval_2, Mode, LowNote, gain_clean, gain_1, gain_2); },
+        [&](float* const* houts) { plugin->Synthesise(houts[0], houts[1], houts[2]); });
 }
 
 /**********************************************************************************************************************************************************/

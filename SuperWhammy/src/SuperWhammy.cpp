@@ -84,15 +84,17 @@ public:
         obja->Reset();
         objs->Reset();
         cont = 0;
+        adapter->Cancel();
     }
 
-    // One hop of audio: `in` and the outputs hold exactly `hop` samples.
-    void Process(const float *in, float *out, double s, double gain, double a, double b, int c)
+    // The two steps of one hop (see BlockAdapter.h); `in` and the outputs hold exactly `hop` samples.
+    // Analyse returns true when Synthesise must still produce the output.
+    bool Analyse(const float *in, float *out, double s, double gain, double a, double b, int c)
     {
         if (InputAbsSum(in, hop) == 0)
         {
             memset(out,0,sizeof(float)*hop);
-            return;
+            return false;
         }
 
         double buffer_duration = hop/((double) SampleRate);
@@ -108,14 +110,20 @@ public:
         {
             cont = cont + 1;
             memset(out,0,sizeof(float)*hop);
+            return false;
         }
-        else
-        {
-            obja->Analysis();
-            objs->Sinthesis(s_);
-            objg->SimpleGain(objs->yshift, out);
-            if (c == 1) for (uint32_t i = 0; i<hop; i++) out[i] += obja->frames[i];
-        }
+
+        obja->Analysis();
+        step = s_;
+        clean = c;
+        return true;
+    }
+
+    void Synthesise(float *out)
+    {
+        objs->Sinthesis(step);
+        objg->SimpleGain(objs->yshift, out);
+        if (clean == 1) for (uint32_t i = 0; i<hop; i++) out[i] += obja->frames[i];
     }
 
     static LV2_Handle instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features);
@@ -133,6 +141,9 @@ public:
     PSSinthesis *objs;
     GainClass *objg;
     BlockAdapter *adapter;
+
+    double step;
+    int clean;
 
     int nBuffers;
     int cont;
@@ -170,7 +181,7 @@ LV2_Handle SuperWhammy::instantiate(const LV2_Descriptor* descriptor, double sam
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    const uint32_t n_samples = GetBufferSize(features);
+    const uint32_t n_samples = EngineHop(GetBufferSize(features));
     SuperWhammy *plugin = new SuperWhammy(n_samples, samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
@@ -211,10 +222,9 @@ void SuperWhammy::run(LV2_Handle instance, uint32_t n_samples)
     plugin->SelectFidelity(fidelity);
 
     float* const outs[1] = { out };
-    plugin->adapter->Run(in, outs, n_samples, [&](const float *hin, float* const* houts)
-    {
-        plugin->Process(hin, houts[0], s, gain, a, b, c);
-    });
+    plugin->adapter->Run(in, outs, n_samples,
+        [&](const float *hin, float* const* houts) { return plugin->Analyse(hin, houts[0], s, gain, a, b, c); },
+        [&](float* const* houts) { plugin->Synthesise(houts[0]); });
 }
 
 /**********************************************************************************************************************************************************/

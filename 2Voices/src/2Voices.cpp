@@ -87,16 +87,18 @@ public:
         objs_1->Reset();
         objs_2->Reset();
         cont = 0;
+        adapter->Cancel();
     }
 
-    // One hop of audio: `in` and the outputs hold exactly `hop` samples.
-    void Process(const float *in, float *out_1, float *out_2, double s_1, double s_2, double gain_1, double gain_2)
+    // The two steps of one hop (see BlockAdapter.h); `in` and the outputs hold exactly `hop` samples.
+    // Analyse returns true when Synthesise must still produce the output.
+    bool Analyse(const float *in, float *out_1, float *out_2, double s_1, double s_2, double gain_1, double gain_2)
     {
         if (InputAbsSum(in, hop) == 0)
         {
             memset(out_1,0,sizeof(float)*hop);
             memset(out_2,0,sizeof(float)*hop);
-            return;
+            return false;
         }
 
         objg1->SetGaindB(gain_1);
@@ -111,15 +113,21 @@ public:
             cont = cont + 1;
             memset(out_1,0,sizeof(float)*hop);
             memset(out_2,0,sizeof(float)*hop);
+            return false;
         }
-        else
-        {
-            obja->Analysis();
-            objs_1->Sinthesis(s_1);
-            objs_2->Sinthesis(s_2);
-            objg1->SimpleGain(objs_1->yshift, out_1);
-            objg2->SimpleGain(objs_2->yshift, out_2);
-        }
+
+        obja->Analysis();
+        step_1 = s_1;
+        step_2 = s_2;
+        return true;
+    }
+
+    void Synthesise(float *out_1, float *out_2)
+    {
+        objs_1->Sinthesis(step_1);
+        objs_2->Sinthesis(step_2);
+        objg1->SimpleGain(objs_1->yshift, out_1);
+        objg2->SimpleGain(objs_2->yshift, out_2);
     }
 
     static LV2_Handle instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features);
@@ -140,6 +148,9 @@ public:
     GainClass *objg1;
     GainClass *objg2;
     BlockAdapter *adapter;
+
+    double step_1;
+    double step_2;
 
     int nBuffers;
     int cont;
@@ -176,7 +187,7 @@ LV2_Handle TwoVoices::instantiate(const LV2_Descriptor* descriptor, double sampl
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    const uint32_t n_samples = GetBufferSize(features);
+    const uint32_t n_samples = EngineHop(GetBufferSize(features));
     TwoVoices *plugin = new TwoVoices(n_samples, samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
@@ -217,10 +228,9 @@ void TwoVoices::run(LV2_Handle instance, uint32_t n_samples)
     plugin->SelectFidelity(fidelity);
 
     float* const outs[2] = { out_1, out_2 };
-    plugin->adapter->Run(in, outs, n_samples, [&](const float *hin, float* const* houts)
-    {
-        plugin->Process(hin, houts[0], houts[1], s_1, s_2, gain_1, gain_2);
-    });
+    plugin->adapter->Run(in, outs, n_samples,
+        [&](const float *hin, float* const* houts) { return plugin->Analyse(hin, houts[0], houts[1], s_1, s_2, gain_1, gain_2); },
+        [&](float* const* houts) { plugin->Synthesise(houts[0], houts[1]); });
 }
 
 /**********************************************************************************************************************************************************/

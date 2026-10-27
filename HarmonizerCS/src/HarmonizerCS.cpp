@@ -89,16 +89,18 @@ public:
         objs->Reset();
         objpd->Reset();
         cont = 0;
+        adapter->Cancel();
     }
 
-    // One hop of audio: `in` and the outputs hold exactly `hop` samples.
-    void Process(const float *in, float *out_1, float *out_2, int Tone, int LowNote, int s_0, int s_1, int s_2, int s_3, int s_4, int s_5, int s_6, int s_7, int s_8, int s_9, int s_10, int s_11, double gain_1, double gain_2)
+    // The two steps of one hop (see BlockAdapter.h); `in` and the outputs hold exactly `hop` samples.
+    // Analyse returns true when Synthesise must still produce the output.
+    bool Analyse(const float *in, float *out_1, float *out_2, int Tone, int LowNote, int s_0, int s_1, int s_2, int s_3, int s_4, int s_5, int s_6, int s_7, int s_8, int s_9, int s_10, int s_11, double gain_1, double gain_2)
     {
         if (InputAbsSum(in, hop) == 0)
         {
             memset(out_1,0,sizeof(float)*hop);
             memset(out_2,0,sizeof(float)*hop);
-            return;
+            return false;
         }
 
         objg1->SetGaindB(gain_1);
@@ -112,17 +114,20 @@ public:
             cont = cont + 1;
             memset(out_1,0,sizeof(float)*hop);
             memset(out_2,0,sizeof(float)*hop);
+            return false;
         }
-        else
-        {
-            objpd->FindNote();
-            FindStepCS(objpd->note, objpd->oitava, Tone, LowNote, s_0, s_1, s_2, s_3, s_4, s_5, s_6, s_7, s_8, s_9, s_10, s_11, &s);
 
-            obja->Analysis();
-            objs->Sinthesis(s);
-            objg1->SimpleGain(obja->frames, out_1);
-            objg2->SimpleGain(objs->yshift, out_2);
-        }
+        objpd->FindNote();
+        FindStepCS(objpd->note, objpd->oitava, Tone, LowNote, s_0, s_1, s_2, s_3, s_4, s_5, s_6, s_7, s_8, s_9, s_10, s_11, &s);
+        return true;
+    }
+
+    void Synthesise(float *out_1, float *out_2)
+    {
+        obja->Analysis();
+        objs->Sinthesis(s);
+        objg1->SimpleGain(obja->frames, out_1);
+        objg2->SimpleGain(objs->yshift, out_2);
     }
 
     static LV2_Handle instantiate(const LV2_Descriptor* descriptor, double samplerate, const char* bundle_path, const LV2_Feature* const* features);
@@ -180,7 +185,7 @@ LV2_Handle HarmonizerCS::instantiate(const LV2_Descriptor* descriptor, double sa
 {
     std::string wisdomFile = bundle_path;
     wisdomFile += "/harmonizer.wisdom";
-    const uint32_t n_samples = GetBufferSize(features);
+    const uint32_t n_samples = EngineHop(GetBufferSize(features));
     HarmonizerCS *plugin = new HarmonizerCS(n_samples, samplerate, wisdomFile);
     return (LV2_Handle)plugin;
 }
@@ -233,10 +238,9 @@ void HarmonizerCS::run(LV2_Handle instance, uint32_t n_samples)
     plugin->SelectFidelity(fidelity);
 
     float* const outs[2] = { out_1, out_2 };
-    plugin->adapter->Run(in, outs, n_samples, [&](const float *hin, float* const* houts)
-    {
-        plugin->Process(hin, houts[0], houts[1], Tone, LowNote, s_0, s_1, s_2, s_3, s_4, s_5, s_6, s_7, s_8, s_9, s_10, s_11, gain_1, gain_2);
-    });
+    plugin->adapter->Run(in, outs, n_samples,
+        [&](const float *hin, float* const* houts) { return plugin->Analyse(hin, houts[0], houts[1], Tone, LowNote, s_0, s_1, s_2, s_3, s_4, s_5, s_6, s_7, s_8, s_9, s_10, s_11, gain_1, gain_2); },
+        [&](float* const* houts) { plugin->Synthesise(houts[0], houts[1]); });
 }
 
 /**********************************************************************************************************************************************************/
