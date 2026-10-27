@@ -1,9 +1,5 @@
 #include "PitchShifterClasses.h"
-#ifdef __ARM_NEON__
-#include <arm_neon.h>
-#endif
 
-// for GetBufferSize
 #include <lv2/lv2plug.in/ns/ext/atom/atom.h>
 #include <lv2/lv2plug.in/ns/ext/buf-size/buf-size.h>
 #include <lv2/lv2plug.in/ns/ext/options/options.h>
@@ -11,8 +7,6 @@
 #ifndef LV2_BUF_SIZE__nominalBlockLength
 #define LV2_BUF_SIZE__nominalBlockLength LV2_BUF_SIZE_PREFIX "nominalBlockLength"
 #endif
-
-#define N_SAMPLES_DEFAULT 128
 
 PSAnalysis::PSAnalysis(uint32_t n_samples, int nBuffers, bool haveWisdom) //Construtor
 {
@@ -269,91 +263,56 @@ void PSSinthesis::Sinthesis(double s)
 
 int nBuffersSW(uint32_t n_samples, int c64, int c128, int c256, int c_default)
 {
-	switch(n_samples)
-	{
-		case 64:
-			return c64;
-		case 128:
-			return c128;
-		case 256:
-			return c256;
-		default:
-			return c_default;
-	}
+	if (n_samples == 64)  return c64;
+	if (n_samples == 128) return c128;
+	if (n_samples == 256) return c256;
+	return c_default;
 }
 
 float InputAbsSum(const float *in, uint32_t n_samples)
 {
-	/* needs performance testing first. should be worth it by a tiny margin.. */
-#if 0 //def __ARM_NEON__
-	float32x4_t acc = vdupq_n_f32(0.0f);
-	float32x4_t vec;
-
-	for (; n_samples != 0; n_samples -= 4)
-	{
-		vec = vld1q_f32(in);
-		acc = vaddq_f32(acc, vabsq_f32(vec));
-		in += 4;
-	}
-
-	float32_t arr[4];
-	vst1q_f32(arr, acc);
-
-	return arr[0] + arr[1] + arr[2] + arr[3];
-#else
-	float sum_abs = 0;
-
-	for (uint32_t i=0; i<n_samples; i++)
-		sum_abs = sum_abs + abs(in[i]);
-
-	return sum_abs;
-#endif
+	float total = 0;
+	for (uint32_t i = 0; i < n_samples; i++)
+		total += fabsf(in[i]);
+	return total;
 }
 
 uint32_t GetBufferSize(const LV2_Feature* const* features)
 {
-    uint32_t n_samples = N_SAMPLES_DEFAULT;
+	const LV2_Options_Option* opts = NULL;
+	const LV2_URID_Map* map = NULL;
 
-    const LV2_Options_Option* options = NULL;
-    const LV2_URID_Map*       uridMap = NULL;
+	for (const LV2_Feature* const* f = features; f != NULL && *f != NULL; ++f)
+	{
+		if (strcmp((*f)->URI, LV2_OPTIONS__options) == 0)
+			opts = (const LV2_Options_Option*)(*f)->data;
+		else if (strcmp((*f)->URI, LV2_URID__map) == 0)
+			map = (const LV2_URID_Map*)(*f)->data;
+	}
 
-    for (int i=0; features[i] != NULL; ++i)
-    {
-        if (std::strcmp(features[i]->URI, LV2_OPTIONS__options) == 0)
-            options = (const LV2_Options_Option*)features[i]->data;
-        else if (std::strcmp(features[i]->URI, LV2_URID__map) == 0)
-            uridMap = (const LV2_URID_Map*)features[i]->data;
-    }
+	uint32_t nominal = 0, maximum = 0;
 
-    if (options == NULL || uridMap == NULL)
-        return n_samples;
+	if (opts != NULL && map != NULL)
+	{
+		const LV2_URID atomInt = map->map(map->handle, LV2_ATOM__Int);
+		const LV2_URID nominalKey = map->map(map->handle, LV2_BUF_SIZE__nominalBlockLength);
+		const LV2_URID maximumKey = map->map(map->handle, LV2_BUF_SIZE__maxBlockLength);
 
-    const LV2_URID keyNominal = uridMap->map(uridMap->handle, LV2_BUF_SIZE__nominalBlockLength);
-    const LV2_URID keyMax     = uridMap->map(uridMap->handle, LV2_BUF_SIZE__maxBlockLength);
-    const LV2_URID typeInt    = uridMap->map(uridMap->handle, LV2_ATOM__Int);
+		for (const LV2_Options_Option* o = opts; o->key != 0; ++o)
+		{
+			if (o->type != atomInt || o->value == NULL)
+				continue;
+			const int32_t v = *(const int32_t*)o->value;
+			if (v <= 0)
+				continue;
+			if (o->key == nominalKey)
+				nominal = (uint32_t)v;
+			else if (o->key == maximumKey)
+				maximum = (uint32_t)v;
+		}
+	}
 
-    uint32_t nominal = 0, maximum = 0;
-
-    for (int i=0; options[i].key != 0; ++i)
-    {
-        // the old code skipped exactly the atom:Int typed entries, so it always fell back to 128
-        if (options[i].type != typeInt || options[i].value == NULL)
-            continue;
-
-        const int32_t value = *(const int32_t*)options[i].value;
-        if (value <= 0)
-            continue;
-
-        if (options[i].key == keyNominal)
-            nominal = (uint32_t)value;
-        else if (options[i].key == keyMax)
-            maximum = (uint32_t)value;
-    }
-
-    if (nominal != 0)
-        n_samples = nominal;
-    else if (maximum != 0)
-        n_samples = maximum;
-
-    return n_samples;
+	if (nominal != 0) return nominal;
+	if (maximum != 0) return maximum;
+	return 128;
 }
