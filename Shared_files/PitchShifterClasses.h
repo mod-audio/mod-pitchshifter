@@ -86,4 +86,11 @@ float InputAbsSum(const float *in, uint32_t n_samples);
  * host provides it, else bufsz:maxBlockLength, else 128. */
 uint32_t GetBufferSize(const LV2_Feature* const* features);
 
+/* An integer control port value. Rounds to nearest; the earlier (int)(v + 0.5f)
+ * truncated negative values toward zero, so -3 became -2. */
+static inline int ControlInt(float v)
+{
+	return (int)floorf(v + 0.5f);
+}
+
 #endif

@@ -216,8 +216,8 @@ void SuperWhammy::run(LV2_Handle instance, uint32_t n_samples)
     double       gain     = (double)(*(plugin->ports[GAIN]));
     double       a        = (double)(*(plugin->ports[FIRST]));
     double       b        = (double)(*(plugin->ports[LAST]));
-    int          c        = (int)(*(plugin->ports[CLEAN])+0.5f);
-    int          fidelity = (int)(*(plugin->ports[FIDELITY])+0.5f);
+    int          c        = ControlInt(*plugin->ports[CLEAN]);
+    int          fidelity = ControlInt(*plugin->ports[FIDELITY]);
 
     plugin->SelectFidelity(fidelity);
 

@@ -201,7 +201,7 @@ void Drop::run(LV2_Handle instance, uint32_t n_samples)
     float       *out      = plugin->ports[OUT];
     double       s        = (double)(*(plugin->ports[STEP]));
     double       gain     = (double)(*(plugin->ports[GAIN]));
-    int          fidelity = (int)(*(plugin->ports[FIDELITY])+0.5f);
+    int          fidelity = ControlInt(*plugin->ports[FIDELITY]);
 
     plugin->SelectFidelity(fidelity);
 

@@ -223,7 +223,7 @@ void TwoVoices::run(LV2_Handle instance, uint32_t n_samples)
     double       s_2      = (double)(*(plugin->ports[STEP_2]));
     double       gain_1   = (double)(*(plugin->ports[GAIN_1]));
     double       gain_2   = (double)(*(plugin->ports[GAIN_2]));
-    int          fidelity = (int)(*(plugin->ports[FIDELITY])+0.5f);
+    int          fidelity = ControlInt(*plugin->ports[FIDELITY]);
 
     plugin->SelectFidelity(fidelity);
 
