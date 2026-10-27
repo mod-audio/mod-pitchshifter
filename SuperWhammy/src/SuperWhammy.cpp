@@ -2,6 +2,7 @@
 #include <cmath>
 #include "PitchShifterClasses.h"
 #include "GainClass.h"
+#include "PitchSplicer.h"   // "Ultra": correlation-spliced time-domain shifter (no FFT)
 
 /**********************************************************************************************************************************************************/
 
@@ -34,6 +35,11 @@ public:
         obja = new PSAnalysis(n_samples, nBuffers, wisdomFile);
         objs = new PSSinthesis(obja, wisdomFile);
         objg = new GainClass(n_samples);
+        // "Ultra" fidelity engine: sized once for the rate; per-sample and never reallocs after
+        // prepare(), so host block size is irrelevant to it (unlike the STFT objects above).
+        objp = new PitchSplicer();
+        objp->prepare(SampleRate);
+        objp->setEnabled(true);
 
         cont = 0;
     }
@@ -42,6 +48,7 @@ public:
     	delete obja;
         delete objs;
         delete objg;
+        delete objp;
     }
     void Realloc(uint32_t n_samples, int nBuffers)
     {
@@ -67,6 +74,9 @@ public:
         case 3:
             bufsize = nBuffersSW(n_samples,FIDELITY3);
             break;
+        case 4:   // "Ultra": correlation-spliced engine (objp). Nothing to re-size - its state is
+                    // independent of host block size, so the STFT objects are left untouched.
+            return;
         default:
             return;
         }
@@ -87,6 +97,7 @@ public:
     PSAnalysis *obja;
     PSSinthesis *objs;
     GainClass *objg;
+    PitchSplicer *objp;   // "Ultra" fidelity engine (correlation-spliced, time-domain)
 
     int nBuffers;
     int cont;
@@ -162,6 +173,27 @@ void SuperWhammy::run(LV2_Handle instance, uint32_t n_samples)
     int    fidelity = (int)(*(plugin->ports[FIDELITY])+0.5f);
 
     plugin->SetFidelity(fidelity, n_samples);
+    if (fidelity == 4)   // "Ultra": routed before the silence early-out so a silent input decays out smoothly instead of hard-cutting to zero.
+    {
+        double buffer_duration = n_samples/((double) plugin->SampleRate);
+        double alpha = std::pow(0.01, buffer_duration/SMOOTH_DURATION);
+        plugin->current_s = alpha*plugin->current_s + (1-alpha)*s;
+
+        double s_ = a + plugin->current_s*(b-a);   // same sweep interpolation the STFT path feeds to Sinthesis()
+        PitchSplicer::Params p;
+        p.semitones = static_cast<float>(s_);      // continuous value, exactly what Sinthesis(s_) would receive
+        plugin->objp->setParams(p);                // window stays at the default set in prepare()
+
+        const float* ins[1]  = { in };
+        float*       outs[1] = { out };
+        plugin->objp->process(ins, outs, static_cast<int>(n_samples), 1);   // shifted audio into `out` (pre-gain)
+
+        (plugin->objg)->SetGaindB(gain);
+        (plugin->objg)->SimpleGain(out, out);      // GAIN port on the shift result only...
+        if (c == 1) for (uint32_t i = 0; i<n_samples; i++) out[i] += in[i];   // ...and CLEAN adds dry at full level afterwards
+        return;
+    }
+
 
     if (InputAbsSum(in, n_samples) == 0)
     {

@@ -2,6 +2,7 @@
 #include <cmath>
 #include "PitchShifterClasses.h"
 #include "GainClass.h"
+#include "PitchSplicer.h"   // "Ultra": correlation-spliced time-domain shifter (no FFT)
 
 /**********************************************************************************************************************************************************/
 
@@ -30,6 +31,11 @@ public:
         obja = new PSAnalysis(n_samples, nBuffers, wisdomFile);
         objs = new PSSinthesis(obja, wisdomFile);
         objg = new GainClass(n_samples);
+        // "Ultra" fidelity engine: sized once for the rate; per-sample and never reallocs after
+        // prepare(), so host block size is irrelevant to it (unlike the STFT objects above).
+        objp = new PitchSplicer();
+        objp->prepare(SampleRate);
+        objp->setEnabled(true);
 
         cont = 0;
     }
@@ -38,6 +44,7 @@ public:
     	delete obja;
         delete objs;
         delete objg;
+        delete objp;
     }
     void Realloc(uint32_t n_samples, int nBuffers)
     {
@@ -60,6 +67,9 @@ public:
         case 2:
             bufsize = nBuffersSW(n_samples,FIDELITY2);
             break;
+        case 3:   // "Ultra": correlation-spliced engine (objp). Nothing to re-size - its state is
+                    // independent of host block size, so the STFT objects are left untouched.
+            return;
         default:
             return;
         }
@@ -80,6 +90,7 @@ public:
     PSAnalysis *obja;
     PSSinthesis *objs;
     GainClass *objg;
+    PitchSplicer *objp;   // "Ultra" fidelity engine (correlation-spliced, time-domain)
 
     int nBuffers;
     int cont;
@@ -152,6 +163,22 @@ void SuperCapo::run(LV2_Handle instance, uint32_t n_samples)
     int    fidelity = (int)(*(plugin->ports[FIDELITY])+0.5f);
 
     plugin->SetFidelity(fidelity, n_samples);
+    if (fidelity == 3)   // "Ultra": routed before the silence early-out on purpose - even when
+          // the input is silent the ring must keep running so it decays out smoothly instead of hard-cutting to zero.
+    {
+        PitchSplicer::Params p;
+        p.semitones = static_cast<float>(s);   // STEP port: whole semitones (continuous also fine)
+        plugin->objp->setParams(p);            // window stays at the default set in prepare()
+
+        const float* ins[1]  = { in };
+        float*       outs[1] = { out };
+        plugin->objp->process(ins, outs, static_cast<int>(n_samples), 1);   // shifted audio into `out` (pre-gain)
+
+        (plugin->objg)->SetGaindB(gain);
+        (plugin->objg)->SimpleGain(out, out);   // GAIN port applied in-place to the shift result
+        return;
+    }
+
 
     if (InputAbsSum(in, n_samples) == 0)
     {
