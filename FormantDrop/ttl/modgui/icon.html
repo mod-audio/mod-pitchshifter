@@ -1,0 +1,67 @@
+<div class="mod-pedal ph-mod-formantdrop">
+    <div mod-role="drag-handle" class="mod-drag-handle"></div>
+    <div class="ph-head"><div class="ph-name">Drop Formant</div><div class="ph-tag">PLACEHOLDER UI</div></div>
+    <div class="ph-cell mod-control-group" style="left:20px;top:64px;width:92px">
+        <div class="ph-label">Step</div>
+        <div class="mod-knob"><div class="ph-knob mod-knob-image" mod-role="input-control-port" mod-port-symbol="Step" mod-widget="film" mod-widget-rotation="270"></div></div>
+        <div class="ph-value" mod-role="input-control-value" mod-port-symbol="Step"></div>
+    </div>
+    <div class="ph-cell mod-control-group" style="left:112px;top:64px;width:92px">
+        <div class="ph-label">Gain</div>
+        <div class="mod-knob"><div class="ph-knob mod-knob-image" mod-role="input-control-port" mod-port-symbol="Gain" mod-widget="film" mod-widget-rotation="270"></div></div>
+        <div class="ph-value" mod-role="input-control-value" mod-port-symbol="Gain"></div>
+    </div>
+    <div class="ph-cell mod-control-group" style="left:204px;top:64px;width:184px">
+        <div class="ph-label">Window</div>
+        <div class="ph-select mod-enumerated" mod-role="input-control-port" mod-port-symbol="Window" mod-widget="custom-select">
+            <div class="ph-select-value" mod-role="input-control-value" mod-port-symbol="Window"></div>
+            <div class="mod-enumerated-list">
+                <div mod-role="enumeration-option" mod-port-value="512">512 (8 ms)</div>
+                <div mod-role="enumeration-option" mod-port-value="768">768 (13 ms)</div>
+                <div mod-role="enumeration-option" mod-port-value="1024">1024 (19 ms)</div>
+                <div mod-role="enumeration-option" mod-port-value="1536">1536 (29 ms)</div>
+                <div mod-role="enumeration-option" mod-port-value="2048">2048 (40 ms)</div>
+            </div>
+        </div>
+    </div>
+    <div class="ph-cell mod-control-group" style="left:388px;top:64px;width:92px">
+        <div class="ph-label">Formant</div>
+        <div class="ph-switch" mod-role="input-control-port" mod-port-symbol="Formant" mod-widget="switch"><div class="ph-switch-dot"></div></div>
+    </div>
+    <div class="ph-light mod-light on" mod-role="bypass-light"></div>
+    <div class="ph-footswitch mod-footswitch" mod-role="bypass"></div>
+    <div class="mod-pedal-input">
+        {{#effect.ports.audio.input}}
+        <div class="mod-input mod-input-disconnected" title="{{name}}" mod-role="input-audio-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-input-image"></div>
+        </div>
+        {{/effect.ports.audio.input}}
+        {{#effect.ports.midi.input}}
+        <div class="mod-input mod-input-disconnected" title="{{name}}" mod-role="input-midi-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-input-image"></div>
+        </div>
+        {{/effect.ports.midi.input}}
+        {{#effect.ports.cv.input}}
+        <div class="mod-input mod-input-disconnected" title="{{name}}" mod-role="input-cv-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-input-image"></div>
+        </div>
+        {{/effect.ports.cv.input}}
+    </div>
+    <div class="mod-pedal-output">
+        {{#effect.ports.audio.output}}
+        <div class="mod-output mod-output-disconnected" title="{{name}}" mod-role="output-audio-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-output-image"></div>
+        </div>
+        {{/effect.ports.audio.output}}
+        {{#effect.ports.midi.output}}
+        <div class="mod-output mod-output-disconnected" title="{{name}}" mod-role="output-midi-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-output-image"></div>
+        </div>
+        {{/effect.ports.midi.output}}
+        {{#effect.ports.cv.output}}
+        <div class="mod-output mod-output-disconnected" title="{{name}}" mod-role="output-cv-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-output-image"></div>
+        </div>
+        {{/effect.ports.cv.output}}
+    </div>
+</div>
