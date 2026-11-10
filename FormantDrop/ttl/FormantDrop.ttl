@@ -1,0 +1,96 @@
+@prefix bsize:  <http://lv2plug.in/ns/ext/buf-size#>.
+@prefix doap:   <http://usefulinc.com/ns/doap#>.
+@prefix foaf:   <http://xmlns.com/foaf/0.1/>.
+@prefix lv2:    <http://lv2plug.in/ns/lv2core#>.
+@prefix mod:    <http://moddevices.com/ns/mod#>.
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix units:  <http://lv2plug.in/ns/extensions/units#>.
+
+<http://moddevices.com/plugins/mod-devel/FormantDrop>
+a lv2:Plugin, lv2:SpectralPlugin;
+
+lv2:requiredFeature bsize:fixedBlockLength, bsize:powerOf2BlockLength;
+
+doap:name "Drop Formant";
+
+doap:maintainer [
+    foaf:name "MOD Team";
+    foaf:homepage <http://moddevices.com>;
+    foaf:mbox <mailto:devel@moddevices.com>;
+];
+
+mod:brand "MOD";
+mod:label "Drop Formant";
+
+doap:license "GPL";
+
+lv2:minorVersion 0;
+lv2:microVersion 1;
+
+rdfs:comment """
+A pitch-shifter that drops the pitch by up to 12 semitones (steps).
+
+Unlike the original, the tone of the instrument stays where it was: the body and pickup resonances do not move with
+the pitch (formant correction). Window sets the analysis size: bigger is smoother and uses more processing, at the
+cost of latency (window minus 128 samples).
+""";
+
+lv2:port
+[
+    a lv2:AudioPort, lv2:InputPort;
+    lv2:index 0;
+    lv2:symbol "In";
+    lv2:name "In";
+],
+[
+    a lv2:AudioPort, lv2:OutputPort;
+    lv2:index 1;
+    lv2:symbol "Out";
+    lv2:name "Out";
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 2;
+    lv2:symbol "Step";
+    lv2:name "Step";
+    lv2:default 0;
+    lv2:minimum -12;
+    lv2:maximum 0;
+    lv2:portProperty lv2:integer;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 3;
+    lv2:symbol "Gain";
+    lv2:name "Gain";
+    lv2:default 0.0;
+    lv2:minimum -20.0;
+    lv2:maximum 20.0;
+    units:unit units:db;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 4;
+    lv2:symbol "Window";
+    lv2:name "Window";
+    lv2:default 1536;
+    lv2:minimum 512;
+    lv2:maximum 2048;
+    lv2:portProperty lv2:integer, lv2:enumeration;
+    lv2:scalePoint [rdfs:label "512 (8 ms)"; rdf:value 512];
+    lv2:scalePoint [rdfs:label "768 (13 ms)"; rdf:value 768];
+    lv2:scalePoint [rdfs:label "1024 (19 ms)"; rdf:value 1024];
+    lv2:scalePoint [rdfs:label "1536 (29 ms)"; rdf:value 1536];
+    lv2:scalePoint [rdfs:label "2048 (40 ms)"; rdf:value 2048];
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 5;
+    lv2:symbol "Formant";
+    lv2:name "Formant";
+    lv2:default 1;
+    lv2:minimum 0;
+    lv2:maximum 1;
+    lv2:portProperty lv2:integer, lv2:toggled;
+].

@@ -1,7 +1,7 @@
-# Builds the eight pitch shifter plugins. Shared_files/harmonizer.wisdom (FFTW plans for the frame
+# Builds the pitch shifter plugins. Shared_files/harmonizer.wisdom (FFTW plans for the frame
 # sizes the plugins use) is generated here when missing; builders copy a per-device file in first.
 
-PLUGINS = 2Voices Capo Drop SuperCapo SuperWhammy Harmonizer Harmonizer2 HarmonizerCS
+PLUGINS = 2Voices Capo Drop SuperCapo SuperWhammy Harmonizer Harmonizer2 HarmonizerCS FormantCapo FormantDrop
 WISDOM  = Shared_files/harmonizer.wisdom
 SIZES   = 128 192 256 384 512 640 768 1024 1280 1536 2048 2176 2304 2432 2560 3072 4096
 
