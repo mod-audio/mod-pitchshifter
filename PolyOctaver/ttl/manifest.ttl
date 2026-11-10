@@ -4,3 +4,6 @@
 <http://moddevices.com/plugins/mod-devel/PolyOctaver> a lv2:Plugin;
     lv2:binary <mod-polyoctaver.so>;
     rdfs:seeAlso <PolyOctaver.ttl>.
+
+<http://moddevices.com/plugins/mod-devel/PolyOctaver>
+    rdfs:seeAlso <modgui.ttl> .

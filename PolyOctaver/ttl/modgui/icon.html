@@ -1,0 +1,100 @@
+<div class="mod-pedal ph-mod-polyoctaver">
+    <div mod-role="drag-handle" class="mod-drag-handle"></div>
+    <div class="ph-head"><div class="ph-name">Poly Octaver</div><div class="ph-tag">PLACEHOLDER UI</div></div>
+    <div class="ph-cell mod-control-group" style="left:20px;top:64px;width:92px">
+        <div class="ph-label">Dry</div>
+        <div class="mod-knob"><div class="ph-knob mod-knob-image" mod-role="input-control-port" mod-port-symbol="Dry" mod-widget="film" mod-widget-rotation="270"></div></div>
+        <div class="ph-value" mod-role="input-control-value" mod-port-symbol="Dry"></div>
+    </div>
+    <div class="ph-cell mod-control-group" style="left:112px;top:64px;width:92px">
+        <div class="ph-label">Sub 2</div>
+        <div class="mod-knob"><div class="ph-knob mod-knob-image" mod-role="input-control-port" mod-port-symbol="Sub2" mod-widget="film" mod-widget-rotation="270"></div></div>
+        <div class="ph-value" mod-role="input-control-value" mod-port-symbol="Sub2"></div>
+    </div>
+    <div class="ph-cell mod-control-group" style="left:204px;top:64px;width:92px">
+        <div class="ph-label">Sub 1</div>
+        <div class="mod-knob"><div class="ph-knob mod-knob-image" mod-role="input-control-port" mod-port-symbol="Sub1" mod-widget="film" mod-widget-rotation="270"></div></div>
+        <div class="ph-value" mod-role="input-control-value" mod-port-symbol="Sub1"></div>
+    </div>
+    <div class="ph-cell mod-control-group" style="left:296px;top:64px;width:92px">
+        <div class="ph-label">Up 1</div>
+        <div class="mod-knob"><div class="ph-knob mod-knob-image" mod-role="input-control-port" mod-port-symbol="Up1" mod-widget="film" mod-widget-rotation="270"></div></div>
+        <div class="ph-value" mod-role="input-control-value" mod-port-symbol="Up1"></div>
+    </div>
+    <div class="ph-cell mod-control-group" style="left:388px;top:64px;width:92px">
+        <div class="ph-label">Up 2</div>
+        <div class="mod-knob"><div class="ph-knob mod-knob-image" mod-role="input-control-port" mod-port-symbol="Up2" mod-widget="film" mod-widget-rotation="270"></div></div>
+        <div class="ph-value" mod-role="input-control-value" mod-port-symbol="Up2"></div>
+    </div>
+    <div class="ph-cell mod-control-group" style="left:480px;top:64px;width:92px">
+        <div class="ph-label">Attack</div>
+        <div class="mod-knob"><div class="ph-knob mod-knob-image" mod-role="input-control-port" mod-port-symbol="Attack" mod-widget="film" mod-widget-rotation="270"></div></div>
+        <div class="ph-value" mod-role="input-control-value" mod-port-symbol="Attack"></div>
+    </div>
+    <div class="ph-cell mod-control-group" style="left:20px;top:176px;width:92px">
+        <div class="ph-label">Filter</div>
+        <div class="mod-knob"><div class="ph-knob mod-knob-image" mod-role="input-control-port" mod-port-symbol="Filter" mod-widget="film" mod-widget-rotation="270"></div></div>
+        <div class="ph-value" mod-role="input-control-value" mod-port-symbol="Filter"></div>
+    </div>
+    <div class="ph-cell mod-control-group" style="left:112px;top:176px;width:92px">
+        <div class="ph-label">Resonance</div>
+        <div class="mod-knob"><div class="ph-knob mod-knob-image" mod-role="input-control-port" mod-port-symbol="Resonance" mod-widget="film" mod-widget-rotation="270"></div></div>
+        <div class="ph-value" mod-role="input-control-value" mod-port-symbol="Resonance"></div>
+    </div>
+    <div class="ph-cell mod-control-group" style="left:204px;top:176px;width:92px">
+        <div class="ph-label">Detune</div>
+        <div class="mod-knob"><div class="ph-knob mod-knob-image" mod-role="input-control-port" mod-port-symbol="Detune" mod-widget="film" mod-widget-rotation="270"></div></div>
+        <div class="ph-value" mod-role="input-control-value" mod-port-symbol="Detune"></div>
+    </div>
+    <div class="ph-cell mod-control-group" style="left:296px;top:176px;width:92px">
+        <div class="ph-label">Dry FX</div>
+        <div class="ph-switch" mod-role="input-control-port" mod-port-symbol="DryFX" mod-widget="switch"><div class="ph-switch-dot"></div></div>
+    </div>
+    <div class="ph-cell mod-control-group" style="left:388px;top:176px;width:184px">
+        <div class="ph-label">Tracking</div>
+        <div class="ph-select mod-enumerated" mod-role="input-control-port" mod-port-symbol="Tracking" mod-widget="custom-select">
+            <div class="ph-select-value" mod-role="input-control-value" mod-port-symbol="Tracking"></div>
+            <div class="mod-enumerated-list">
+                <div mod-role="enumeration-option" mod-port-value="0">Fast</div>
+                <div mod-role="enumeration-option" mod-port-value="1">Balanced</div>
+                <div mod-role="enumeration-option" mod-port-value="2">Clean</div>
+            </div>
+        </div>
+    </div>
+    <div class="ph-light mod-light on" mod-role="bypass-light"></div>
+    <div class="ph-footswitch mod-footswitch" mod-role="bypass"></div>
+    <div class="mod-pedal-input">
+        {{#effect.ports.audio.input}}
+        <div class="mod-input mod-input-disconnected" title="{{name}}" mod-role="input-audio-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-input-image"></div>
+        </div>
+        {{/effect.ports.audio.input}}
+        {{#effect.ports.midi.input}}
+        <div class="mod-input mod-input-disconnected" title="{{name}}" mod-role="input-midi-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-input-image"></div>
+        </div>
+        {{/effect.ports.midi.input}}
+        {{#effect.ports.cv.input}}
+        <div class="mod-input mod-input-disconnected" title="{{name}}" mod-role="input-cv-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-input-image"></div>
+        </div>
+        {{/effect.ports.cv.input}}
+    </div>
+    <div class="mod-pedal-output">
+        {{#effect.ports.audio.output}}
+        <div class="mod-output mod-output-disconnected" title="{{name}}" mod-role="output-audio-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-output-image"></div>
+        </div>
+        {{/effect.ports.audio.output}}
+        {{#effect.ports.midi.output}}
+        <div class="mod-output mod-output-disconnected" title="{{name}}" mod-role="output-midi-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-output-image"></div>
+        </div>
+        {{/effect.ports.midi.output}}
+        {{#effect.ports.cv.output}}
+        <div class="mod-output mod-output-disconnected" title="{{name}}" mod-role="output-cv-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-output-image"></div>
+        </div>
+        {{/effect.ports.cv.output}}
+    </div>
+</div>
