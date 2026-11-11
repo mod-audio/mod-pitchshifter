@@ -1,5 +1,6 @@
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix pset: <http://lv2plug.in/ns/ext/presets#>.
 
 <http://moddevices.com/plugins/mod-devel/PolyOctaver> a lv2:Plugin;
     lv2:binary <mod-polyoctaver.so>;
@@ -7,3 +8,28 @@
 
 <http://moddevices.com/plugins/mod-devel/PolyOctaver>
     rdfs:seeAlso <modgui.ttl> .
+
+
+<http://moddevices.com/plugins/mod-devel/PolyOctaver#preset-organ>
+    a pset:Preset;
+    lv2:appliesTo <http://moddevices.com/plugins/mod-devel/PolyOctaver>;
+    rdfs:label "Organ";
+    rdfs:seeAlso <presets.ttl>.
+
+<http://moddevices.com/plugins/mod-devel/PolyOctaver#preset-twelve-string>
+    a pset:Preset;
+    lv2:appliesTo <http://moddevices.com/plugins/mod-devel/PolyOctaver>;
+    rdfs:label "Twelve-String";
+    rdfs:seeAlso <presets.ttl>.
+
+<http://moddevices.com/plugins/mod-devel/PolyOctaver#preset-sub-bass>
+    a pset:Preset;
+    lv2:appliesTo <http://moddevices.com/plugins/mod-devel/PolyOctaver>;
+    rdfs:label "Sub Bass";
+    rdfs:seeAlso <presets.ttl>.
+
+<http://moddevices.com/plugins/mod-devel/PolyOctaver#preset-swell-pad>
+    a pset:Preset;
+    lv2:appliesTo <http://moddevices.com/plugins/mod-devel/PolyOctaver>;
+    rdfs:label "Swell Pad";
+    rdfs:seeAlso <presets.ttl>.
