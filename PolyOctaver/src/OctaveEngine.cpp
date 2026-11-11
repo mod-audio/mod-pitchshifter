@@ -136,6 +136,7 @@ OctaveEngine::OctaveEngine(const Config& config, bool haveWisdom)
 	fwd = PlanR2C(N, timeIn, X, haveWisdom);
 	inv = PlanC2R(N, Y, timeOut, haveWisdom);
 
+	holdWanted = false;
 	Reset();
 }
 
@@ -226,6 +227,8 @@ void OctaveEngine::Reset()
 	silentTicks = N / T;
 	analysed = false;
 	synthesisNext = false;
+	holding = false;
+	soundTicks = 0;
 }
 
 void OctaveEngine::FindPeaks()
@@ -418,6 +421,30 @@ void OctaveEngine::ModelPartials()
 	}
 }
 
+// The held frame, one frame hop later: every partial, and what is left of its region, turned by
+// the phase its frequency runs through in that time.
+void OctaveEngine::AdvanceHeld()
+{
+	for (int i = 0; i < nPeaks; ++i)
+	{
+		const float turn = kTwoPi * peakPos[i] * H / N;
+		const float c = std::cos(turn), s = std::sin(turn);
+		if (K > 0)
+		{
+			const float re = ampRe[i] * c - ampIm[i] * s;
+			ampIm[i] = ampRe[i] * s + ampIm[i] * c;
+			ampRe[i] = re;
+		}
+		for (int k = regionLo[i]; k <= regionHi[i]; ++k)
+		{
+			const float re = X[k][0] * c - X[k][1] * s;
+			X[k][1] = X[k][0] * s + X[k][1] * c;
+			X[k][0] = re;
+		}
+		peakPhase[i] = wrapPhase(peakPhase[i] + turn);
+	}
+}
+
 // One partial, skirt included, into the output spectrum at a fractional bin.
 void OctaveEngine::AddLobe(float position, float re, float im)
 {
@@ -553,14 +580,28 @@ void OctaveEngine::Process(const float* in, float* wet, const float* gains, cons
 	else
 		silentTicks = 0;
 
+	if (loudest < 3e-4f) // -70 dBFS: a unit's input is never at digital silence
+		soundTicks = 0;
+	else if (soundTicks < N / T)
+		++soundTicks;
+
 	if (!synthesisNext)
 	{
 		bool anyVoice = false;
 		for (int v = 0; v < NVOICES; ++v)
 			if (gains[v] > 0.0f) anyVoice = true;
 
-		analysed = false;
-		if (anyVoice && silentTicks < N / T && fwd && inv)
+		if (!holdWanted) holding = false;
+
+		if (holding)
+		{
+			AdvanceHeld();
+			analysed = anyVoice;
+		}
+		else
+			analysed = false;
+
+		if (!holding && (anyVoice || holdWanted) && silentTicks < N / T && fwd && inv)
 		{
 			const int first = N - ringAt; // samples from ringAt to the end of the buffer
 			for (int n = 0; n < first; ++n)
@@ -571,7 +612,8 @@ void OctaveEngine::Process(const float* in, float* wet, const float* gains, cons
 
 			FindPeaks();
 			if (K > 0) ModelPartials();
-			analysed = nPeaks > 0;
+			holding = holdWanted && nPeaks > 0 && soundTicks >= 3 * N / (4 * T);
+			analysed = nPeaks > 0 && anyVoice;
 		}
 
 		std::memcpy(wet, pending + T, sizeof(float) * T); // second half of the previous frame's output

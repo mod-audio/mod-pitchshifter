@@ -9,6 +9,7 @@ all: Shared_files/harmonizer.wisdom
 	$(MAKE) -C Harmonizer2
 	$(MAKE) -C HarmonizerCS
 	$(MAKE) -C PolyOctaver
+	$(MAKE) -C PitchArpeggiator
 
 install: all
 	$(MAKE) -C 2Voices install
@@ -20,6 +21,7 @@ install: all
 	$(MAKE) -C Harmonizer2 install
 	$(MAKE) -C HarmonizerCS install
 	$(MAKE) -C PolyOctaver install
+	$(MAKE) -C PitchArpeggiator install
 
 clean:
 	$(MAKE) -C 2Voices clean
@@ -31,6 +33,7 @@ clean:
 	$(MAKE) -C Harmonizer2 clean
 	$(MAKE) -C HarmonizerCS clean
 	$(MAKE) -C PolyOctaver clean
+	$(MAKE) -C PitchArpeggiator clean
 	rm -f Shared_files/*.o
 	rm -f Shared_files/harmonizer.wisdom
 

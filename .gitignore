@@ -11,3 +11,8 @@ PolyOctaver/test/engine_test
 PolyOctaver/test/baseline_test
 PolyOctaver/test/plugin_smoke
 PolyOctaver/test/swell_test
+PolyOctaver/test/baseline_test
+PolyOctaver/test/plugin_smoke
+PolyOctaver/test/swell_test
+PitchArpeggiator/test/interval_test
+PitchArpeggiator/test/arp_test

@@ -1,0 +1,247 @@
+@prefix atom:  <http://lv2plug.in/ns/ext/atom#>.
+@prefix doap:  <http://usefulinc.com/ns/doap#>.
+@prefix epp:   <http://lv2plug.in/ns/ext/port-props#>.
+@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#>.
+@prefix mod:   <http://moddevices.com/ns/mod#>.
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix rsz:   <http://lv2plug.in/ns/ext/resize-port#>.
+@prefix units: <http://lv2plug.in/ns/extensions/units#>.
+@prefix urid:  <http://lv2plug.in/ns/ext/urid#>.
+
+<http://moddevices.com/plugins/mod-devel/PitchArpeggiator>
+a lv2:Plugin, lv2:PitchPlugin;
+
+lv2:optionalFeature lv2:hardRTCapable, urid:map;
+
+doap:name "Pitch Arpeggiator";
+
+doap:maintainer [
+    foaf:name "MOD Team";
+    foaf:homepage <http://moddevices.com>;
+    foaf:mbox <mailto:devel@moddevices.com>;
+];
+
+mod:brand "MOD";
+mod:label "Pitch Arpeggiator";
+
+doap:license "GPL";
+
+lv2:minorVersion 0;
+lv2:microVersion 1;
+
+rdfs:comment """
+An arpeggiator for audio. Play a note or a chord and let it ring: the plugin moves it through the notes of an arpeggio in time with the tempo. It works on chords as well as single notes, with no note detection, so nothing has to be played cleanly for it to track.
+
+What you play is the root. Pattern chooses the chord built on it, Division the speed, and Arp Mode, Octave, Octave Spread and Octave Mode the order of the notes, as on the MOD Arpeggiator.
+
+*Freeze holds the sound that is playing when it is switched on and keeps arpeggiating it after you stop. Turn Dry up to play over it. Made for a footswitch.
+*Sync follows the tempo of the pedalboard, and its bars while the transport is running. Free Running uses the BPM control.
+*Note Length is how much of every step sounds. At 100 % the notes run into each other; lower settings give separate, plucked notes.
+*Octave moves the whole arpeggio up or down from what you play. Octave Spread is how many octaves it covers.
+*Octave Mode: Cycle runs the pattern through the whole range. The other settings change octave on every note instead.
+*Dry is the level of the unprocessed signal, Level that of the arpeggio.
+
+The arpeggio reaches two octaves above and two below the input; notes beyond that fold back by an octave.
+""";
+
+lv2:port
+[
+    a lv2:AudioPort, lv2:InputPort;
+    lv2:index 0;
+    lv2:symbol "In";
+    lv2:name "In";
+    lv2:shortName "In";
+],
+[
+    a lv2:AudioPort, lv2:OutputPort;
+    lv2:index 1;
+    lv2:symbol "Out";
+    lv2:name "Out";
+    lv2:shortName "Out";
+],
+[
+    a lv2:InputPort, atom:AtomPort;
+    lv2:index 2;
+    lv2:symbol "events_in";
+    lv2:name "Events Input";
+    rsz:minimumSize 2048;
+    atom:bufferType atom:Sequence;
+    atom:supports <http://lv2plug.in/ns/ext/time#Position>;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 3;
+    lv2:symbol "Sync";
+    lv2:name "Sync";
+    lv2:shortName "Sync";
+    lv2:default 1;
+    lv2:minimum 0;
+    lv2:maximum 1;
+    lv2:portProperty lv2:integer, lv2:enumeration;
+    lv2:scalePoint [rdfs:label "Free Running"; rdf:value 0];
+    lv2:scalePoint [rdfs:label "Host Sync"; rdf:value 1];
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 4;
+    lv2:symbol "BPM";
+    lv2:name "BPM";
+    lv2:shortName "BPM";
+    lv2:default 120;
+    lv2:minimum 20;
+    lv2:maximum 280;
+    units:unit units:bpm;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 5;
+    lv2:symbol "Division";
+    lv2:name "Division";
+    lv2:shortName "Division";
+    lv2:default 6;
+    lv2:minimum 0;
+    lv2:maximum 12;
+    lv2:portProperty lv2:integer, lv2:enumeration;
+    lv2:scalePoint [rdfs:label "1/1"; rdf:value 0];
+    lv2:scalePoint [rdfs:label "1/2"; rdf:value 1];
+    lv2:scalePoint [rdfs:label "1/3"; rdf:value 2];
+    lv2:scalePoint [rdfs:label "1/4"; rdf:value 3];
+    lv2:scalePoint [rdfs:label "1/4."; rdf:value 4];
+    lv2:scalePoint [rdfs:label "1/4T"; rdf:value 5];
+    lv2:scalePoint [rdfs:label "1/8"; rdf:value 6];
+    lv2:scalePoint [rdfs:label "1/8."; rdf:value 7];
+    lv2:scalePoint [rdfs:label "1/8T"; rdf:value 8];
+    lv2:scalePoint [rdfs:label "1/16"; rdf:value 9];
+    lv2:scalePoint [rdfs:label "1/16."; rdf:value 10];
+    lv2:scalePoint [rdfs:label "1/16T"; rdf:value 11];
+    lv2:scalePoint [rdfs:label "1/32"; rdf:value 12];
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 6;
+    lv2:symbol "Pattern";
+    lv2:name "Pattern";
+    lv2:shortName "Pattern";
+    lv2:default 0;
+    lv2:minimum 0;
+    lv2:maximum 10;
+    lv2:portProperty lv2:integer, lv2:enumeration;
+    lv2:scalePoint [rdfs:label "Major"; rdf:value 0];
+    lv2:scalePoint [rdfs:label "Minor"; rdf:value 1];
+    lv2:scalePoint [rdfs:label "Major 7"; rdf:value 2];
+    lv2:scalePoint [rdfs:label "Minor 7"; rdf:value 3];
+    lv2:scalePoint [rdfs:label "Dominant 7"; rdf:value 4];
+    lv2:scalePoint [rdfs:label "Sus 4"; rdf:value 5];
+    lv2:scalePoint [rdfs:label "Diminished"; rdf:value 6];
+    lv2:scalePoint [rdfs:label "Fifths"; rdf:value 7];
+    lv2:scalePoint [rdfs:label "Octaves"; rdf:value 8];
+    lv2:scalePoint [rdfs:label "Major Pentatonic"; rdf:value 9];
+    lv2:scalePoint [rdfs:label "Minor Pentatonic"; rdf:value 10];
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 7;
+    lv2:symbol "ArpMode";
+    lv2:name "Arp Mode";
+    lv2:shortName "Arp Mode";
+    lv2:default 0;
+    lv2:minimum 0;
+    lv2:maximum 4;
+    lv2:portProperty lv2:integer, lv2:enumeration;
+    lv2:scalePoint [rdfs:label "Up"; rdf:value 0];
+    lv2:scalePoint [rdfs:label "Down"; rdf:value 1];
+    lv2:scalePoint [rdfs:label "Up-Down"; rdf:value 2];
+    lv2:scalePoint [rdfs:label "Up-Down (alt)"; rdf:value 3];
+    lv2:scalePoint [rdfs:label "Random"; rdf:value 4];
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 8;
+    lv2:symbol "Octave";
+    lv2:name "Octave";
+    lv2:shortName "Octave";
+    lv2:default 0;
+    lv2:minimum -2;
+    lv2:maximum 1;
+    lv2:portProperty lv2:integer, lv2:enumeration;
+    lv2:scalePoint [rdfs:label "-2"; rdf:value -2];
+    lv2:scalePoint [rdfs:label "-1"; rdf:value -1];
+    lv2:scalePoint [rdfs:label "0"; rdf:value 0];
+    lv2:scalePoint [rdfs:label "+1"; rdf:value 1];
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 9;
+    lv2:symbol "OctaveSpread";
+    lv2:name "Octave Spread";
+    lv2:shortName "Octave Spread";
+    lv2:default 1;
+    lv2:minimum 1;
+    lv2:maximum 3;
+    lv2:portProperty lv2:integer, lv2:enumeration;
+    lv2:scalePoint [rdfs:label "1 oct"; rdf:value 1];
+    lv2:scalePoint [rdfs:label "2 oct"; rdf:value 2];
+    lv2:scalePoint [rdfs:label "3 oct"; rdf:value 3];
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 10;
+    lv2:symbol "OctaveMode";
+    lv2:name "Octave Mode";
+    lv2:shortName "Octave Mode";
+    lv2:default 4;
+    lv2:minimum 0;
+    lv2:maximum 4;
+    lv2:portProperty lv2:integer, lv2:enumeration;
+    lv2:scalePoint [rdfs:label "Up"; rdf:value 0];
+    lv2:scalePoint [rdfs:label "Down"; rdf:value 1];
+    lv2:scalePoint [rdfs:label "Up-Down"; rdf:value 2];
+    lv2:scalePoint [rdfs:label "Down-Up"; rdf:value 3];
+    lv2:scalePoint [rdfs:label "Cycle"; rdf:value 4];
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 11;
+    lv2:symbol "NoteLength";
+    lv2:name "Note Length";
+    lv2:shortName "Note Length";
+    lv2:default 70;
+    lv2:minimum 5;
+    lv2:maximum 100;
+    units:unit units:pc;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 12;
+    lv2:symbol "Freeze";
+    lv2:name "Freeze";
+    lv2:shortName "Freeze";
+    lv2:default 0;
+    lv2:minimum 0;
+    lv2:maximum 1;
+    lv2:portProperty lv2:integer, lv2:toggled;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 13;
+    lv2:symbol "Dry";
+    lv2:name "Dry";
+    lv2:shortName "Dry";
+    lv2:default 0;
+    lv2:minimum 0;
+    lv2:maximum 100;
+    units:unit units:pc;
+],
+[
+    a lv2:ControlPort, lv2:InputPort;
+    lv2:index 14;
+    lv2:symbol "Level";
+    lv2:name "Level";
+    lv2:shortName "Level";
+    lv2:default 100;
+    lv2:minimum 0;
+    lv2:maximum 100;
+    units:unit units:pc;
+].

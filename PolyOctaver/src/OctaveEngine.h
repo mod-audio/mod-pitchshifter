@@ -59,6 +59,12 @@ public:
 	 * costs nothing. `detune`, if given, is a frequency ratio per voice on top of its octave (1 = in tune). */
 	void Process(const float* in, float* wet, const float* gains, const float* detune = 0);
 
+	/* Hold: stop listening and keep the last analysed frame sounding, every partial running on at
+	 * its own frequency, until released. Asked for in silence or within the first 64 ms of a note,
+	 * it waits for that much of the note to be in the frame. Voices and detune work as before. */
+	void Hold(bool on) { holdWanted = on; }
+	bool Holding() const { return holding; }
+
 private:
 	OctaveEngine(const OctaveEngine&);
 	OctaveEngine& operator=(const OctaveEngine&);
@@ -83,6 +89,7 @@ private:
 		re = lobeRe[idx];
 		im = offset < 0 ? -lobeIm[idx] : lobeIm[idx];
 	}
+	void AdvanceHeld();
 	void AddVoice(int voice, float gain, float detune);
 	void AddLobe(float position, float re, float im);
 
@@ -140,6 +147,9 @@ private:
 	int silentTicks;
 	bool analysed;       // the last analysis tick found something to build voices from
 	bool synthesisNext;
+
+	bool holdWanted, holding;
+	int soundTicks;      // ticks since the input came out of silence, up to a frame's worth
 };
 
 #endif
