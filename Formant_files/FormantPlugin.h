@@ -18,10 +18,12 @@
 
 enum {IN, OUT, STEP, GAIN, WINDOW, FORMANT, PLUGIN_PORT_COUNT};
 
-// window sizes offered (samples at a 128 hop; latency = window - 128). Default: 1536 (by ear, 2026-10-28).
-static const int kWindows[] = {512, 768, 1024, 1536, 2048};
-#define NWINDOWS 5
-#define DEFAULT_WINDOW 3
+// window sizes offered (samples at a 128 hop; latency = window - 128). Powers of two only: FFTW allocated while
+// executing the 1536 transform on the Duo X (rt_check 2026-11-11); 768 is the same kind of size. Default 1024: the smallest window the
+// formant correction works with, and light enough for the Duo (max 1.3 ms of 2.67 at 128 frames).
+static const int kWindows[] = {512, 1024, 2048};
+#define NWINDOWS 3
+#define DEFAULT_WINDOW 1
 
 // the guitar plugins follow a fixed f0 (chords: no pitch detector); by measurement 80-300 Hz all work
 #define FORMANT_F0 200.0

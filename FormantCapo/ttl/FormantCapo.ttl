@@ -74,14 +74,12 @@ lv2:port
     lv2:index 4;
     lv2:symbol "Window";
     lv2:name "Window";
-    lv2:default 1536;
+    lv2:default 1024;
     lv2:minimum 512;
     lv2:maximum 2048;
     lv2:portProperty lv2:integer, lv2:enumeration;
     lv2:scalePoint [rdfs:label "512 (8 ms)"; rdf:value 512];
-    lv2:scalePoint [rdfs:label "768 (13 ms)"; rdf:value 768];
     lv2:scalePoint [rdfs:label "1024 (19 ms)"; rdf:value 1024];
-    lv2:scalePoint [rdfs:label "1536 (29 ms)"; rdf:value 1536];
     lv2:scalePoint [rdfs:label "2048 (40 ms)"; rdf:value 2048];
 ],
 [
